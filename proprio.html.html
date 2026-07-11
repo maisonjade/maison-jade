@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maison Jade · Espace Propriétaire</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --jade:#31483F;--jade-mid:#3D5A50;--jade-bg:#EAF0EE;--jade-bd:#C2D4CD;
+  --or:#A57C52;--or-bg:#F5EDE3;--or-bd:#D4B896;
+  --ivoire:#F5F0E8;--blanc:#FDFAF6;--border:#D8CFBF;
+  --ink:#2A1F15;--ink2:#5B4335;--ink3:#9A8878;--noyer:#5B4335;
+  --surface:#FDFAF6;--surface2:#F5F0E8;
+  --green:#2D6A4F;--green-bg:#E8F5EE;
+  --red:#8B2020;--red-bg:#FDF0F0;
+  --blue:#185FA5;--blue-bg:#E6F1FB;
+  --radius:8px;
+}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+/* ── LOGIN ── */
+#login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;background:var(--jade)}
+.login-card{background:var(--blanc);border-radius:16px;padding:2.5rem;width:100%;max-width:380px;box-shadow:0 24px 64px rgba(0,0,0,0.15)}
+.login-logo{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--jade);text-align:center;margin-bottom:4px}
+.login-logo em{color:var(--or);font-style:italic}
+.login-sub{text-align:center;font-size:12px;color:var(--ink3);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:2rem}
+.login-label{font-size:12px;font-weight:500;color:var(--ink2);margin-bottom:6px;display:block}
+.login-input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:'Inter',sans-serif;background:var(--ivoire);color:var(--ink);outline:none;margin-bottom:1rem;transition:border-color 0.2s}
+.login-input:focus{border-color:var(--jade)}
+.login-btn{width:100%;padding:12px;background:var(--jade);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s;margin-top:0.5rem}
+.login-btn:hover{background:var(--jade-mid)}
+.login-err{font-size:12px;color:var(--red);text-align:center;margin-top:8px;min-height:18px}
+.login-footer{text-align:center;font-size:11px;color:rgba(255,255,255,0.4);margin-top:1.5rem}
+
+/* ── APP ── */
+#app{display:none;flex-direction:column;min-height:100vh}
+
+/* TOPBAR */
+.topbar{background:var(--jade);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,0.12)}
+.topbar-logo{font-family:'Cormorant Garamond',serif;font-size:20px;color:white;letter-spacing:0.06em}
+.topbar-logo em{color:var(--or);font-style:italic}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-user{font-size:12px;color:rgba(255,255,255,0.6)}
+.topbar-user strong{color:white;font-weight:500}
+.logout-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s}
+.logout-btn:hover{background:rgba(255,255,255,0.2)}
+
+/* MAIN */
+.main{flex:1;padding:2rem 1.5rem;max-width:1100px;margin:0 auto;width:100%}
+
+/* BIEN SELECTOR */
+.bien-selector{background:var(--blanc);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:1.5rem;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.bien-selector label{font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);white-space:nowrap}
+.bien-select{flex:1;min-width:200px;padding:9px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:'Inter',sans-serif;background:var(--ivoire);color:var(--ink);outline:none;cursor:pointer}
+.bien-badge{background:var(--jade-bg);color:var(--jade);border:1px solid var(--jade-bd);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:1.5rem}
+.kpi-card{background:var(--blanc);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.kpi-label{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+.kpi-val{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--ink);font-weight:300;line-height:1}
+.kpi-val.green{color:var(--green)}
+.kpi-val.or{color:var(--or)}
+.kpi-sub{font-size:11px;color:var(--ink3);margin-top:6px}
+.kpi-icon{font-size:20px;margin-bottom:6px}
+
+/* GRID 2 COLS */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+
+/* CARD */
+.card{background:var(--blanc);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem}
+.card-hd{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--surface2)}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--jade);font-weight:400}
+.card-body{padding:16px 20px}
+
+/* CALENDRIER */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-day-hd{text-align:center;font-size:10px;font-weight:600;color:var(--ink3);padding:4px;text-transform:uppercase}
+.cal-day{min-height:52px;border-radius:6px;padding:4px 6px;font-size:11px;background:var(--surface2);border:1px solid transparent;position:relative}
+.cal-day.today{border-color:var(--jade);background:var(--jade-bg)}
+.cal-day.past{opacity:0.5}
+.cal-day.other-month{opacity:0.3}
+.cal-day-num{font-size:11px;font-weight:500;color:var(--ink2);margin-bottom:2px}
+.cal-resa{font-size:9px;padding:2px 4px;border-radius:3px;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+.cal-resa.checkin{background:#E8F5EE;color:#2D6A4F}
+.cal-resa.checkout{background:#FDF0F0;color:#8B2020}
+.cal-resa.occupied{background:var(--jade-bg);color:var(--jade)}
+.cal-nav{display:flex;align-items:center;gap:12px}
+.cal-nav button{background:none;border:1px solid var(--border);border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px;color:var(--ink2)}
+.cal-month-label{font-size:13px;font-weight:500;color:var(--ink)}
+
+/* MÉNAGES */
+.menage-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.menage-row:last-child{border-bottom:none}
+.menage-date{font-size:12px;font-weight:500;color:var(--ink)}
+.menage-info{font-size:11px;color:var(--ink3);margin-top:2px}
+.badge{display:inline-block;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:600}
+.badge-planifie{background:#E6F1FB;color:#185FA5}
+.badge-en-cours{background:#FFF3CD;color:#856404}
+.badge-valide{background:#E8F5EE;color:#2D6A4F}
+.badge-retard{background:#FDF0F0;color:#8B2020}
+
+/* REVENUS */
+.rev-table{width:100%;border-collapse:collapse}
+.rev-table th{text-align:left;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);padding:8px 0;border-bottom:1px solid var(--border)}
+.rev-table td{padding:10px 0;border-bottom:1px solid rgba(216,207,191,0.4);font-size:13px;color:var(--ink)}
+.rev-table tr:last-child td{border-bottom:none}
+.rev-positive{color:var(--green);font-weight:500}
+.rev-negative{color:var(--red)}
+
+/* INCIDENTS */
+.incident-row{padding:12px 0;border-bottom:1px solid var(--border)}
+.incident-row:last-child{border-bottom:none}
+.incident-title{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:3px}
+.incident-meta{font-size:11px;color:var(--ink3)}
+.badge-urgent{background:#FDF0F0;color:#8B2020}
+.badge-normal{background:#E6F1FB;color:#185FA5}
+.badge-resolu{background:#E8F5EE;color:#2D6A4F}
+
+/* REPORTING */
+.report-card{background:var(--jade);border-radius:10px;padding:18px 20px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.report-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:white;font-weight:300}
+.report-meta{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px}
+.report-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:white;padding:8px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s}
+.report-btn:hover{background:rgba(255,255,255,0.25)}
+
+/* NAV TABS */
+.nav-tabs{display:flex;gap:4px;margin-bottom:1.5rem;background:var(--blanc);border:1px solid var(--border);border-radius:10px;padding:4px}
+.nav-tab{flex:1;padding:9px;text-align:center;font-size:12px;font-weight:500;color:var(--ink3);cursor:pointer;border-radius:7px;border:none;background:none;font-family:'Inter',sans-serif;transition:all 0.15s;white-space:nowrap}
+.nav-tab.active{background:var(--jade);color:white}
+.nav-tab:hover:not(.active){background:var(--surface2);color:var(--ink)}
+
+/* SECTION */
+.section{display:none}
+.section.active{display:block}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:2rem;color:var(--ink3);font-size:13px}
+.empty-icon{font-size:32px;margin-bottom:8px}
+
+/* WELCOME BANNER */
+.welcome{background:linear-gradient(135deg,var(--jade) 0%,var(--jade-mid) 100%);border-radius:12px;padding:20px 24px;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.welcome-text h2{font-family:'Cormorant Garamond',serif;font-size:22px;color:white;font-weight:300;margin-bottom:4px}
+.welcome-text p{font-size:12px;color:rgba(255,255,255,0.6)}
+.welcome-code{background:rgba(255,255,255,0.1);border:1px solid rgba(165,124,82,0.4);border-radius:8px;padding:8px 14px;text-align:center}
+.welcome-code div:first-child{font-size:10px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:2px}
+.welcome-code div:last-child{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--or);font-weight:400}
+
+/* FOOTER */
+.proprio-footer{text-align:center;padding:1rem;font-size:11px;color:var(--ink3);border-top:1px solid var(--border);background:var(--blanc)}
+
+/* LOADING */
+.loading{display:flex;align-items:center;justify-content:center;padding:2rem;gap:10px;color:var(--ink3);font-size:13px}
+.spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--jade);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--jade);color:white;padding:10px 20px;border-radius:8px;font-size:13px;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Maison <em>Jade</em></div>
+    <div class="login-sub">Espace Propriétaire</div>
+    <label class="login-label">Email</label>
+    <input type="email" class="login-input" id="login-email" placeholder="votre@email.fr" autocomplete="email">
+    <label class="login-label">Mot de passe</label>
+    <input type="password" class="login-input" id="login-pass" placeholder="••••••••" autocomplete="current-password"
+      onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Accéder à mon espace</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+  <div class="login-footer">Maison Jade Ltd · contact@maisonjade.com</div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">Maison <em>Jade</em></div>
+    <div class="topbar-right">
+      <div class="topbar-user">Bienvenue, <strong id="user-name">—</strong></div>
+      <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- WELCOME -->
+    <div class="welcome">
+      <div class="welcome-text">
+        <h2>Votre espace propriétaire</h2>
+        <p>Suivez vos biens, vos revenus et vos ménages en temps réel</p>
+      </div>
+      <div class="welcome-code">
+        <div>Co-hôte attitré</div>
+        <div id="cohote-name">—</div>
+      </div>
+    </div>
+
+    <!-- BIEN SELECTOR -->
+    <div class="bien-selector">
+      <label>🏠 Votre bien</label>
+      <select class="bien-select" id="bien-select" onchange="onBienChange()">
+        <option value="">— Chargement —</option>
+      </select>
+      <span class="bien-badge" id="bien-code">—</span>
+    </div>
+
+    <!-- NAV TABS -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showSection('tableau-bord',this)">📊 Vue d'ensemble</button>
+      <button class="nav-tab" onclick="showSection('calendrier',this)">📅 Calendrier</button>
+      <button class="nav-tab" onclick="showSection('menages',this)">🧹 Ménages</button>
+      <button class="nav-tab" onclick="showSection('revenus',this)">💰 Revenus</button>
+      <button class="nav-tab" onclick="showSection('incidents',this)">🔧 Incidents</button>
+      <button class="nav-tab" onclick="showSection('documents',this)">📄 Documents</button>
+    </div>
+
+    <!-- TABLEAU DE BORD -->
+    <div class="section active" id="section-tableau-bord">
+      <div class="kpi-grid" id="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon">📅</div>
+          <div class="kpi-label">Réservations ce mois</div>
+          <div class="kpi-val" id="kpi-resas">—</div>
+          <div class="kpi-sub" id="kpi-nuits">— nuits</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon">💰</div>
+          <div class="kpi-label">Revenus bruts</div>
+          <div class="kpi-val or" id="kpi-ca">—</div>
+          <div class="kpi-sub">Ce mois (via plateforme)</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon">✅</div>
+          <div class="kpi-label">Votre revenu net</div>
+          <div class="kpi-val green" id="kpi-net">—</div>
+          <div class="kpi-sub" id="kpi-comm">Après commission MJ</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon">🧹</div>
+          <div class="kpi-label">Ménages ce mois</div>
+          <div class="kpi-val" id="kpi-menages">—</div>
+          <div class="kpi-sub" id="kpi-menages-sub">— validés</div>
+        </div>
+      </div>
+
+      <!-- Prochaine réservation -->
+      <div class="card">
+        <div class="card-hd">
+          <span class="card-title">✈️ Prochaine arrivée</span>
+        </div>
+        <div class="card-body" id="next-arrival">
+          <div class="loading"><div class="spinner"></div> Chargement…</div>
+        </div>
+      </div>
+
+      <!-- Derniers ménages -->
+      <div class="card">
+        <div class="card-hd">
+          <span class="card-title">🧹 Derniers ménages</span>
+        </div>
+        <div class="card-body" id="recent-menages">
+          <div class="loading"><div class="spinner"></div> Chargement…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALENDRIER -->
+    <div class="section" id="section-calendrier">
+      <div class="card">
+        <div class="card-hd">
+          <span class="card-title">📅 Calendrier des réservations</span>
+          <div class="cal-nav">
+            <button onclick="changeMonth(-1)">←</button>
+            <span class="cal-month-label" id="cal-label">—</span>
+            <button onclick="changeMonth(1)">→</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="cal-grid" id="cal-header">
+            <div class="cal-day-hd">Lun</div>
+            <div class="cal-day-hd">Mar</div>
+            <div class="cal-day-hd">Mer</div>
+            <div class="cal-day-hd">Jeu</div>
+            <div class="cal-day-hd">Ven</div>
+            <div class="cal-day-hd">Sam</div>
+            <div class="cal-day-hd">Dim</div>
+          </div>
+          <div class="cal-grid" id="cal-grid" style="margin-top:4px"></div>
+          <div style="display:flex;gap:16px;margin-top:12px;flex-wrap:wrap">
+            <span style="font-size:11px;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#E8F5EE;border:1px solid #2D6A4F;display:inline-block"></span>Check-in</span>
+            <span style="font-size:11px;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#FDF0F0;border:1px solid #8B2020;display:inline-block"></span>Check-out</span>
+            <span style="font-size:11px;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--jade-bg);border:1px solid var(--jade-bd);display:inline-block"></span>Occupé</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÉNAGES -->
+    <div class="section" id="section-menages">
+      <div class="card">
+        <div class="card-hd">
+          <span class="card-title">🧹 Planning des ménages</span>
+          <div style="display:flex;gap:6px">
+            <select id="menage-filter" style="padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--ivoire)" onchange="renderMenagesProprio()">
+              <option value="">Tous</option>
+              <option value="planifie">Planifiés</option>
+              <option value="en_cours">En cours</option>
+              <option value="valide">Validés</option>
+            </select>
+          </div>
+        </div>
+        <div class="card-body" id="menages-list">
+          <div class="loading"><div class="spinner"></div> Chargement…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVENUS -->
+    <div class="section" id="section-revenus">
+      <div class="card">
+        <div class="card-hd">
+          <span class="card-title">💰 Historique des revenus</span>
+        </div>
+        <div class="card-body">
+          <table class="rev-table" id="revenus-table">
+            <thead>
+              <tr>
+                <th>Mois</th>
+                <th>CA brut</th>
+                <th>Commission MJ</th>
+                <th>Votre net</th>
+                <th>Nuits</th>
+              </tr>
+            </thead>
+            <tbody id="revenus-body">
+              <tr><td colspan="5" class="empty">Chargement…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- INCIDENTS -->
+    <div class="section" id="section-incidents">
+      <div class="card">
+        <div class="card-hd">
+          <span class="card-title">🔧 Incidents & signalements</span>
+        </div>
+        <div class="card-body" id="incidents-list">
+          <div class="loading"><div class="spinner"></div> Chargement…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div class="section" id="section-documents">
+      <div class="card">
+        <div class="card-hd">
+          <span class="card-title">📄 Vos documents</span>
+        </div>
+        <div class="card-body">
+          <div id="docs-list">
+            <div class="loading"><div class="spinner"></div> Chargement…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <div class="proprio-footer">
+    Maison Jade Ltd · contact@maisonjade.com · Espace propriétaire sécurisé
+  </div>
+</div><!-- /app -->
+
+<script>
+// ── CONFIG ──
+const SUPABASE_URL = 'https://lvfncstosaaqgtfozthw.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_UrB6X04fyAOhnN7aHropFQ_mwubBip2';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let proprioProfile = null;
+let biensDossiers = []; // dossiers assignés à ce propriétaire
+let selectedDossierId = null;
+let calDate = new Date();
+let allReservations = {}; // {dossierId: [...reservations]}
+let allMenages = [];
+
+// ── TOAST ──
+function toast(msg, dur=3000) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), dur);
+}
+
+// ── LOGIN ──
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  const errEl = document.getElementById('login-err');
+  errEl.textContent = '';
+  if (!email || !pass) { errEl.textContent = 'Email et mot de passe requis'; return; }
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) { errEl.textContent = 'Identifiants incorrects'; return; }
+
+  currentUser = data.user;
+  await loadApp();
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  currentUser = null;
+}
+
+// ── INIT APP ──
+async function loadApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+
+  // Charger le profil propriétaire
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+  proprioProfile = profile;
+
+  // Nom utilisateur
+  const nom = profile?.nom || profile?.prenom || currentUser.email.split('@')[0];
+  document.getElementById('user-name').textContent = nom;
+
+  // Charger les biens liés à ce propriétaire
+  await loadBiensProprio();
+}
+
+async function loadBiensProprio() {
+  // Chercher les dossiers où proprio_id = currentUser.id
+  // OU les cohote_biens assignés à ce proprio via proprio_user_id
+  const { data: propBiens } = await sb.from('proprio_biens')
+    .select('*, dossier:dossier_id(*)')
+    .eq('proprio_id', currentUser.id)
+    .catch(() => ({ data: null }));
+
+  // Fallback : chercher dans dossiers par email propriétaire
+  const { data: dossiers } = await sb.from('dossiers').select('id, data');
+  const userEmail = currentUser.email.toLowerCase();
+
+  biensDossiers = (dossiers || []).filter(d => {
+    const data = d.data || {};
+    return (data.email || '').toLowerCase() === userEmail ||
+           String(data.proprio_user_id) === String(currentUser.id);
+  });
+
+  // Si proprio_biens table existe, fusionner
+  if (propBiens && propBiens.length) {
+    const idsExistants = biensDossiers.map(d => d.id);
+    propBiens.forEach(b => {
+      if (!idsExistants.includes(b.dossier_id)) {
+        biensDossiers.push({ id: b.dossier_id, data: b.dossier?.data || {} });
+      }
+    });
+  }
+
+  // Remplir le sélecteur
+  const sel = document.getElementById('bien-select');
+  sel.innerHTML = '';
+  if (!biensDossiers.length) {
+    sel.innerHTML = '<option value="">Aucun bien trouvé — contactez Maison Jade</option>';
+    return;
+  }
+  biensDossiers.forEach(d => {
+    const data = d.data || {};
+    const label = (data.codeMJ ? data.codeMJ + ' · ' : '') + (data.surnom || data.adresse?.split(',')[0] || 'Bien');
+    sel.innerHTML += `<option value="${d.id}">${label}</option>`;
+  });
+
+  // Charger les réservations depuis Supabase / iCal
+  await loadReservationsProprio();
+
+  // Sélectionner le premier bien
+  selectedDossierId = biensDossiers[0]?.id;
+  await onBienChange();
+}
+
+async function loadReservationsProprio() {
+  // Charger depuis la table ical_events si elle existe, sinon via cohote_revenus
+  const { data: revs } = await sb.from('cohote_revenus').select('*');
+  allReservations = {};
+  (revs || []).forEach(r => {
+    if (!allReservations[r.dossier_id]) allReservations[r.dossier_id] = [];
+    allReservations[r.dossier_id].push(r);
+  });
+
+  // Charger les ménages
+  const { data: menages } = await sb.from('menages_proprio').select('*')
+    .catch(() => ({ data: null }));
+  allMenages = menages || [];
+}
+
+async function onBienChange() {
+  selectedDossierId = document.getElementById('bien-select').value;
+  const dos = biensDossiers.find(d => String(d.id) === String(selectedDossierId));
+  const data = dos?.data || {};
+
+  // Badge code MJ
+  document.getElementById('bien-code').textContent = data.codeMJ || '—';
+
+  // Co-hôte attitré — chercher dans cohote_biens
+  const { data: cohBien } = await sb.from('cohote_biens').select('cohote_id').eq('dossier_id', selectedDossierId).maybeSingle();
+  if (cohBien?.cohote_id) {
+    const { data: cohProfile } = await sb.from('profiles').select('prenom, nom').eq('id', cohBien.cohote_id).maybeSingle();
+    document.getElementById('cohote-name').textContent = cohProfile ? (cohProfile.prenom + ' ' + (cohProfile.nom||'')).trim() : '—';
+  } else {
+    document.getElementById('cohote-name').textContent = 'À assigner';
+  }
+
+  // Rafraîchir toutes les sections
+  renderKPIs(data);
+  renderNextArrival();
+  renderRecentMenages();
+  renderCalendrierProprio();
+  renderMenagesProprio();
+  renderRevenusTable(data);
+  renderIncidents();
+  renderDocuments();
+}
+
+// ── KPIs ──
+function renderKPIs(dosData) {
+  const now = new Date();
+  const mois = now.getMonth();
+  const annee = now.getFullYear();
+
+  // Réservations ce mois depuis cohote_revenus
+  const revsMois = (allReservations[selectedDossierId] || []).filter(r => {
+    const d = new Date(r.date_debut || r.created_at);
+    return d.getMonth() === mois && d.getFullYear() === annee;
+  });
+
+  const totalCA = revsMois.reduce((s, r) => s + (parseFloat(r.montant_brut || r.montant || 0)), 0);
+  const taux = parseFloat(dosData.comm || 22) / 100;
+  const commMJ = totalCA * taux;
+  const netProprio = totalCA - commMJ;
+  const totalNuits = revsMois.reduce((s, r) => s + (parseInt(r.nuits || 0)), 0);
+
+  document.getElementById('kpi-resas').textContent = revsMois.length || '—';
+  document.getElementById('kpi-nuits').textContent = totalNuits ? totalNuits + ' nuits' : 'Synchronisez le calendrier';
+  document.getElementById('kpi-ca').textContent = totalCA ? totalCA.toLocaleString('fr-FR') + '€' : '—';
+  document.getElementById('kpi-net').textContent = netProprio ? Math.round(netProprio).toLocaleString('fr-FR') + '€' : '—';
+  document.getElementById('kpi-comm').textContent = `Commission MJ ${Math.round(taux*100)}% = ${Math.round(commMJ).toLocaleString('fr-FR')}€`;
+
+  // Ménages
+  const menagesMois = allMenages.filter(m => {
+    const d = new Date(m.date);
+    return String(m.dossier_id) === String(selectedDossierId) && d.getMonth() === mois && d.getFullYear() === annee;
+  });
+  const valides = menagesMois.filter(m => m.statut === 'valide').length;
+  document.getElementById('kpi-menages').textContent = menagesMois.length || '0';
+  document.getElementById('kpi-menages-sub').textContent = valides + ' validés';
+}
+
+// ── PROCHAINE ARRIVÉE ──
+function renderNextArrival() {
+  const el = document.getElementById('next-arrival');
+  const revs = (allReservations[selectedDossierId] || [])
+    .filter(r => new Date(r.date_debut || r.date) >= new Date())
+    .sort((a,b) => new Date(a.date_debut||a.date) - new Date(b.date_debut||b.date));
+
+  if (!revs.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📅</div>Aucune réservation à venir enregistrée.<br><small>Synchronisez le calendrier depuis l\'espace co-hôte.</small></div>';
+    return;
+  }
+  const r = revs[0];
+  const dateCI = new Date(r.date_debut || r.date);
+  const dateCO = new Date(r.date_fin || r.date_checkout || dateCI);
+  const nuits = r.nuits || Math.round((dateCO - dateCI) / 86400000);
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+      <div style="text-align:center;background:var(--jade-bg);border-radius:8px;padding:14px">
+        <div style="font-size:10px;color:var(--jade);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">✈️ Check-in</div>
+        <div style="font-size:16px;font-weight:500;color:var(--ink)">${dateCI.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}</div>
+        <div style="font-size:11px;color:var(--jade);margin-top:4px">${r.heure_checkin || '16:00'}</div>
+      </div>
+      <div style="text-align:center;background:var(--surface2);border-radius:8px;padding:14px">
+        <div style="font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Durée</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--or);font-weight:300">${nuits}</div>
+        <div style="font-size:11px;color:var(--ink3)">nuit${nuits>1?'s':''}</div>
+      </div>
+      <div style="text-align:center;background:var(--surface2);border-radius:8px;padding:14px">
+        <div style="font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">🧳 Check-out</div>
+        <div style="font-size:16px;font-weight:500;color:var(--ink)">${dateCO.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}</div>
+        <div style="font-size:11px;color:var(--ink3);margin-top:4px">${r.heure_checkout || '11:00'}</div>
+      </div>
+    </div>
+    ${r.voyageur ? `<div style="margin-top:12px;padding:10px 14px;background:var(--surface2);border-radius:8px;font-size:13px;color:var(--ink3)">Voyageur : <strong style="color:var(--ink)">${r.voyageur}</strong></div>` : ''}`;
+}
+
+// ── MÉNAGES RÉCENTS ──
+function renderRecentMenages() {
+  const el = document.getElementById('recent-menages');
+  const m = allMenages.filter(m => String(m.dossier_id) === String(selectedDossierId))
+    .sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0,5);
+
+  if (!m.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">🧹</div>Aucun ménage enregistré</div>';
+    return;
+  }
+  el.innerHTML = m.map(men => {
+    const statuts = { planifie:'badge-planifie', en_cours:'badge-en-cours', valide:'badge-valide', retard:'badge-retard' };
+    const labels  = { planifie:'Planifié', en_cours:'En cours', valide:'Validé ✓', retard:'En retard' };
+    return `<div class="menage-row">
+      <div>
+        <div class="menage-date">${new Date(men.date).toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'})}</div>
+        <div class="menage-info">${men.prestataire_nom || men.prestataire || 'Prestataire non assigné'} · ${men.heure || '11:00'}</div>
+      </div>
+      <span class="badge ${statuts[men.statut]||'badge-planifie'}">${labels[men.statut]||men.statut}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── CALENDRIER ──
+function renderCalendrierProprio() {
+  const y = calDate.getFullYear(), m = calDate.getMonth();
+  document.getElementById('cal-label').textContent =
+    calDate.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
+
+  const firstDay = new Date(y, m, 1);
+  const lastDay  = new Date(y, m+1, 0);
+  let startDow = (firstDay.getDay() + 6) % 7; // Lundi = 0
+
+  const revs = allReservations[selectedDossierId] || [];
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  let html = '';
+  // Jours vides avant le 1er
+  for (let i = 0; i < startDow; i++) {
+    html += '<div class="cal-day other-month"></div>';
+  }
+
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    const date = new Date(y, m, d);
+    const dateStr = date.toISOString().split('T')[0];
+    const isToday = date.getTime() === today.getTime();
+    const isPast  = date < today;
+
+    // Trouver réservations actives ce jour
+    let inner = '';
+    revs.forEach(r => {
+      const ci = new Date(r.date_debut || r.date);
+      const co = new Date(r.date_fin || r.date_checkout || ci);
+      ci.setHours(0,0,0,0); co.setHours(0,0,0,0);
+      if (date.getTime() === ci.getTime()) {
+        inner += `<div class="cal-resa checkin">✈ CI</div>`;
+      } else if (date.getTime() === co.getTime()) {
+        inner += `<div class="cal-resa checkout">🧳 CO</div>`;
+      } else if (date > ci && date < co) {
+        inner += `<div class="cal-resa occupied">●</div>`;
+      }
+    });
+
+    html += `<div class="cal-day ${isToday?'today':''} ${isPast?'past':''}">
+      <div class="cal-day-num">${d}</div>
+      ${inner}
+    </div>`;
+  }
+
+  document.getElementById('cal-grid').innerHTML = html;
+}
+
+function changeMonth(dir) {
+  calDate.setMonth(calDate.getMonth() + dir);
+  renderCalendrierProprio();
+}
+
+// ── MÉNAGES ──
+function renderMenagesProprio() {
+  const el = document.getElementById('menages-list');
+  const filter = document.getElementById('menage-filter').value;
+  let m = allMenages.filter(men => String(men.dossier_id) === String(selectedDossierId));
+  if (filter) m = m.filter(men => men.statut === filter);
+  m.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  if (!m.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">🧹</div>Aucun ménage trouvé</div>';
+    return;
+  }
+  const statuts = { planifie:'badge-planifie', en_cours:'badge-en-cours', valide:'badge-valide', retard:'badge-retard' };
+  const labels  = { planifie:'Planifié', en_cours:'En cours', valide:'Validé ✓', retard:'En retard' };
+  el.innerHTML = m.map(men => `
+    <div class="menage-row">
+      <div>
+        <div class="menage-date">${new Date(men.date).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})}</div>
+        <div class="menage-info">
+          ${men.prestataire_nom || men.prestataire || '—'} · 
+          ${men.heure || '11:00'} · 
+          ${men.duree ? men.duree+'h' : ''}
+          ${men.notes ? ' · '+men.notes : ''}
+        </div>
+      </div>
+      <span class="badge ${statuts[men.statut]||'badge-planifie'}">${labels[men.statut]||men.statut}</span>
+    </div>`).join('');
+}
+
+// ── REVENUS ──
+function renderRevenusTable(dosData) {
+  const taux = parseFloat(dosData.comm || 22) / 100;
+  const revs = (allReservations[selectedDossierId] || [])
+    .sort((a,b) => new Date(b.created_at||b.date) - new Date(a.created_at||a.date));
+
+  if (!revs.length) {
+    document.getElementById('revenus-body').innerHTML = '<tr><td colspan="5" class="empty">Aucun revenu enregistré — le co-hôte doit saisir les montants</td></tr>';
+    return;
+  }
+
+  // Grouper par mois
+  const byMonth = {};
+  revs.forEach(r => {
+    const d = new Date(r.date_debut || r.date || r.created_at);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    if (!byMonth[key]) byMonth[key] = { mois: d, ca: 0, nuits: 0 };
+    byMonth[key].ca += parseFloat(r.montant_brut || r.montant || 0);
+    byMonth[key].nuits += parseInt(r.nuits || 0);
+  });
+
+  document.getElementById('revenus-body').innerHTML = Object.entries(byMonth)
+    .sort(([a],[b]) => b.localeCompare(a))
+    .map(([key, v]) => {
+      const comm = v.ca * taux;
+      const net  = v.ca - comm;
+      return `<tr>
+        <td>${v.mois.toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</td>
+        <td>${v.ca.toLocaleString('fr-FR')}€</td>
+        <td class="rev-negative">-${Math.round(comm).toLocaleString('fr-FR')}€</td>
+        <td class="rev-positive">${Math.round(net).toLocaleString('fr-FR')}€</td>
+        <td>${v.nuits} nuits</td>
+      </tr>`;
+    }).join('');
+}
+
+// ── INCIDENTS ──
+async function renderIncidents() {
+  const el = document.getElementById('incidents-list');
+  const { data } = await sb.from('tickets').select('*')
+    .eq('dossier_id', selectedDossierId)
+    .order('created_at', { ascending: false })
+    .catch(() => ({ data: null }));
+
+  if (!data || !data.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">✅</div>Aucun incident signalé — tout va bien !</div>';
+    return;
+  }
+  const priorites = { urgent:'badge-urgent', normal:'badge-normal', resolu:'badge-resolu' };
+  el.innerHTML = data.map(t => `
+    <div class="incident-row">
+      <div class="incident-title">${t.titre || t.description?.substring(0,60) || 'Incident'}</div>
+      <div class="incident-meta">
+        ${new Date(t.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'long'})} · 
+        <span class="badge ${priorites[t.priorite]||'badge-normal'}">${t.priorite||'normal'}</span>
+        ${t.statut ? ` · ${t.statut}` : ''}
+      </div>
+    </div>`).join('');
+}
+
+// ── DOCUMENTS ──
+async function renderDocuments() {
+  const el = document.getElementById('docs-list');
+  // Générer un reporting mensuel fictif / liste de factures
+  const moisDispos = Object.keys(allReservations[selectedDossierId]?.reduce((acc, r) => {
+    const d = new Date(r.date_debut || r.date || r.created_at);
+    acc[`${d.getFullYear()}-${d.getMonth()+1}`] = true;
+    return acc;
+  }, {}) || {});
+
+  if (!moisDispos.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📄</div>Aucun document disponible pour l\'instant.<br><small>Les reportings mensuels seront disponibles ici dès la première réservation.</small></div>';
+    return;
+  }
+  el.innerHTML = moisDispos.sort((a,b)=>b.localeCompare(a)).map(m => {
+    const [y, mo] = m.split('-');
+    const label = new Date(parseInt(y), parseInt(mo)-1, 1).toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
+    return `<div class="report-card">
+      <div>
+        <div class="report-title">Reporting ${label}</div>
+        <div class="report-meta">Généré automatiquement · Maison Jade</div>
+      </div>
+      <button class="report-btn" onclick="toast('📄 Fonctionnalité disponible prochainement')">⬇ Télécharger</button>
+    </div>`;
+  }).join('');
+}
+
+// ── NAVIGATION ──
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ── AUTH CHECK AU DÉMARRAGE ──
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    currentUser = session.user;
+    await loadApp();
+  }
+})();
+</script>
+</body>
+</html>
