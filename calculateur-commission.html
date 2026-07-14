@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculateur de commission — Maison Jade</title>
+<style>
+  :root{
+    --jade:#31483F;
+    --or:#A57C52;
+    --ivoire:#F5F0E8;
+    --noyer:#5B4335;
+    --blanc:#FFFDF9;
+    --trait:#DED5C6;
+    --gris:#8A8177;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--ivoire);color:var(--noyer);
+    line-height:1.5;padding:16px;
+  }
+  .wrap{max-width:760px;margin:0 auto}
+
+  header{border-bottom:2px solid var(--jade);padding-bottom:12px;margin-bottom:20px}
+  header h1{font-size:20px;color:var(--jade);letter-spacing:.02em}
+  header p{font-size:13px;color:var(--gris);margin-top:2px}
+
+  .periode{
+    display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+    background:var(--blanc);border:1px solid var(--trait);border-radius:8px;
+    padding:12px;margin-bottom:16px;
+  }
+  label{font-size:12px;font-weight:600;color:var(--jade);display:block;margin-bottom:4px}
+  input,select{
+    font:inherit;font-size:15px;padding:9px 10px;
+    border:1px solid var(--trait);border-radius:6px;
+    background:var(--blanc);color:var(--noyer);width:100%;
+  }
+  input:focus,select:focus{outline:2px solid var(--or);outline-offset:1px}
+
+  .bien{
+    background:var(--blanc);border:1px solid var(--trait);border-left:4px solid var(--or);
+    border-radius:8px;padding:14px;margin-bottom:12px;
+  }
+  .bien-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+  .bien-head input{font-weight:600}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .grid .full{grid-column:1/-1}
+
+  .aide{display:block;font-size:11px;color:var(--gris);margin-top:4px;line-height:1.3}
+
+  .calcul{
+    margin-top:12px;padding-top:10px;border-top:1px dashed var(--trait);
+    font-size:13px;color:var(--gris);
+  }
+  .calcul div{display:flex;justify-content:space-between;padding:2px 0}
+  .calcul .net{color:var(--jade);font-weight:700;font-size:16px;padding-top:6px}
+
+  button{
+    font:inherit;font-weight:600;cursor:pointer;border:none;border-radius:6px;
+    padding:11px 16px;transition:opacity .15s;
+  }
+  button:hover{opacity:.85}
+  button:focus-visible{outline:2px solid var(--or);outline-offset:2px}
+  .btn-jade{background:var(--jade);color:var(--ivoire)}
+  .btn-or{background:var(--or);color:#fff}
+  .btn-ligne{background:transparent;color:var(--jade);border:1px dashed var(--jade);width:100%}
+  .btn-suppr{background:none;color:var(--gris);font-size:20px;padding:0 6px;line-height:1}
+
+  .total{
+    background:var(--jade);color:var(--ivoire);border-radius:8px;
+    padding:16px;margin:18px 0;
+  }
+  .total-ligne{display:flex;justify-content:space-between;font-size:14px;padding:3px 0;opacity:.85}
+  .total-net{
+    display:flex;justify-content:space-between;align-items:baseline;
+    border-top:1px solid rgba(245,240,232,.3);margin-top:8px;padding-top:10px;
+  }
+  .total-net span:first-child{font-size:14px}
+  .total-net span:last-child{font-size:26px;font-weight:700;color:#E8C99B}
+
+  .actions{display:flex;gap:10px;flex-wrap:wrap}
+  .actions button{flex:1;min-width:150px}
+
+  .note{font-size:12px;color:var(--gris);margin-top:20px;padding:12px;
+    background:var(--blanc);border:1px solid var(--trait);border-radius:8px}
+  .note strong{color:var(--noyer)}
+
+  /* --- Pré-facture (masquée à l'écran, visible à l'impression) --- */
+  #facture{display:none}
+  @media print{
+    body{background:#fff;padding:0}
+    .no-print{display:none !important}
+    #facture{display:block;font-size:12px;color:#000}
+    #facture h2{color:var(--jade);font-size:22px;margin-bottom:2px}
+    #facture table{width:100%;border-collapse:collapse;margin:18px 0}
+    #facture th{background:var(--jade);color:#fff;text-align:left;padding:8px;font-size:11px}
+    #facture td{border-bottom:1px solid var(--trait);padding:8px}
+    #facture .num{text-align:right}
+    #facture .tot{font-weight:700;font-size:15px;color:var(--jade)}
+    #facture .mentions{margin-top:24px;font-size:10px;color:#555;line-height:1.6}
+    #facture .parties{display:flex;justify-content:space-between;margin-top:20px}
+  }
+  @media (max-width:480px){
+    .grid{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+
+<div class="wrap no-print">
+  <header>
+    <h1>Calculateur de commission co-hôte</h1>
+    <p>Maison Jade — récap mensuel et pré-facture</p>
+  </header>
+
+  <div class="periode">
+    <div style="flex:1;min-width:130px">
+      <label for="mois">Mois concerné</label>
+      <input type="month" id="mois">
+    </div>
+    <div style="flex:1;min-width:130px">
+      <label for="cohote">Nom du co-hôte</label>
+      <input type="text" id="cohote" placeholder="Prénom Nom">
+    </div>
+    <div style="flex:1;min-width:130px">
+      <label for="siret">SIRET</label>
+      <input type="text" id="siret" placeholder="000 000 000 00000">
+    </div>
+  </div>
+
+  <div id="biens"></div>
+
+  <button class="btn-ligne" onclick="ajouterBien()">+ Ajouter un bien</button>
+
+  <div class="total">
+    <div class="total-ligne"><span>Honoraires Maison Jade encaissés</span><span id="t-honoraires">0 €</span></div>
+    <div class="total-ligne"><span>Dont commission gestion</span><span id="t-gestion">0 €</span></div>
+    <div class="total-ligne"><span>Dont services à la carte (85 %)</span><span id="t-services">0 €</span></div>
+    <div class="total-net"><span>Total dû au co-hôte</span><span id="t-net">0 €</span></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-or" onclick="exportCSV()">Exporter le récap (CSV)</button>
+    <button class="btn-jade" onclick="window.print()">Générer la pré-facture (PDF)</button>
+  </div>
+
+  <p class="note">
+    <strong>Rappel du barème.</strong> Commission gestion = CA net du bien (après frais de plateforme)
+    × taux de l'offre propriétaire (16 / 22 / 25 %) × part co-hôte
+    (50 % bien Maison Jade, 70 % bien apporté par le co-hôte).
+    Services à la carte : 85 % reversés au co-hôte.
+    La pré-facture est un document de travail : elle ne remplace pas la facture émise par le co-hôte.
+  </p>
+</div>
+
+<!-- Pré-facture imprimable -->
+<div id="facture">
+  <h2>Pré-facture</h2>
+  <div id="f-ref"></div>
+  <div class="parties">
+    <div><strong>Émetteur</strong><br><span id="f-cohote"></span><br><span id="f-siret"></span></div>
+    <div style="text-align:right"><strong>Destinataire</strong><br>Maison Jade Ltd<br>contact@maisonjade.com</div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Bien</th><th class="num">CA net</th><th class="num">Taux offre</th>
+        <th class="num">Honoraires MJ</th><th class="num">Part</th><th class="num">Commission</th>
+      </tr>
+    </thead>
+    <tbody id="f-lignes"></tbody>
+    <tfoot><tr><td colspan="5" class="tot">Total dû au co-hôte</td><td class="num tot" id="f-total"></td></tr></tfoot>
+  </table>
+  <div class="mentions">
+    Prestation de services de co-hébergement réalisée pour le compte de Maison Jade Ltd (Royaume-Uni).<br>
+    Les montants « CA net » s'entendent après déduction des frais de plateforme.<br>
+    <em>Mentions de TVA à valider avec votre comptable avant émission de la facture définitive.</em><br>
+    Règlement par virement — délai contractuel.
+  </div>
+</div>
+
+<script>
+let biens = [];
+let seq = 0;
+
+const euro = n => new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(n||0);
+
+function ajouterBien(){
+  biens.push({id:++seq, nom:'', ca:0, taux:22, part:50, services:0});
+  render();
+}
+function supprimerBien(id){
+  biens = biens.filter(b => b.id !== id);
+  if(!biens.length) ajouterBien();
+  render();
+}
+function maj(id, champ, valeur){
+  const b = biens.find(x => x.id === id);
+  if(!b) return;
+  b[champ] = (champ === 'nom') ? valeur : parseFloat(valeur) || 0;
+  render();
+}
+
+function calc(b){
+  const honoraires = b.ca * (b.taux/100);
+  const gestion    = honoraires * (b.part/100);
+  const services   = b.services * 0.85;
+  return {honoraires, gestion, services, total: gestion + services};
+}
+
+function render(){
+  const zone = document.getElementById('biens');
+  zone.innerHTML = '';
+  let tH=0, tG=0, tS=0;
+
+  biens.forEach(b => {
+    const c = calc(b);
+    tH += c.honoraires; tG += c.gestion; tS += c.services;
+
+    const el = document.createElement('div');
+    el.className = 'bien';
+    el.innerHTML = `
+      <div class="bien-head">
+        <input type="text" value="${b.nom.replace(/"/g,'&quot;')}" placeholder="Nom du bien"
+               oninput="maj(${b.id},'nom',this.value)" aria-label="Nom du bien">
+        <button class="btn-suppr" onclick="supprimerBien(${b.id})" aria-label="Retirer ce bien">&times;</button>
+      </div>
+      <div class="grid">
+        <div>
+          <label>CA net du mois (€)</label>
+          <input type="number" min="0" step="10" value="${b.ca||''}" placeholder="0"
+                 oninput="maj(${b.id},'ca',this.value)">
+          <span class="aide">Après déduction des frais de plateforme</span>
+        </div>
+        <div>
+          <label>Taux de l'offre</label>
+          <select onchange="maj(${b.id},'taux',this.value)">
+            <option value="16" ${b.taux==16?'selected':''}>Essentielle — 16 %</option>
+            <option value="22" ${b.taux==22?'selected':''}>Sérénité — 22 %</option>
+            <option value="25" ${b.taux==25?'selected':''}>Signature — 25 %</option>
+          </select>
+        </div>
+        <div>
+          <label>Origine du bien</label>
+          <select onchange="maj(${b.id},'part',this.value)">
+            <option value="50" ${b.part==50?'selected':''}>Bien Maison Jade — 50 %</option>
+            <option value="70" ${b.part==70?'selected':''}>Bien apporté — 70 %</option>
+          </select>
+        </div>
+        <div>
+          <label>Services à la carte (€)</label>
+          <input type="number" min="0" step="10" value="${b.services||''}" placeholder="0"
+                 oninput="maj(${b.id},'services',this.value)">
+        </div>
+      </div>
+      <div class="calcul">
+        <div><span>Honoraires Maison Jade</span><span>${euro(c.honoraires)}</span></div>
+        <div><span>Commission gestion (${b.part} %)</span><span>${euro(c.gestion)}</span></div>
+        <div><span>Services à la carte (85 %)</span><span>${euro(c.services)}</span></div>
+        <div class="net"><span>Commission du bien</span><span>${euro(c.total)}</span></div>
+      </div>`;
+    zone.appendChild(el);
+  });
+
+  document.getElementById('t-honoraires').textContent = euro(tH);
+  document.getElementById('t-gestion').textContent    = euro(tG);
+  document.getElementById('t-services').textContent   = euro(tS);
+  document.getElementById('t-net').textContent        = euro(tG + tS);
+
+  majFacture(tG + tS);
+}
+
+function majFacture(total){
+  const mois = document.getElementById('mois').value;
+  const libelleMois = mois
+    ? new Date(mois + '-01').toLocaleDateString('fr-FR',{month:'long',year:'numeric'})
+    : '—';
+
+  document.getElementById('f-ref').innerHTML =
+    `Période : <strong>${libelleMois}</strong> — Émise le ${new Date().toLocaleDateString('fr-FR')}`;
+  document.getElementById('f-cohote').textContent = document.getElementById('cohote').value || '—';
+  document.getElementById('f-siret').textContent  = 'SIRET : ' + (document.getElementById('siret').value || '—');
+
+  document.getElementById('f-lignes').innerHTML = biens.map(b => {
+    const c = calc(b);
+    const lignes = [`
+      <tr>
+        <td>${b.nom || 'Bien sans nom'}</td>
+        <td class="num">${euro(b.ca)}</td>
+        <td class="num">${b.taux} %</td>
+        <td class="num">${euro(c.honoraires)}</td>
+        <td class="num">${b.part} %</td>
+        <td class="num">${euro(c.gestion)}</td>
+      </tr>`];
+    if(b.services > 0){
+      lignes.push(`
+      <tr>
+        <td style="padding-left:20px;font-style:italic">↳ Services à la carte</td>
+        <td class="num">${euro(b.services)}</td>
+        <td class="num">—</td><td class="num">—</td>
+        <td class="num">85 %</td>
+        <td class="num">${euro(c.services)}</td>
+      </tr>`);
+    }
+    return lignes.join('');
+  }).join('');
+
+  document.getElementById('f-total').textContent = euro(total);
+}
+
+function exportCSV(){
+  const mois = document.getElementById('mois').value || 'periode';
+  const sep = ';';
+  const lignes = [['Bien','CA net (apres frais plateforme)','Taux offre','Honoraires MJ','Part co-hote','Commission gestion','Services a la carte','Part services','Total bien'].join(sep)];
+
+  let total = 0;
+  biens.forEach(b => {
+    const c = calc(b);
+    total += c.total;
+    lignes.push([
+      `"${(b.nom||'Bien sans nom').replace(/"/g,'""')}"`,
+      b.ca.toFixed(2).replace('.',','),
+      b.taux + '%',
+      c.honoraires.toFixed(2).replace('.',','),
+      b.part + '%',
+      c.gestion.toFixed(2).replace('.',','),
+      b.services.toFixed(2).replace('.',','),
+      '85%',
+      c.total.toFixed(2).replace('.',',')
+    ].join(sep));
+  });
+  lignes.push(['TOTAL','','','','','','','', total.toFixed(2).replace('.',',')].join(sep));
+
+  const blob = new Blob(['\uFEFF' + lignes.join('\r\n')], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `commission_${mois}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+['mois','cohote','siret'].forEach(id =>
+  document.getElementById(id).addEventListener('input', () => render())
+);
+
+document.getElementById('mois').value = new Date().toISOString().slice(0,7);
+ajouterBien();
+</script>
+</body>
+</html>
