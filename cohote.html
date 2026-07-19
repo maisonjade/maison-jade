@@ -1,0 +1,2904 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maison Jade · Espace Co-Hôte</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --jade: #1F3B34; --jade-mid: #2A5045; --jade-light: #3A6A5A;
+  --sauge: #8E9C8B; --beige: #D8C7AE; --or: #B99A5E;
+  --ivoire: #F7F3ED; --blanc: #FCFAF7; --taupe: #B8ACA0; --noyer: #5E4B3C;
+  --red: #C0392B; --redbg: #FDECEA; --green: #1F3B34; --greenbg: #E8EDE9;
+  --border: #D8C7AE; --ink: #1A1710; --ink2: #5E4B3C; --ink3: #8E9C8B;
+  --sw: 240px; --th: 64px;
+}
+body { font-family: 'Montserrat', sans-serif; background: var(--ivoire); color: var(--ink); font-size: 14px; line-height: 1.6; }
+h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
+
+/* ── LOGIN ── */
+#login-screen {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--jade) 0%, var(--jade-mid) 100%);
+  padding: 2rem;
+}
+.login-card {
+  background: var(--blanc); border-radius: 4px; padding: 48px;
+  width: 100%; max-width: 420px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.25);
+}
+.login-logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; color: var(--jade); letter-spacing: 0.08em; margin-bottom: 6px; }
+.login-logo em { color: var(--or); font-style: italic; }
+.login-sub { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--taupe); margin-bottom: 36px; }
+.login-title { font-size: 28px; color: var(--jade); margin-bottom: 8px; }
+.login-desc { font-size: 12px; color: var(--noyer); font-weight: 300; margin-bottom: 28px; }
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--noyer); margin-bottom: 6px; }
+.form-group input {
+  width: 100%; padding: 12px 14px;
+  border: 1px solid var(--border); border-radius: 2px;
+  font-size: 14px; font-family: 'Montserrat', sans-serif; background: var(--blanc);
+  outline: none; transition: border-color 0.2s;
+}
+.form-group input:focus { border-color: var(--jade); }
+.btn-jade {
+  width: 100%; padding: 14px; background: var(--jade); color: white; border: none;
+  border-radius: 2px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; cursor: pointer; transition: background 0.2s; font-family: 'Montserrat', sans-serif;
+}
+.btn-jade:hover { background: var(--jade-mid); }
+.login-error { background: var(--redbg); color: var(--red); padding: 10px 14px; border-radius: 2px; font-size: 12px; margin-bottom: 16px; display: none; }
+.login-forgot { text-align: center; margin-top: 16px; font-size: 12px; color: var(--taupe); }
+.login-forgot a { color: var(--or); text-decoration: none; }
+
+/* ── APP ── */
+#app { display: none; }
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--th); background: var(--jade);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.5rem; border-bottom: 1px solid rgba(185,154,94,0.2);
+}
+.brand { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--ivoire); letter-spacing: 0.06em; }
+.brand em { color: var(--or); font-style: italic; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.user-info { text-align: right; }
+.user-name { font-size: 12px; font-weight: 500; color: var(--ivoire); }
+.user-role { font-size: 10px; color: rgba(185,154,94,0.7); letter-spacing: 0.08em; text-transform: uppercase; }
+.user-avatar {
+  width: 36px; height: 36px; border-radius: 50%; background: var(--jade-mid);
+  border: 2px solid rgba(185,154,94,0.4);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--or); font-style: italic;
+}
+.btn-logout {
+  background: none; border: 1px solid rgba(185,154,94,0.3); color: rgba(255,255,255,0.5);
+  padding: 6px 12px; border-radius: 2px; font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase; cursor: pointer; font-family: 'Montserrat', sans-serif;
+  transition: all 0.2s;
+}
+.btn-logout:hover { border-color: var(--or); color: var(--or); }
+
+.sidebar {
+  position: fixed; top: var(--th); left: 0; bottom: 0; width: var(--sw);
+  background: var(--jade-mid); display: flex; flex-direction: column; z-index: 50; overflow-y: auto;
+}
+.sb-sect { padding: 1rem 0 0.25rem; }
+.sb-lbl { font-size: 9px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(185,154,94,0.45); padding: 0 1.25rem; margin-bottom: 4px; }
+.ni {
+  display: flex; align-items: center; gap: 9px; padding: 9px 1.25rem;
+  font-size: 12px; color: rgba(247,243,237,0.6); cursor: pointer; border: none;
+  background: none; width: 100%; text-align: left; border-left: 2px solid transparent;
+  transition: all 0.15s; font-family: 'Montserrat', sans-serif; letter-spacing: 0.02em;
+}
+.ni:hover { background: rgba(185,154,94,0.07); color: var(--ivoire); }
+.ni.active { color: var(--or); background: rgba(185,154,94,0.1); border-left-color: var(--or); font-weight: 500; }
+.ni-icon { font-size: 15px; flex-shrink: 0; }
+.sb-badge { margin-left: auto; background: rgba(185,154,94,0.2); color: var(--or); font-size: 10px; padding: 1px 7px; border-radius: 10px; }
+.sb-foot { margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid rgba(185,154,94,0.1); font-size: 10px; color: rgba(185,154,94,0.35); }
+
+.main { margin-left: var(--sw); padding-top: var(--th); min-height: 100vh; }
+.view { display: none; padding: 2rem 2.5rem; }
+.view.active { display: block; }
+.ph { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+.ph h1 { font-size: 32px; color: var(--jade); }
+.ph h1 em { font-style: italic; color: var(--or); }
+.ph p { font-size: 12px; color: var(--ink3); margin-top: 4px; }
+
+/* Cards KPI */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 2rem; }
+.kpi-card { background: var(--blanc); border: 1px solid var(--border); border-radius: 4px; padding: 20px 24px; }
+.kpi-num { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--jade); line-height: 1; }
+.kpi-num.gold { color: var(--or); }
+.kpi-lbl { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink3); margin-top: 6px; }
+.kpi-sub { font-size: 11px; color: var(--noyer); margin-top: 4px; }
+
+/* Cards biens */
+.biens-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+.bien-card { background: var(--blanc); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+.bien-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(31,59,52,0.08); }
+.bien-card-header { background: var(--jade); padding: 16px 20px; }
+.bien-card-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: white; }
+.bien-card-adresse { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 3px; }
+.bien-card-body { padding: 16px 20px; }
+.bien-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; margin-bottom: 12px; }
+.bien-badge.mj { background: rgba(31,59,52,0.08); color: var(--jade); }
+.bien-badge.apporte { background: rgba(185,154,94,0.12); color: #8B6F3A; }
+.bien-commission { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--or); }
+.bien-commission-lbl { font-size: 10px; color: var(--ink3); margin-top: 2px; }
+.bien-actions { display: flex; gap: 8px; margin-top: 14px; }
+
+/* Boutons */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 2px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border: none; font-family: 'Montserrat', sans-serif; transition: all 0.2s; text-decoration: none; }
+.btn-primary { background: var(--jade); color: white; }
+.btn-primary:hover { background: var(--jade-mid); }
+.btn-outline { background: none; border: 1px solid var(--border); color: var(--noyer); }
+.btn-outline:hover { border-color: var(--jade); color: var(--jade); }
+.btn-or { background: var(--or); color: white; }
+.btn-or:hover { background: #8B6F3A; }
+.btn-sm { padding: 5px 12px; font-size: 10px; }
+
+/* Table */
+.tcard { background: var(--blanc); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 1.5rem; }
+.tcard-hd { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.tcard-title { font-size: 14px; font-weight: 500; color: var(--jade); }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 10px 16px; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink3); background: var(--ivoire); border-bottom: 1px solid var(--border); }
+td { padding: 12px 16px; border-bottom: 1px solid rgba(216,199,174,0.3); font-size: 13px; color: var(--ink2); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--ivoire); }
+
+/* Checklist */
+.cl-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; background: var(--blanc); border: 1px solid var(--border); border-radius: 3px; cursor: pointer; margin-bottom: 6px; transition: all 0.15s; }
+.cl-item.done { background: var(--greenbg); border-color: rgba(31,59,52,0.2); }
+.cl-item input[type=checkbox] { accent-color: var(--jade); width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; }
+.cl-item span { font-size: 13px; color: var(--ink2); }
+.cl-item.done span { color: var(--jade); }
+
+/* Revenus */
+.section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--or); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* Réseau filleuls */
+.filleul-card { background: var(--blanc); border: 1px solid var(--border); border-radius: 4px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.filleul-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--jade); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--or); font-style: italic; flex-shrink: 0; }
+.filleul-name { font-size: 14px; font-weight: 500; color: var(--jade); }
+.filleul-sub { font-size: 11px; color: var(--ink3); margin-top: 2px; }
+.filleul-comm { text-align: right; }
+.filleul-comm-num { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--or); }
+.filleul-comm-lbl { font-size: 10px; color: var(--ink3); }
+
+/* Profil */
+.profil-card { background: var(--blanc); border: 1px solid var(--border); border-radius: 4px; padding: 32px; max-width: 560px; }
+.profil-avatar-lg { width: 72px; height: 72px; border-radius: 50%; background: var(--jade); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--or); font-style: italic; margin-bottom: 20px; }
+.profil-field { margin-bottom: 16px; }
+.profil-field label { display: block; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--noyer); margin-bottom: 5px; }
+.profil-field input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 2px; font-size: 13px; font-family: 'Montserrat', sans-serif; background: var(--ivoire); outline: none; }
+.profil-field input:focus { border-color: var(--jade); }
+
+/* Ambassadeur banner */
+.ambassadeur-banner {
+  background: linear-gradient(135deg, var(--jade) 0%, var(--jade-mid) 100%);
+  border-radius: 4px; padding: 24px 28px; margin-bottom: 1.5rem;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+.amb-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: white; }
+.amb-sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; font-weight: 300; }
+.amb-badge { background: rgba(185,154,94,0.2); border: 1px solid rgba(185,154,94,0.4); color: var(--or); padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* Statut badge */
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+.badge-online { background: var(--greenbg); color: var(--jade); }
+.badge-attente { background: rgba(185,154,94,0.12); color: #8B6F3A; }
+.badge-pause { background: rgba(216,199,174,0.3); color: var(--noyer); }
+
+/* Loading */
+.loading { display: flex; align-items: center; justify-content: center; min-height: 200px; color: var(--ink3); font-size: 13px; }
+.empty-state { text-align: center; padding: 48px; color: var(--ink3); }
+.empty-state h3 { font-size: 20px; color: var(--jade); margin-bottom: 8px; }
+.empty-state p { font-size: 13px; font-weight: 300; }
+
+/* Admin panel */
+.admin-section { background: rgba(31,59,52,0.04); border: 1px solid rgba(31,59,52,0.12); border-radius: 4px; padding: 20px; margin-bottom: 1.5rem; }
+.admin-section h3 { font-size: 18px; color: var(--jade); margin-bottom: 16px; }
+
+/* ═══ MOBILE ═══ */
+.mobile-tabs { display: none; }
+.mobile-drawer { display: none; }
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding-bottom: 76px; }
+  .view { padding: 1.25rem 1rem; }
+  .topbar { padding: 0 1rem; }
+  .btn-logout { display: none; }
+  .user-info { display: none; }
+  .ph h1 { font-size: 26px; }
+
+  .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .kpi-card { padding: 16px; }
+  .kpi-num { font-size: 26px; }
+  .biens-grid { grid-template-columns: 1fr; }
+
+  /* Tableaux : défilement horizontal plutôt qu'écrasement */
+  #revenus-form, #revenus-history, #admin-cohotes-list, #admin-assign-list {
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+  #revenus-form table, #revenus-history table,
+  #admin-cohotes-list table, #admin-assign-list table { min-width: 640px; }
+
+  /* Formulaire d'assignation admin : une colonne */
+  #view-admin .tcard > div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+  #create-form div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+
+  .profil-card { padding: 20px; }
+  .ambassadeur-banner { padding: 18px 20px; }
+  #toast { left: 12px; right: 12px; bottom: 86px; text-align: center; }
+
+  /* Barre d'onglets basse */
+  .mobile-tabs {
+    display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
+    background: var(--jade); border-top: 1px solid rgba(185,154,94,0.25);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .mt-btn {
+    flex: 1; background: none; border: none; cursor: pointer;
+    padding: 9px 2px 8px; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    color: rgba(247,243,237,0.55); font-family: 'Montserrat', sans-serif;
+    font-size: 9px; letter-spacing: 0.04em; border-top: 2px solid transparent;
+  }
+  .mt-btn .mt-ico { font-size: 18px; line-height: 1; }
+  .mt-btn.active { color: var(--or); border-top-color: var(--or); background: rgba(185,154,94,0.08); }
+
+  /* Tiroir « Plus » */
+  .mobile-drawer {
+    display: block; position: fixed; inset: 0; z-index: 95;
+    background: rgba(26,23,16,0.5); opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  }
+  .mobile-drawer.open { opacity: 1; pointer-events: auto; }
+  .md-sheet {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: var(--blanc); border-radius: 12px 12px 0 0; padding: 8px 0 calc(16px + env(safe-area-inset-bottom));
+    transform: translateY(100%); transition: transform 0.25s ease;
+  }
+  .mobile-drawer.open .md-sheet { transform: translateY(0); }
+  .md-grip { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 8px auto 12px; }
+  .md-item {
+    display: flex; align-items: center; gap: 12px; width: 100%;
+    padding: 13px 22px; background: none; border: none; cursor: pointer;
+    font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--ink2); text-align: left;
+  }
+  .md-item:active { background: var(--ivoire); }
+  .md-item .md-ico { font-size: 18px; }
+  .md-sep { height: 1px; background: var(--border); margin: 6px 22px; }
+}
+
+/* Pré-facture imprimable */
+#facture { display: none; }
+@media print {
+  body { background: white; }
+  .topbar, .sidebar, #toast, .no-print,
+  .mobile-tabs, .mobile-drawer { display: none !important; }
+  .main { margin-left: 0; padding-top: 0; }
+  .view { display: none !important; }
+  #facture { display: block; padding: 0; font-size: 12px; color: #000; }
+  #facture h2 { font-family: 'Cormorant Garamond', serif; font-size: 26px; color: var(--jade); }
+  #facture table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+  #facture th { background: var(--jade); color: white; padding: 8px; font-size: 10px; }
+  #facture td { border-bottom: 1px solid var(--border); padding: 8px; }
+  #facture .num { text-align: right; }
+  #facture .tot { font-weight: 700; font-size: 15px; color: var(--jade); }
+  #facture .mentions { margin-top: 26px; font-size: 10px; color: #555; line-height: 1.7; }
+  #facture .parties { display: flex; justify-content: space-between; margin-top: 22px; }
+}
+
+/* Toast */
+#toast { position: fixed; bottom: 24px; right: 24px; z-index: 999; background: var(--jade); color: white; padding: 12px 20px; border-radius: 3px; font-size: 13px; font-weight: 500; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+
+/* ═══ SIMULATEUR (identique à l'intranet) ═══ */
+/* PAGE HEADER */
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.75rem;gap:16px;flex-wrap:wrap;}
+.ph h1{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;line-height:1.15;color:var(--ink);}
+.ph h1 em{font-style:italic;color:var(--jade);}
+.ph p{font-size:12px;color:var(--ink3);margin-top:5px;font-weight:300;}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;box-shadow:0 1px 3px rgba(42,31,21,0.05);transition:box-shadow 0.2s;}
+.sc-n{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;line-height:1;}
+.sc-l{font-size:11px;color:var(--ink3);margin-top:4px;}
+.sc.cg .sc-n{color:var(--jade);}
+.sc.co .sc-n{color:var(--ora);}
+.sc.cb .sc-n{color:var(--blue);}
+.sc.cp .sc-n{color:var(--pur);}
+.sc.cgold .sc-n{color:var(--or);}
+.btn-ghost{background:var(--surface);border:1px solid var(--border);color:var(--ink2);}
+.btn-ghost:hover{border-color:var(--jade-bd);color:var(--jade);background:var(--jade-bg);}
+.btn-gold{background:var(--goldbg);border:1px solid var(--goldbd);color:var(--golddeep);}
+.fl{display:block;font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:5px;}
+.fl .req{color:var(--g2);}
+/* CALLOUT */
+.callout{display:flex;gap:10px;padding:0.8rem 1rem;border-radius:8px;font-size:13px;margin:0.75rem 0;line-height:1.6;}
+.ct-tip{background:var(--bronze-bg);border-left:3px solid var(--bronze);}
+.callout strong{font-weight:500;display:block;margin-bottom:2px;}
+.fl{font-family:'Inter',sans-serif !important;}
+/* ── SIMULATEUR STEPS ── */
+.sim-step{flex:1;padding:14px 10px;text-align:center;cursor:pointer;border-right:1px solid var(--border);transition:all 0.2s;opacity:0.5}
+.sim-step:last-child{border-right:none}
+.sim-step.active{opacity:1;background:var(--jade-bg)}
+.sim-step-num{width:28px;height:28px;border-radius:50%;background:var(--border);color:var(--ink3);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;margin:0 auto 6px}
+.sim-step.active .sim-step-num{background:var(--jade);color:white}
+.sim-step-label{font-size:11px;font-weight:500;color:var(--ink3)}
+.sim-step.active .sim-step-label{color:var(--jade)}
+.sim-radio-label{display:flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:12px;color:var(--ink2);transition:all 0.15s}
+.sim-radio-label:hover{border-color:var(--jade);background:var(--jade-bg)}
+.sim-radio-label input{accent-color:var(--jade)}
+.sim-check-label{display:flex;align-items:center;gap:6px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:12px;color:var(--ink2);transition:all 0.15s}
+.sim-check-label:hover{border-color:var(--jade);background:var(--jade-bg)}
+.sim-check-label input{accent-color:var(--jade)}
+/* Page header mobile */
+  .ph { flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 16px;}
+.ph h1 { font-size: 22px;}
+.ph .btn { width: 100%; justify-content: center;}
+.sc { padding: 12px 14px;}
+.sc-n { font-size: 22px;}
+.sc-n { font-size: 20px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Maison <em>Jade</em></div>
+    <div class="login-sub">Espace Co-Hôte Partenaire</div>
+    <h2 class="login-title">Connexion</h2>
+    <p class="login-desc">Accédez à votre tableau de bord personnel</p>
+    <div id="login-error" class="login-error"></div>
+    <div class="form-group">
+      <label>Adresse email</label>
+      <input type="email" id="login-email" placeholder="votre@email.com" autocomplete="email">
+    </div>
+    <div class="form-group">
+      <label>Mot de passe</label>
+      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-jade" onclick="doLogin()">Se connecter →</button>
+    <div class="login-forgot"><a href="#" onclick="doReset()">Mot de passe oublié ?</a></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <span class="brand">Maison <em>Jade</em></span>
+    <div class="topbar-right">
+      <div class="user-info">
+        <div class="user-name" id="tb-name">—</div>
+        <div class="user-role" id="tb-role">Co-Hôte</div>
+      </div>
+      <div class="user-avatar" id="tb-avatar">J</div>
+      <button class="btn-logout" onclick="doLogout()">Déconnexion</button>
+    </div>
+  </div>
+
+  <nav class="sidebar">
+    <div class="sb-sect">
+      <div class="sb-lbl">Mon espace</div>
+      <button class="ni active" onclick="sv('dashboard',this)"><span class="ni-icon">📊</span> Tableau de bord</button>
+      <button class="ni" onclick="sv('simulateur',this)"><span class="ni-icon">🧮</span> Simulateur de revenus</button>
+      <button class="ni" onclick="sv('biens',this)"><span class="ni-icon">🏠</span> Mes biens <span class="sb-badge" id="nb-biens">0</span></button>
+      <button class="ni" onclick="sv('calendrier',this)"><span class="ni-icon">📅</span> Mon calendrier</button>
+      <button class="ni" onclick="sv('revenus',this)"><span class="ni-icon">💰</span> Mes revenus</button>
+    </div>
+    <div class="sb-sect">
+      <div class="sb-lbl">Opérationnel</div>
+      <button class="ni" onclick="sv('checklists',this)"><span class="ni-icon">✅</span> Checklists terrain</button>
+    </div>
+    <div class="sb-sect" id="sb-reseau-sect" style="display:none">
+      <div class="sb-lbl">Réseau Ambassadeur</div>
+      <button class="ni" onclick="sv('reseau',this)"><span class="ni-icon">👥</span> Mes filleuls</button>
+    </div>
+    <div class="sb-sect" id="sb-admin-sect" style="display:none">
+      <div class="sb-lbl">Administration</div>
+      <button class="ni" onclick="sv('admin',this)"><span class="ni-icon">⚙️</span> Gestion co-hôtes</button>
+    </div>
+    <div class="sb-sect">
+      <div class="sb-lbl">Mon compte</div>
+      <button class="ni" onclick="sv('profil',this)"><span class="ni-icon">👤</span> Mon profil</button>
+    </div>
+    <div class="sb-foot">v1.3 · Maison Jade Co-Hôte</div>
+  </nav>
+
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <div class="view active" id="view-dashboard">
+      <div class="ph">
+        <div>
+          <h1>Bonjour <em id="dash-prenom">—</em> 👋</h1>
+          <p id="dash-sub">Tableau de bord · Maison Jade Co-Hôte</p>
+        </div>
+        <div id="ambassadeur-badge" style="display:none">
+          <span style="background:rgba(185,154,94,0.12);border:1px solid rgba(185,154,94,0.3);color:var(--or);padding:6px 14px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:0.1em">⭐ AMBASSADEUR</span>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-num" id="kpi-biens">—</div>
+          <div class="kpi-lbl">Biens gérés</div>
+          <div class="kpi-sub" id="kpi-biens-sub"></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-num gold" id="kpi-revenus">—</div>
+          <div class="kpi-lbl">Revenus ce mois</div>
+          <div class="kpi-sub">Commission co-hôte</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-num" id="kpi-nuits">—</div>
+          <div class="kpi-lbl">Nuits ce mois</div>
+          <div class="kpi-sub" id="kpi-nuits-sub"></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-num gold" id="kpi-annuel">—</div>
+          <div class="kpi-lbl">Revenus annuels</div>
+          <div class="kpi-sub">Cumul <span id="kpi-year"></span></div>
+        </div>
+      </div>
+
+      <!-- Mes biens résumé -->
+      <div class="section-label">Mes biens en cours</div>
+      <div id="dash-biens" class="biens-grid"></div>
+
+      <!-- Actions rapides -->
+      <div class="section-label" style="margin-top:2rem">Actions rapides</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="sv('checklists',document.querySelector('.ni:nth-child(5)'))">✅ Checklist inter-séjour</button>
+        <button class="btn btn-outline" onclick="sv('revenus',document.querySelector('.ni'))">💰 Saisir mes revenus</button>
+        <button class="btn btn-outline" onclick="sv('profil',document.querySelector('.ni'))">👤 Mon profil</button>
+      </div>
+    </div>
+
+    <!-- MES BIENS -->
+    <div class="view" id="view-biens">
+      <div class="ph">
+        <div><h1>Mes <em>biens</em></h1><p>Biens qui vous sont assignés par Maison Jade</p></div>
+      </div>
+      <div id="biens-list" class="loading">Chargement…</div>
+    </div>
+
+    <!-- CALENDRIER -->
+    <div class="view" id="view-calendrier">
+      <div class="ph">
+        <div><h1>Mon <em>calendrier</em></h1><p>Vos réservations · Synchronisation iCal</p></div>
+        <button class="btn btn-primary btn-sm" onclick="refreshCalCohote()">🔄 Synchroniser</button>
+      </div>
+      <div id="cal-cohote-content" class="loading">Chargement…</div>
+    </div>
+
+    <!-- REVENUS -->
+    <div class="view" id="view-revenus">
+      <div class="ph">
+        <div><h1>Mes <em>revenus</em></h1><p>Commissions par bien · Détail mensuel</p></div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-hd">
+          <span class="tcard-title">Saisir les revenus du mois</span>
+          <div style="display:flex;gap:8px">
+            <select id="rev-mois" style="padding:6px 10px;border:1px solid var(--border);border-radius:2px;font-size:12px;background:var(--ivoire)">
+              <option value="1">Janvier</option><option value="2">Février</option><option value="3">Mars</option>
+              <option value="4">Avril</option><option value="5">Mai</option><option value="6">Juin</option>
+              <option value="7">Juillet</option><option value="8">Août</option><option value="9">Septembre</option>
+              <option value="10">Octobre</option><option value="11">Novembre</option><option value="12">Décembre</option>
+            </select>
+            <select id="rev-annee" style="padding:6px 10px;border:1px solid var(--border);border-radius:2px;font-size:12px;background:var(--ivoire)">
+              <option value="2026">2026</option><option value="2027">2027</option>
+            </select>
+          </div>
+        </div>
+        <div id="revenus-form" style="padding:1rem"></div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-hd">
+          <span class="tcard-title">Historique des revenus</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-outline btn-sm" onclick="exportRecapCSV()">⬇ Récap CSV</button>
+            <button class="btn btn-or btn-sm" onclick="genererPrefacture()">🧾 Pré-facture PDF</button>
+          </div>
+        </div>
+        <div id="revenus-history" style="padding:1rem"></div>
+      </div>
+
+      <div style="margin-top:1rem;padding:14px 16px;background:var(--blanc);border:1px solid var(--border);border-radius:4px;font-size:12px;color:var(--noyer);line-height:1.7">
+        <strong style="color:var(--jade)">Comment votre commission est calculée</strong><br>
+        Honoraires Maison Jade = <em>CA net du bien</em> (après frais de plateforme) × <em>taux de l'offre du propriétaire</em> (16 / 22 / 25 %).<br>
+        Votre commission = <em>honoraires Maison Jade</em> × <em>votre part</em> (50 % bien MJ · 70 % bien apporté par vous).<br>
+        Prestations à la carte : <em>85 % vous sont reversés</em>.
+      </div>
+    </div>
+
+    <!-- CHECKLISTS -->
+    <div class="view" id="view-checklists">
+      <div class="ph">
+        <div><h1>Checklists <em>terrain</em></h1><p>Opérations par bien · Inter-séjour · Pré-lancement</p></div>
+      </div>
+
+      <div style="margin-bottom:1rem;display:flex;gap:8px">
+        <select id="cl-bien-select" style="padding:8px 12px;border:1px solid var(--border);border-radius:2px;font-size:13px;background:var(--ivoire)" onchange="loadChecklist()">
+          <option value="">— Choisir un bien —</option>
+        </select>
+        <select id="cl-type-select" style="padding:8px 12px;border:1px solid var(--border);border-radius:2px;font-size:13px;background:var(--ivoire)" onchange="loadChecklist()">
+          <option value="intersejour">🔄 Inter-séjour</option>
+          <option value="prelancement">🚀 Pré-lancement</option>
+          <option value="intervention">🔧 Intervention</option>
+        </select>
+        <button class="btn btn-primary btn-sm" onclick="saveChecklist()">💾 Sauvegarder</button>
+        <button class="btn btn-outline btn-sm" onclick="resetChecklist()">↺ Réinitialiser</button>
+      </div>
+
+      <div id="cl-content"></div>
+    </div>
+
+    <!-- RÉSEAU -->
+    <div class="view" id="view-reseau">
+      <div class="ph">
+        <div><h1>Mon <em>réseau</em></h1><p>Filleuls recrutés · Commission 20% sur leur activité</p></div>
+      </div>
+      <div class="ambassadeur-banner">
+        <div>
+          <div class="amb-title">⭐ Programme Ambassadeur</div>
+          <div class="amb-sub">Vous percevez 20% de la commission de chaque co-hôte que vous avez recruté</div>
+        </div>
+        <div class="amb-badge">Ambassadeur actif</div>
+      </div>
+      <div id="reseau-list" class="loading">Chargement…</div>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="view" id="view-admin">
+      <div class="ph">
+        <div><h1>Gestion <em>co-hôtes</em></h1><p>Administration · Maison Jade</p></div>
+        <button class="btn btn-primary" onclick="showCreateCohote()">+ Créer un compte</button>
+      </div>
+
+      <div id="create-form" style="display:none" class="admin-section">
+        <h3>Créer un compte co-hôte</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+          <div class="profil-field"><label>Prénom</label><input type="text" id="adm-prenom" placeholder="Prénom"></div>
+          <div class="profil-field"><label>Nom</label><input type="text" id="adm-nom" placeholder="Nom"></div>
+          <div class="profil-field"><label>Email</label><input type="email" id="adm-email" placeholder="marie@example.com"></div>
+          <div class="profil-field"><label>Mot de passe temporaire</label><input type="text" id="adm-password" placeholder="MaisonJade2026!"></div>
+          <div class="profil-field"><label>Téléphone</label><input type="tel" id="adm-tel" placeholder="+33 6 00 00 00 00"></div>
+          <div class="profil-field"><label>Statut</label>
+            <select id="adm-statut" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:2px;font-size:13px;background:var(--ivoire)">
+              <option value="actif">Actif</option>
+              <option value="ambassadeur">Ambassadeur</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary" onclick="createCohote()">Créer le compte</button>
+          <button class="btn btn-outline" onclick="document.getElementById('create-form').style.display='none'">Annuler</button>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-hd"><span class="tcard-title">Co-hôtes du réseau</span></div>
+        <div id="admin-cohotes-list" class="loading">Chargement…</div>
+      </div>
+
+      <!-- Assignation de bien -->
+      <div class="tcard" style="margin-top:1rem">
+        <div class="tcard-hd"><span class="tcard-title">Assigner un bien à un co-hôte</span></div>
+        <div style="padding:1rem;display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:12px;align-items:end">
+          <div class="profil-field" style="margin:0"><label>Co-hôte</label>
+            <select id="assign-cohote" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:2px;font-size:13px;background:var(--ivoire)">
+              <option value="">— Choisir —</option>
+            </select>
+          </div>
+          <div class="profil-field" style="margin:0"><label>Dossier (ID)</label>
+            <select id="assign-dossier" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:2px;font-size:13px;background:var(--ivoire)">
+              <option value="">— Choisir —</option>
+            </select>
+          </div>
+          <div class="profil-field" style="margin:0"><label>Type de bien</label>
+            <select id="assign-type" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:2px;font-size:13px;background:var(--ivoire)">
+              <option value="mj">Fourni par MJ (50%)</option>
+              <option value="apporte">Apporté par co-hôte (70%)</option>
+            </select>
+          </div>
+          <div class="profil-field" style="margin:0"><label>Offre du propriétaire</label>
+            <select id="assign-offre" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:2px;font-size:13px;background:var(--ivoire)">
+              <option value="16">Essentielle — 16 %</option>
+              <option value="22" selected>Sérénité — 22 %</option>
+              <option value="25">Signature — 25 %</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="assignBien()">Assigner</button>
+        </div>
+      </div>
+
+      <!-- Biens déjà assignés — réassignation -->
+      <div class="tcard" style="margin-top:1rem">
+        <div class="tcard-hd"><span class="tcard-title">Biens assignés</span></div>
+        <div id="admin-assign-list" class="loading">Chargement…</div>
+      </div>
+    </div>
+
+    <!-- PROFIL -->
+    <div class="view" id="view-simulateur">
+  <div class="ph">
+    <div><h1>Simulateur <em>de revenus</em></h1><p>Estimation locative · Saisonnalité · Commission Maison Jade · Net propriétaire</p></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost btn-sm" onclick="resetSimulateur()">🔄 Réinitialiser</button>
+      <button class="btn btn-primary" onclick="genererPDFSimulation()" id="btn-pdf-sim" style="display:none">📄 Générer le PDF</button>
+    </div>
+  </div>
+
+  <!-- ÉTAPES -->
+  <div style="display:flex;gap:0;margin-bottom:2rem;background:var(--blanc);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+    <div class="sim-step active" id="step-btn-1" onclick="goStep(1)">
+      <div class="sim-step-num">1</div>
+      <div class="sim-step-label">Profil du bien</div>
+    </div>
+    <div class="sim-step" id="step-btn-2" onclick="goStep(2)">
+      <div class="sim-step-num">2</div>
+      <div class="sim-step-label">Prix de référence</div>
+    </div>
+    <div class="sim-step" id="step-btn-3" onclick="goStep(3)">
+      <div class="sim-step-num">3</div>
+      <div class="sim-step-label">Résultats</div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 1 — PROFIL DU BIEN -->
+  <div id="sim-step-1">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+
+      <div class="tcard">
+        <div class="tcard-hd"><span class="tcard-title">🏠 Le bien</span></div>
+        <div style="padding:1rem;display:flex;flex-direction:column;gap:14px">
+
+          <div>
+            <label class="fl">Nom du propriétaire / prospect</label>
+            <input type="text" id="s-proprio-nom" placeholder="Nom du propriétaire">
+          </div>
+          <div>
+            <label class="fl">Ville / Commune</label>
+            <div style="position:relative">
+              <input type="text" id="s-adresse" placeholder="Tapez l'adresse ou la ville du bien..." oninput="rechercheAdresse(this.value)" autocomplete="off">
+              <div id="adresse-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--blanc);border:1px solid var(--border);border-radius:0 0 8px 8px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:50;max-height:220px;overflow-y:auto"></div>
+            </div>
+            <input type="hidden" id="s-ville">
+            <div id="adresse-confirmee" style="display:none;margin-top:6px;padding:8px 12px;background:var(--jade-bg);border:1px solid var(--jade-bd);border-radius:8px;font-size:12px;color:var(--jade)"></div>
+            <div id="secteur-detecte" style="display:none;margin-top:8px"></div>
+            <div id="geo-panneau" style="display:none;margin-top:8px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div>
+              <label class="fl">Type de bien</label>
+              <select id="s-type-bien" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:var(--ivoire)">
+                <option value="studio">Studio / T1</option>
+                <option value="t2" selected>T2</option>
+                <option value="t3">T3</option>
+                <option value="t4">T4+</option>
+                <option value="maison">Maison</option>
+                <option value="villa">Villa</option>
+              </select>
+            </div>
+            <div>
+              <label class="fl">Couchages</label>
+              <input type="number" id="s-couchages" data-recalc="1" min="1" max="20" value="4" oninput="forcePrixSuggere()" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:var(--ivoire)">
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div>
+              <label class="fl">Chambres</label>
+              <input type="number" id="s-chambres" min="0" max="10" value="1" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:var(--ivoire)">
+            </div>
+            <div>
+              <label class="fl">Salles d'eau</label>
+              <input type="number" id="s-sdeau" data-recalc="1" min="1" max="6" value="1" oninput="forcePrixSuggere()" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:var(--ivoire)">
+            </div>
+          </div>
+          <div>
+            <label class="fl">Offre Maison Jade</label>
+            <select id="s-offre" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:var(--ivoire)">
+              <option value="16">Essentiel — 16% HT</option>
+              <option value="22" selected>Confort — 22% HT</option>
+              <option value="25">Premium — 25% HT</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-hd"><span class="tcard-title">📍 Localisation & attraits</span></div>
+        <div style="padding:1rem;display:flex;flex-direction:column;gap:14px">
+
+          <div>
+            <label class="fl">Attraits de la zone <span style="font-weight:400;color:var(--ink3)">(plusieurs choix possibles — le profil sera un mélange précis)</span></label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px" id="attrait-grid">
+              <label class="sim-radio-label"><input type="checkbox" name="attrait" value="plage" onchange="updateSaisonnalite()"> 🏖 Balnéaire</label>
+              <label class="sim-radio-label"><input type="checkbox" name="attrait" value="montagne" onchange="updateSaisonnalite()"> ⛷ Montagne</label>
+              <label class="sim-radio-label"><input type="checkbox" name="attrait" value="ville" onchange="updateSaisonnalite()"> 🏙 Urbain / Tourisme</label>
+              <label class="sim-radio-label"><input type="checkbox" name="attrait" value="aeroport" onchange="updateSaisonnalite()" checked> ✈️ Aéroport / Transit</label>
+              <label class="sim-radio-label"><input type="checkbox" name="attrait" value="affaires" onchange="updateSaisonnalite()"> 💼 Affaires urbaines</label>
+              <label class="sim-radio-label"><input type="checkbox" name="attrait" value="campagne" onchange="updateSaisonnalite()"> 🌿 Campagne / Nature</label>
+            </div>
+          </div>
+
+          <div>
+            <label class="fl">Distance de l'attrait principal</label>
+            <select id="s-distance" onchange="updateSaisonnalite()" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:var(--ivoire)">
+              <option value="proche">Moins de 5 minutes</option>
+              <option value="moyen" selected>5 à 15 minutes</option>
+              <option value="loin">Plus de 15 minutes</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="fl">Équipements premium (cochez)</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:4px">
+              <label class="sim-check-label"><input type="checkbox" id="eq-piscine" onchange="updateSaisonnalite()"> 🏊 Piscine</label>
+              <label class="sim-check-label"><input type="checkbox" id="eq-terrasse" onchange="forcePrixSuggere()"> 🌿 Terrasse</label>
+              <label class="sim-check-label"><input type="checkbox" id="eq-parking" onchange="forcePrixSuggere()"> 🅿️ Parking</label>
+              <label class="sim-check-label"><input type="checkbox" id="s-maison-indiv" onchange="forcePrixSuggere()"> 🏠 Maison individuelle</label>
+              <label class="sim-check-label"><input type="checkbox" id="s-jardin" onchange="forcePrixSuggere()"> 🌳 Jardin</label>
+              <label class="sim-check-label"><input type="checkbox" id="eq-clim" onchange="updateSaisonnalite()"> ❄️ Climatisation</label>
+              <label class="sim-check-label"><input type="checkbox" id="eq-vue" onchange="updateSaisonnalite()"> 🌊 Vue mer/montagne</label>
+              <label class="sim-check-label"><input type="checkbox" id="eq-animaux" onchange="updateSaisonnalite()"> 🐾 Animaux acceptés</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Profil saisonnier généré -->
+    <div class="tcard" style="margin-top:1.5rem">
+      <div class="tcard-hd">
+        <span class="tcard-title">📊 Profil saisonnier généré</span>
+        <span id="profil-label" style="font-size:12px;color:var(--ink3);font-style:italic">Sélectionnez l'attrait principal</span>
+      </div>
+      <div style="padding:1rem">
+        <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-bottom:8px" id="saison-bars"></div>
+        <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:4px">
+          <div style="text-align:center;font-size:9px;color:var(--ink3)">Jan</div>
+          <div style="text-align:center;font-size:9px;color:var(--ink3)">Fév</div>
+          <div style="text-align:center;font-size:9px;color:var(--ink3)">Mar</div>
+          <div style="text-align:center;font-size:9px;color:var(--ink3)">Avr</div>
+          <div style="text-align:center;font-size:9px;color:var(--ink3)">Mai</div>
+          <div style="text-align:center;font-size:9px;color:var(--ink3)">Juin</div>
+          <div style="text-align:center;font-size:9px;color:var(--ink3)">Juil</div>
+          <div style="text-align:center;font-size:9px;color:var(--ink3)">Août</div>
+          <div style="text-align:center;font-size:9px;color:var(--ink3)">Sep</div>
+          <div style="text-align:center;font-size:9px;color:var(--ink3)">Oct</div>
+          <div style="text-align:center;font-size:9px;color:var(--ink3)">Nov</div>
+          <div style="text-align:center;font-size:9px;color:var(--ink3)">Déc</div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap" id="saison-legend"></div>
+      </div>
+    </div>
+
+    <div style="text-align:right;margin-top:1rem">
+      <button class="btn btn-primary" onclick="goStep(2)">Étape suivante → Prix de référence</button>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 2 — PRIX DE RÉFÉRENCE -->
+  <div id="sim-step-2" style="display:none">
+
+    <!-- Onglets étape 2 -->
+    <div style="display:flex;gap:2px;background:var(--blanc);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:1.5rem">
+      <button class="nav-tab active" id="tab-sim-prix" onclick="showSimTab('prix',this)" style="flex:1">💶 Prix de référence</button>
+      <button class="nav-tab" id="tab-sim-ref" onclick="showSimTab('ref',this)" style="flex:1">📋 Références Airbnb enregistrées</button>
+    </div>
+
+    <!-- TAB PRIX -->
+    <div id="sim-tab-prix">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+
+        <!-- Fourchette + taux d'occupation -->
+        <div class="tcard">
+          <div class="tcard-hd"><span class="tcard-title">💡 Fourchette indicative & taux d'occupation</span></div>
+          <div style="padding:1rem">
+
+            <!-- Taux d'occupation par saison -->
+            <div style="margin-bottom:12px">
+              <div style="font-size:11px;font-weight:600;color:var(--jade);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Taux d'occupation estimé</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+                <div style="background:var(--surface2);border-radius:8px;padding:10px;text-align:center">
+                  <div style="font-size:9px;color:var(--ink3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">❄️ Basse saison</div>
+                  <div id="taux-basse" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--ink3)">—</div>
+                  <div style="font-size:10px;color:var(--ink3);margin-top:2px" id="mois-basse">—</div>
+                </div>
+                <div style="background:var(--jade-bg);border:1px solid var(--jade-bd);border-radius:8px;padding:10px;text-align:center">
+                  <div style="font-size:9px;color:var(--jade);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">🌤 Moyenne saison</div>
+                  <div id="taux-moy" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--jade)">—</div>
+                  <div style="font-size:10px;color:var(--jade);margin-top:2px" id="mois-moy">—</div>
+                </div>
+                <div style="background:var(--goldbg);border:1px solid var(--goldbd);border-radius:8px;padding:10px;text-align:center">
+                  <div style="font-size:9px;color:var(--golddeep);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">☀️ Haute saison</div>
+                  <div id="taux-haute" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--or)">—</div>
+                  <div style="font-size:10px;color:var(--golddeep);margin-top:2px" id="mois-haute">—</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fourchette prix -->
+            <div style="background:var(--jade-bg);border:1px solid var(--jade-bd);border-radius:8px;padding:12px;margin-bottom:12px">
+              <div style="font-size:11px;color:var(--jade);font-weight:600;margin-bottom:8px">Prix indicatifs / nuit :</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+                <div>
+                  <div style="font-size:10px;color:var(--ink3);margin-bottom:4px">Basse saison</div>
+                  <div id="fourch-basse" style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--ink)">—</div>
+                  <div style="font-size:10px;color:var(--ink3)">€/nuit</div>
+                </div>
+                <div>
+                  <div style="font-size:10px;color:var(--ink3);margin-bottom:4px">Moyenne saison</div>
+                  <div id="fourch-moy" style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--jade)">—</div>
+                  <div style="font-size:10px;color:var(--ink3)">€/nuit</div>
+                </div>
+                <div>
+                  <div style="font-size:10px;color:var(--ink3);margin-bottom:4px">Haute saison</div>
+                  <div id="fourch-haute" style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--or)">—</div>
+                  <div style="font-size:10px;color:var(--ink3)">€/nuit</div>
+                </div>
+              </div>
+              <div style="font-size:10px;color:var(--ink3);text-align:center;margin-top:8px;font-style:italic" id="fourch-note">Estimation indicative — à vérifier sur Airbnb</div>
+            </div>
+
+            <a id="btn-airbnb" href="#" target="_blank" class="btn btn-ghost" style="width:100%;justify-content:center;gap:8px;text-decoration:none">
+              🔍 Vérifier les prix réels sur Airbnb
+            </a>
+            <div style="font-size:11px;color:var(--ink3);text-align:center;margin-top:6px">Filtré sur votre zone et type de bien</div>
+          </div>
+        </div>
+
+        <!-- Prix confirmés -->
+        <div class="tcard">
+          <div class="tcard-hd"><span class="tcard-title">✏️ Vos prix confirmés</span></div>
+          <div style="padding:1rem;display:flex;flex-direction:column;gap:12px">
+            <div style="background:var(--surface2);border-radius:8px;padding:10px;font-size:12px;color:var(--ink3);line-height:1.6">
+              Après avoir vérifié sur Airbnb, entrez les prix moyens observés pour des biens similaires. Les taux d'occupation affichés à gauche seront appliqués automatiquement par saison.
+            </div>
+
+            <div style="background:var(--surface2);border-radius:8px;padding:12px">
+              <div style="font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">❄️ Basse saison</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center">
+                <div>
+                  <label class="fl" style="font-size:11px">Prix / nuit (€)</label>
+                  <input type="number" id="prix-basse" placeholder="Ex: 65" oninput="updatePrixMensuel()" style="margin-top:2px">
+                </div>
+                <div style="text-align:center;background:var(--blanc);border-radius:6px;padding:8px">
+                  <div style="font-size:10px;color:var(--ink3)">Taux d'occ.</div>
+                  <div id="taux-basse-mini" style="font-size:18px;font-weight:600;color:var(--ink3)">—</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background:var(--jade-bg);border:1px solid var(--jade-bd);border-radius:8px;padding:12px">
+              <div style="font-size:10px;font-weight:600;color:var(--jade);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">🌤 Moyenne saison</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center">
+                <div>
+                  <label class="fl" style="font-size:11px;color:var(--jade)">Prix / nuit (€)</label>
+                  <input type="number" id="prix-moy" placeholder="Ex: 95" oninput="updatePrixMensuel()" style="margin-top:2px">
+                  <div id="prix-repere" style="display:none;font-size:11px;color:var(--jade);margin-top:4px"></div>
+                </div>
+                <div style="text-align:center;background:var(--blanc);border-radius:6px;padding:8px">
+                  <div style="font-size:10px;color:var(--jade)">Taux d'occ.</div>
+                  <div id="taux-moy-mini" style="font-size:18px;font-weight:600;color:var(--jade)">—</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background:var(--goldbg);border:1px solid var(--goldbd);border-radius:8px;padding:12px">
+              <div style="font-size:10px;font-weight:600;color:var(--golddeep);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">☀️ Haute saison</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center">
+                <div>
+                  <label class="fl" style="font-size:11px;color:var(--golddeep)">Prix / nuit (€)</label>
+                  <input type="number" id="prix-haute" placeholder="Ex: 140" oninput="updatePrixMensuel()" style="margin-top:2px">
+                </div>
+                <div style="text-align:center;background:var(--blanc);border-radius:6px;padding:8px">
+                  <div style="font-size:10px;color:var(--golddeep)">Taux d'occ.</div>
+                  <div id="taux-haute-mini" style="font-size:18px;font-weight:600;color:var(--or)">—</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background:var(--goldbg);border:1px solid var(--goldbd);border-radius:8px;padding:12px;text-align:center">
+              <div style="font-size:10px;color:var(--golddeep);margin-bottom:4px">CA mensuel moyen estimé</div>
+              <div id="ca-moy-preview" style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--golddeep)">—</div>
+              <div style="font-size:10px;color:var(--golddeep);margin-top:2px" id="ca-moy-detail">—</div>
+            </div>
+
+            <!-- Sauvegarder comme référence -->
+            <button class="btn btn-ghost btn-sm" onclick="saveRefAirbnb()" style="width:100%;justify-content:center">
+              💾 Sauvegarder comme référence Airbnb
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB RÉFÉRENCES AIRBNB -->
+    <div id="sim-tab-ref" style="display:none">
+      <div class="tcard">
+        <div class="tcard-hd">
+          <span class="tcard-title">📋 Références de prix Airbnb enregistrées</span>
+          <span style="font-size:11px;color:var(--ink3);font-style:italic">Données relevées manuellement sur Airbnb</span>
+        </div>
+        <div style="padding:1rem">
+          <div id="ref-airbnb-list">
+            <div style="text-align:center;padding:2rem;color:var(--ink3);font-size:13px">
+              <div style="font-size:28px;margin-bottom:8px">📋</div>
+              Aucune référence enregistrée.<br>
+              <small>Après avoir observé les prix sur Airbnb, cliquez sur "Sauvegarder comme référence".</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;margin-top:1rem">
+      <button class="btn btn-ghost" onclick="goStep(1)">← Retour</button>
+      <button class="btn btn-primary" onclick="calculerResultats();goStep(3)">Calculer les résultats →</button>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 3 — RÉSULTATS -->
+  <div id="sim-step-3" style="display:none">
+
+    <!-- En-tête résumé -->
+    <div style="background:var(--jade);border-radius:12px;padding:18px 24px;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:white;font-weight:300" id="res-titre">Simulation — —</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.55);margin-top:2px" id="res-sous-titre">— · Offre —</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="genererPDFSimulation()">📄 Générer le PDF propriétaire</button>
+      </div>
+    </div>
+
+    <div id="score-mj" style="display:none;margin-bottom:1rem"></div>
+    <div id="indice-confiance" style="display:none;margin-bottom:1rem"></div>
+    <label style="display:flex;align-items:center;gap:8px;margin-bottom:1.5rem;font-size:13px;color:var(--noyer);cursor:pointer">
+      <input type="checkbox" id="pdf-show-confiance"> Afficher l'indice de confiance sur le PDF propriétaire
+    </label>
+
+    <!-- KPIs annuels -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem">
+      <div class="sc cgold">
+        <div class="sc-n" id="res-ca-annuel">—</div>
+        <div class="sc-l">CA brut annuel</div>
+      </div>
+      <div class="sc cg">
+        <div class="sc-n" id="res-net-annuel">—</div>
+        <div class="sc-l">Net propriétaire / an</div>
+      </div>
+      <div class="sc">
+        <div class="sc-n" id="res-nuits-annuel">—</div>
+        <div class="sc-l">Nuits estimées / an</div>
+      </div>
+      <div class="sc">
+        <div class="sc-n" id="res-taux-annuel">—</div>
+        <div class="sc-l">Taux d'occupation moy.</div>
+      </div>
+    </div>
+
+    <!-- Projection mois par mois -->
+    <div class="tcard" style="margin-bottom:1.5rem">
+      <div class="tcard-hd"><span class="tcard-title">📅 Projection mensuelle sur 12 mois</span></div>
+      <div style="padding:1rem;overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:12px">
+          <thead>
+            <tr style="background:var(--jade);color:white">
+              <th style="padding:8px 10px;text-align:left;border-radius:4px 0 0 0">Mois</th>
+              <th style="padding:8px 10px;text-align:center">Taux occ.</th>
+              <th style="padding:8px 10px;text-align:center">Nuits</th>
+              <th style="padding:8px 10px;text-align:center">Prix/nuit</th>
+              <th style="padding:8px 10px;text-align:center">CA brut</th>
+              <th style="padding:8px 10px;text-align:center">Comm. MJ</th>
+              <th style="padding:8px 10px;text-align:right;border-radius:0 4px 0 0">Net proprio</th>
+            </tr>
+          </thead>
+          <tbody id="res-table-mois"></tbody>
+          <tfoot id="res-table-total"></tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- 3 scénarios -->
+    <div class="tcard" style="margin-bottom:1.5rem">
+      <div class="tcard-hd"><span class="tcard-title">📊 3 scénarios de rentabilité</span></div>
+      <div style="padding:1rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div style="background:var(--surface2);border-radius:10px;padding:16px;text-align:center">
+          <div style="font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">😐 Prudent</div>
+          <div style="font-size:10px;color:var(--ink3);margin-bottom:8px">Taux d'occupation -20%</div>
+          <div id="sc-prudent-ca" style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--ink)">—</div>
+          <div style="font-size:10px;color:var(--ink3);margin-top:2px">CA annuel</div>
+          <div id="sc-prudent-net" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ink3);margin-top:6px">—</div>
+          <div style="font-size:10px;color:var(--ink3)">Net propriétaire</div>
+        </div>
+        <div style="background:var(--jade-bg);border:1px solid var(--jade-bd);border-radius:10px;padding:16px;text-align:center">
+          <div style="font-size:11px;font-weight:600;color:var(--jade);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">✅ Réaliste</div>
+          <div style="font-size:10px;color:var(--jade);margin-bottom:8px">Taux d'occupation estimé</div>
+          <div id="sc-realiste-ca" style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--jade)">—</div>
+          <div style="font-size:10px;color:var(--jade);margin-top:2px">CA annuel</div>
+          <div id="sc-realiste-net" style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--jade);margin-top:6px">—</div>
+          <div style="font-size:10px;color:var(--jade)">Net propriétaire</div>
+        </div>
+        <div style="background:var(--goldbg);border:1px solid var(--goldbd);border-radius:10px;padding:16px;text-align:center">
+          <div style="font-size:11px;font-weight:600;color:var(--golddeep);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">🚀 Optimiste</div>
+          <div style="font-size:10px;color:var(--golddeep);margin-bottom:8px">Taux d'occupation +15%</div>
+          <div id="sc-optimiste-ca" style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--golddeep)">—</div>
+          <div style="font-size:10px;color:var(--golddeep);margin-top:2px">CA annuel</div>
+          <div id="sc-optimiste-net" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--golddeep);margin-top:6px">—</div>
+          <div style="font-size:10px;color:var(--golddeep)">Net propriétaire</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Note légale -->
+    <div class="callout ct-tip">
+      <span>⚠️</span>
+      <div style="font-size:11px">Ces projections sont des estimations basées sur les données de marché observées. Les revenus réels dépendent de la qualité du bien, de sa notation, de la concurrence locale et de la stratégie tarifaire. Maison Jade optimise en continu pour maximiser votre taux d'occupation.</div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;margin-top:1rem">
+      <button class="btn btn-ghost" onclick="goStep(2)">← Modifier les prix</button>
+      <button class="btn btn-primary" onclick="genererPDFSimulation()">📄 Générer le PDF propriétaire</button>
+    </div>
+  </div>
+</div>
+
+
+
+    <div class="view" id="view-profil">
+      <div class="ph"><div><h1>Mon <em>profil</em></h1><p>Informations personnelles · Maison Jade</p></div></div>
+      <div class="profil-card">
+        <div class="profil-avatar-lg" id="profil-avatar-lg">J</div>
+        <div class="profil-field"><label>Prénom</label><input type="text" id="p-prenom"></div>
+        <div class="profil-field"><label>Nom</label><input type="text" id="p-nom"></div>
+        <div class="profil-field"><label>Email</label><input type="email" id="p-email" disabled style="opacity:0.6"></div>
+        <div class="profil-field"><label>Téléphone</label><input type="tel" id="p-tel" placeholder="+33 6 00 00 00 00"></div>
+        <div class="profil-field"><label>SIRET (auto-entrepreneur)</label><input type="text" id="p-siret" placeholder="000 000 000 00000"></div>
+        <div class="profil-field"><label>Adresse de facturation</label><input type="text" id="p-adresse" placeholder="12 rue des Oliviers, 34110 Vic-la-Gardiole"></div>
+        <div style="margin-bottom:16px;padding:12px 14px;background:var(--ivoire);border-radius:3px;font-size:12px;color:var(--noyer)">
+          <strong>Statut :</strong> <span id="p-statut">—</span> &nbsp;·&nbsp; <strong>Abonnement :</strong> <span id="p-abo">—</span>
+        </div>
+        <button class="btn btn-primary" onclick="saveProfil()">💾 Enregistrer</button>
+        <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
+          <div class="profil-field"><label>Nouveau mot de passe</label><input type="password" id="p-pwd" placeholder="Laisser vide pour ne pas changer"></div>
+          <button class="btn btn-outline" onclick="changePassword()">Changer le mot de passe</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- BARRE D'ONGLETS MOBILE -->
+<nav class="mobile-tabs" id="mobile-tabs">
+  <button class="mt-btn active" data-tab="dashboard" onclick="svMobile('dashboard',this)">
+    <span class="mt-ico">📊</span>Bord</button>
+  <button class="mt-btn" data-tab="biens" onclick="svMobile('biens',this)">
+    <span class="mt-ico">🏠</span>Biens</button>
+  <button class="mt-btn" data-tab="revenus" onclick="svMobile('revenus',this)">
+    <span class="mt-ico">💰</span>Revenus</button>
+  <button class="mt-btn" data-tab="checklists" onclick="svMobile('checklists',this)">
+    <span class="mt-ico">✅</span>Checklists</button>
+  <button class="mt-btn" data-tab="_plus" onclick="openDrawer()">
+    <span class="mt-ico">⋯</span>Plus</button>
+</nav>
+
+<!-- TIROIR « PLUS » -->
+<div class="mobile-drawer" id="mobile-drawer" onclick="if(event.target===this) closeDrawer()">
+  <div class="md-sheet">
+    <div class="md-grip"></div>
+    <button class="md-item" onclick="svMobile('simulateur')"><span class="md-ico">🧮</span> Simulateur de revenus</button>
+    <button class="md-item" onclick="svMobile('calendrier')"><span class="md-ico">📅</span> Mon calendrier</button>
+    <button class="md-item" id="md-reseau" style="display:none" onclick="svMobile('reseau')"><span class="md-ico">👥</span> Mes filleuls</button>
+    <button class="md-item" id="md-admin" style="display:none" onclick="svMobile('admin')"><span class="md-ico">⚙️</span> Gestion co-hôtes</button>
+    <button class="md-item" onclick="svMobile('profil')"><span class="md-ico">👤</span> Mon profil</button>
+    <div class="md-sep"></div>
+    <button class="md-item" style="color:var(--red)" onclick="doLogout()"><span class="md-ico">🚪</span> Déconnexion</button>
+  </div>
+</div>
+
+<!-- PRÉ-FACTURE IMPRIMABLE -->
+<div id="facture">
+  <h2>Pré-facture</h2>
+  <div id="f-ref"></div>
+  <div class="parties">
+    <div>
+      <strong>Émetteur</strong><br>
+      <span id="f-cohote"></span><br>
+      <span id="f-adresse"></span><br>
+      <span id="f-siret"></span>
+    </div>
+    <div style="text-align:right">
+      <strong>Destinataire</strong><br>
+      Maison Jade Ltd<br>
+      contact@maisonjade.com
+    </div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Bien</th><th class="num">CA net</th><th class="num">Offre</th>
+        <th class="num">Honoraires MJ</th><th class="num">Part</th><th class="num">Commission</th>
+      </tr>
+    </thead>
+    <tbody id="f-lignes"></tbody>
+    <tfoot><tr><td colspan="5" class="tot">Total dû au co-hôte</td><td class="num tot" id="f-total"></td></tr></tfoot>
+  </table>
+  <div class="mentions">
+    Prestation de co-hébergement réalisée pour le compte de Maison Jade Ltd (Royaume-Uni).<br>
+    Les montants « CA net » s'entendent après déduction des frais de plateforme.<br>
+    <em>Mentions de TVA à valider avec votre comptable avant émission de la facture définitive.</em><br>
+    Document de travail — ne remplace pas la facture émise par le co-hôte.
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── CONFIG SUPABASE ──
+const SUPABASE_URL = 'https://lvfncstosaaqgtfozthw.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_UrB6X04fyAOhnN7aHropFQ_mwubBip2';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let currentProfile = null;
+let mesBiens = [];
+
+// ── BARÈME MAISON JADE ──
+// Honoraires MJ  = CA net (apres frais plateforme) x taux_offre (16 / 22 / 25 %)
+// Commission     = honoraires MJ x part co-hote (50 % bien MJ / 70 % bien apporte)
+// Services carte = 85 % reverses au co-hote
+const PART_SERVICES_COHOTE = 0.85;
+const OFFRES = { 16: 'Essentielle', 22: 'Sérénité', 25: 'Signature' };
+
+const partCohote = b => b.type_bien === 'apporte' ? 70 : (b.taux_commission || 50);
+const tauxOffre  = b => b.taux_offre || 22;
+const eur = n => (Math.round((n || 0) * 100) / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€';
+
+function calcCommission(caNet, tOffre, part, services) {
+  const honoraires   = (caNet || 0) * (tOffre || 0) / 100;
+  const commGestion  = honoraires * (part || 0) / 100;
+  const commServices = (services || 0) * PART_SERVICES_COHOTE;
+  return {
+    honoraires,
+    commGestion,
+    commServices,
+    partMJ: honoraires - commGestion + (services || 0) * (1 - PART_SERVICES_COHOTE),
+    total: commGestion + commServices
+  };
+}
+
+// ── CHECKLISTS ──
+const CL_ITEMS = {
+  intersejour: [
+    'État des lieux de sortie effectué',
+    'Inventaire des équipements vérifié',
+    'Ménage réalisé (noter le nom du prestataire)',
+    'Linge envoyé en blanchisserie',
+    'Linge propre réinstallé',
+    'Consommables réapprovisionnés (café, produits)',
+    'Dommages éventuels photographiés et signalés',
+    'Message de remerciement envoyé au voyageur',
+    'Demande d\'avis envoyée',
+    'Calendrier vérifié pour le prochain voyageur',
+    'Propriétaire informé si anomalie'
+  ],
+  prelancement: [
+    'Visite découverte réalisée',
+    'Contrat signé par le propriétaire',
+    'Accès bien configuré (boîte à clés / code)',
+    'Clés de secours récupérées',
+    'Photos réalisées (min 15 angles)',
+    'Annonce créée et validée',
+    'Équipements vérifiés et complets',
+    'Produits d\'accueil installés',
+    'Manuel voyageur créé',
+    'Prix configuré sur Airbnb',
+    'Numéro d\'enregistrement affiché',
+    'Test check-in réalisé'
+  ],
+  intervention: [
+    'Problème identifié et documenté',
+    'Photos prises',
+    'Prestataire contacté',
+    'Intervention réalisée',
+    'Propriétaire informé',
+    'Rapport d\'intervention rédigé',
+    'Facture reçue et transmise'
+  ]
+};
+
+let clState = {};
+
+// ── AUTH ──
+async function doLogin() {
+  const email = document.getElementById('login-email').value;
+  const pwd = document.getElementById('login-password').value;
+  const err = document.getElementById('login-error');
+  err.style.display = 'none';
+  if (!email || !pwd) { showErr('Veuillez remplir tous les champs.'); return; }
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pwd });
+  if (error) { showErr('Email ou mot de passe incorrect.'); return; }
+  initApp(data.user);
+}
+
+function showErr(msg) {
+  const err = document.getElementById('login-error');
+  err.textContent = msg; err.style.display = 'block';
+}
+
+async function doReset() {
+  const email = document.getElementById('login-email').value;
+  if (!email) { showErr('Entrez votre email pour réinitialiser le mot de passe.'); return; }
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
+  if (error) { showErr('Erreur : ' + error.message); return; }
+  showToast('Email de réinitialisation envoyé !');
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  currentUser = null; currentProfile = null; mesBiens = [];
+}
+
+// ── INIT APP ──
+async function initApp(user) {
+  currentUser = user;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+
+  // Charger profil
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  currentProfile = profile;
+
+  if (profile) {
+    const initiale = (profile.prenom || profile.email || 'J')[0].toUpperCase();
+    document.getElementById('tb-name').textContent = `${profile.prenom || ''} ${profile.nom || ''}`.trim() || profile.email;
+    document.getElementById('tb-role').textContent = profile.statut === 'ambassadeur' ? 'Ambassadeur ⭐' : 'Co-Hôte Partenaire';
+    document.getElementById('tb-avatar').textContent = initiale;
+    document.getElementById('dash-prenom').textContent = profile.prenom || profile.email.split('@')[0];
+    document.getElementById('kpi-year').textContent = new Date().getFullYear();
+
+    // Afficher sections selon rôle
+    if (profile.statut === 'ambassadeur') {
+      document.getElementById('sb-reseau-sect').style.display = 'block';
+      document.getElementById('ambassadeur-badge').style.display = 'block';
+      document.getElementById('md-reseau').style.display = 'flex';
+    }
+    if (profile.role === 'admin') {
+      document.getElementById('sb-admin-sect').style.display = 'block';
+      document.getElementById('md-admin').style.display = 'flex';
+      loadAdminData();
+    }
+    // Profil form
+    document.getElementById('p-prenom').value = profile.prenom || '';
+    document.getElementById('p-nom').value = profile.nom || '';
+    document.getElementById('p-email').value = profile.email || user.email;
+    document.getElementById('p-tel').value = profile.telephone || '';
+    document.getElementById('p-siret').value = profile.siret || '';
+    document.getElementById('p-adresse').value = profile.adresse || '';
+    document.getElementById('p-statut').textContent = profile.statut === 'ambassadeur' ? '⭐ Ambassadeur' : '✅ Co-Hôte actif';
+    document.getElementById('p-abo').textContent = profile.abonnement_actif ? '✅ Actif — 49€/mois' : '❌ Inactif';
+    document.getElementById('profil-avatar-lg').textContent = initiale;
+  }
+
+  await loadMesBiens();
+  loadDashboard();
+  loadRevenusForm();
+  document.getElementById('rev-mois').value = new Date().getMonth() + 1;
+}
+
+// ── NAVIGATION MOBILE ──
+function openDrawer()  { document.getElementById('mobile-drawer').classList.add('open'); }
+function closeDrawer() { document.getElementById('mobile-drawer').classList.remove('open'); }
+
+function svMobile(id, btn) {
+  closeDrawer();
+  sv(id, null);
+  // Synchroniser la barre latérale (bureau) et les onglets (mobile)
+  document.querySelectorAll('.ni').forEach(n => {
+    n.classList.toggle('active', (n.getAttribute('onclick') || '').includes(`sv('${id}'`));
+  });
+  document.querySelectorAll('.mt-btn').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === id);
+  });
+}
+
+// ── NAVIGATION ──
+function sv(id, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+  const v = document.getElementById('view-' + id);
+  if (v) v.classList.add('active');
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('.mt-btn').forEach(t => t.classList.toggle('active', t.dataset.tab === id));
+  window.scrollTo(0, 0);
+  if (id === 'revenus') loadRevenusHistory();
+  if (id === 'reseau') loadReseau();
+  if (id === 'checklists') loadChecklistBiens();
+  if (id === 'calendrier') loadCalCohote();
+}
+
+// ── MES BIENS ──
+async function loadMesBiens() {
+  const { data } = await sb.from('cohote_biens').select('*').eq('cohote_id', currentUser.id);
+  mesBiens = data || [];
+  document.getElementById('nb-biens').textContent = mesBiens.length;
+
+  // Enrichir avec les dossiers depuis l'API Supabase (table dossiers)
+  for (const b of mesBiens) {
+    const { data: d } = await sb.from('dossiers').select('data').eq('id', b.dossier_id).single();
+    b.dossier = d?.data || {};
+  }
+
+  renderBiensList();
+  renderDashBiens();
+}
+
+function renderBiensList() {
+  const el = document.getElementById('biens-list');
+  if (!mesBiens.length) {
+    el.innerHTML = '<div class="empty-state"><h3>Aucun bien assigné</h3><p>Contactez Maison Jade pour que des biens vous soient attribués.</p></div>';
+    return;
+  }
+  el.className = 'biens-grid';
+  el.innerHTML = mesBiens.map(b => bienCardHTML(b)).join('');
+}
+
+function bienCardHTML(b) {
+  const d = b.dossier || {};
+  const adresse = d.adresse || d.ville || '—';
+  const type = d.type || '';
+  const comm = partCohote(b);
+  const off = tauxOffre(b);
+  return `<div class="bien-card">
+    <div class="bien-card-header">
+      <div class="bien-card-title">${d.prenom || ''} ${d.nom || ''}</div>
+      <div class="bien-card-adresse">${adresse}</div>
+    </div>
+    <div class="bien-card-body">
+      <div class="bien-badge ${b.type_bien === 'mj' ? 'mj' : 'apporte'}">
+        ${b.type_bien === 'mj' ? '🏠 Fourni par MJ' : '✋ Votre bien'}
+      </div>
+      <div style="margin-top:8px">
+        <div class="bien-commission">${comm}%</div>
+        <div class="bien-commission-lbl">de nos honoraires · Offre ${OFFRES[off] || ''} ${off}%<br>
+          <span style="color:var(--ink3)">soit ${(off * comm / 100).toFixed(1)}% du CA net</span></div>
+      </div>
+      ${d.etape ? `<div style="margin-top:10px"><span class="badge badge-online">${d.etape === 'online' ? '🟢 En ligne' : '📋 ' + d.etape}</span></div>` : ''}
+      <div class="bien-actions">
+        <button class="btn btn-outline btn-sm" onclick="sv('checklists',null);setTimeout(()=>{document.getElementById('cl-bien-select').value='${b.dossier_id}';loadChecklist()},100)">✅ Checklist</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderDashBiens() {
+  const el = document.getElementById('dash-biens');
+  if (!mesBiens.length) {
+    el.innerHTML = '<div class="empty-state"><h3>Aucun bien assigné</h3><p>Maison Jade va vous attribuer vos premiers biens prochainement.</p></div>';
+    return;
+  }
+  el.className = 'biens-grid';
+  el.innerHTML = mesBiens.slice(0,3).map(b => bienCardHTML(b)).join('');
+}
+
+// ── DASHBOARD KPIs ──
+async function loadDashboard() {
+  const now = new Date();
+  const mois = now.getMonth() + 1, annee = now.getFullYear();
+
+  // Revenus du mois
+  const { data: revs } = await sb.from('cohote_revenus')
+    .select('*').eq('cohote_id', currentUser.id).eq('mois', mois).eq('annee', annee);
+
+  const totalRev = (revs || []).reduce((a, r) => a + (parseFloat(r.commission_cohote) || 0), 0);
+  const totalNuits = (revs || []).reduce((a, r) => a + (parseInt(r.nuits) || 0), 0);
+
+  // Revenus annuels
+  const { data: revsAn } = await sb.from('cohote_revenus')
+    .select('commission_cohote').eq('cohote_id', currentUser.id).eq('annee', annee);
+  const totalAnnuel = (revsAn || []).reduce((a, r) => a + (parseFloat(r.commission_cohote) || 0), 0);
+
+  document.getElementById('kpi-biens').textContent = mesBiens.length;
+  document.getElementById('kpi-biens-sub').textContent = `${mesBiens.filter(b=>b.type_bien==='mj').length} MJ · ${mesBiens.filter(b=>b.type_bien==='apporte').length} apportés`;
+  document.getElementById('kpi-revenus').textContent = totalRev.toLocaleString('fr-FR') + '€';
+  document.getElementById('kpi-nuits').textContent = totalNuits;
+  document.getElementById('kpi-nuits-sub').textContent = 'Nuits louées ce mois';
+  document.getElementById('kpi-annuel').textContent = totalAnnuel.toLocaleString('fr-FR') + '€';
+}
+
+// ── REVENUS ──
+function loadRevenusForm() {
+  const el = document.getElementById('revenus-form');
+  if (!mesBiens.length) {
+    el.innerHTML = '<div style="color:var(--ink3);font-size:13px;padding:8px">Aucun bien assigné.</div>';
+    return;
+  }
+  el.innerHTML = `<table>
+    <thead><tr>
+      <th>Bien</th><th>Offre</th><th>CA net (€)</th><th>Nuits</th><th>Services (€)</th>
+      <th>Honoraires MJ</th><th>Votre commission</th><th></th>
+    </tr></thead>
+    <tbody>${mesBiens.map(b => {
+      const d = b.dossier || {};
+      const part = partCohote(b), off = tauxOffre(b);
+      return `<tr>
+        <td style="font-weight:500">${d.prenom || ''} ${d.nom || ''}<br>
+          <span style="font-size:11px;color:var(--ink3)">${(d.adresse||'').split(',')[0]}</span></td>
+        <td><span class="badge badge-attente">${off}%</span><br>
+          <span style="font-size:10px;color:var(--ink3)">part ${part}%</span></td>
+        <td><input type="number" min="0" step="10" id="rev-ca-${b.dossier_id}" placeholder="0"
+              style="width:90px;padding:6px 8px;border:1px solid var(--border);border-radius:2px;font-size:12px"
+              oninput="calcCommAuto(${b.dossier_id})"></td>
+        <td><input type="number" min="0" id="rev-nuits-${b.dossier_id}" placeholder="0"
+              style="width:55px;padding:6px 8px;border:1px solid var(--border);border-radius:2px;font-size:12px"></td>
+        <td><input type="number" min="0" step="10" id="rev-serv-${b.dossier_id}" placeholder="0"
+              style="width:80px;padding:6px 8px;border:1px solid var(--border);border-radius:2px;font-size:12px"
+              oninput="calcCommAuto(${b.dossier_id})"></td>
+        <td id="rev-hono-${b.dossier_id}" style="color:var(--ink3);font-size:12px">—</td>
+        <td id="rev-comm-${b.dossier_id}" style="font-weight:600;color:var(--or);font-size:14px">—</td>
+        <td><button class="btn btn-primary btn-sm" onclick="saveRevenu(${b.dossier_id})">💾</button></td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table>`;
+}
+
+function ligneRevenu(dosId) {
+  const b = mesBiens.find(x => x.dossier_id == dosId);
+  if (!b) return null;
+  const caNet    = parseFloat(document.getElementById('rev-ca-' + dosId)?.value) || 0;
+  const services = parseFloat(document.getElementById('rev-serv-' + dosId)?.value) || 0;
+  const nuits    = parseInt(document.getElementById('rev-nuits-' + dosId)?.value) || 0;
+  const part = partCohote(b), off = tauxOffre(b);
+  return { b, caNet, services, nuits, part, off, c: calcCommission(caNet, off, part, services) };
+}
+
+function calcCommAuto(dosId) {
+  const l = ligneRevenu(dosId);
+  if (!l) return;
+  const hono = document.getElementById('rev-hono-' + dosId);
+  const comm = document.getElementById('rev-comm-' + dosId);
+  if (hono) hono.textContent = l.caNet ? eur(l.c.honoraires) : '—';
+  if (comm) comm.textContent = (l.caNet || l.services) ? eur(l.c.total) : '—';
+}
+
+async function saveRevenu(dosId) {
+  const l = ligneRevenu(dosId);
+  if (!l) return;
+  if (!l.caNet && !l.services) { showToast('Saisissez un CA net ou des services'); return; }
+
+  const mois  = parseInt(document.getElementById('rev-mois').value);
+  const annee = parseInt(document.getElementById('rev-annee').value);
+  const r2 = n => Math.round(n * 100) / 100;
+
+  const { error } = await sb.from('cohote_revenus').upsert({
+    cohote_id: currentUser.id, dossier_id: dosId, mois, annee,
+    revenu_brut: r2(l.caNet),                 // = CA net apres frais plateforme
+    taux_offre: l.off,
+    honoraires_mj: r2(l.c.honoraires),
+    services_carte: r2(l.services),
+    commission_services: r2(l.c.commServices),
+    commission_cohote: r2(l.c.total),
+    commission_mj: r2(l.c.partMJ),
+    nuits: l.nuits
+  }, { onConflict: 'cohote_id,dossier_id,mois,annee' });
+
+  if (error) { showToast('❌ Erreur : ' + error.message); return; }
+  showToast(`✅ Enregistré — votre commission : ${eur(l.c.total)}`);
+  loadDashboard();
+  loadRevenusHistory();
+}
+
+let historique = [];
+const MOIS_LBL = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+async function loadRevenusHistory() {
+  const { data } = await sb.from('cohote_revenus').select('*')
+    .eq('cohote_id', currentUser.id)
+    .order('annee', { ascending: false }).order('mois', { ascending: false });
+  historique = data || [];
+
+  const el = document.getElementById('revenus-history');
+  const MOIS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'];
+  if (!historique.length) {
+    el.innerHTML = '<div style="color:var(--ink3);font-size:13px;padding:8px">Aucun revenu enregistré.</div>';
+    return;
+  }
+  el.innerHTML = `<table>
+    <thead><tr>
+      <th>Mois</th><th>Bien</th><th>CA net</th><th>Offre</th>
+      <th>Honoraires MJ</th><th>Nuits</th><th>Services</th><th>Votre commission</th>
+    </tr></thead>
+    <tbody>${historique.map(r => {
+      const b = mesBiens.find(x => x.dossier_id === r.dossier_id);
+      const d = b?.dossier || {};
+      return `<tr>
+        <td>${MOIS[r.mois-1]} ${r.annee}</td>
+        <td>${d.prenom||''} ${d.nom||''}</td>
+        <td>${eur(parseFloat(r.revenu_brut))}</td>
+        <td>${r.taux_offre ? r.taux_offre + '%' : '—'}</td>
+        <td style="color:var(--ink3)">${eur(parseFloat(r.honoraires_mj))}</td>
+        <td style="text-align:center">${r.nuits || 0}</td>
+        <td>${eur(parseFloat(r.services_carte))}</td>
+        <td style="font-weight:600;color:var(--or)">${eur(parseFloat(r.commission_cohote))}</td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table>`;
+}
+
+// ── EXPORT CSV ──
+function exportRecapCSV() {
+  if (!historique.length) { showToast('Aucun revenu à exporter'); return; }
+  const sep = ';';
+  const nb = n => (Math.round((parseFloat(n) || 0) * 100) / 100).toFixed(2).replace('.', ',');
+
+  const lignes = [['Mois','Annee','Bien','CA net (apres frais plateforme)','Taux offre',
+    'Honoraires MJ','Part co-hote','Nuits','Services a la carte','Commission services','Commission totale'].join(sep)];
+
+  let total = 0;
+  historique.forEach(r => {
+    const b = mesBiens.find(x => x.dossier_id === r.dossier_id);
+    const d = b?.dossier || {};
+    total += parseFloat(r.commission_cohote) || 0;
+    lignes.push([
+      MOIS_LBL[r.mois-1], r.annee,
+      `"${`${d.prenom||''} ${d.nom||''}`.trim().replace(/"/g,'""') || 'Bien ' + r.dossier_id}"`,
+      nb(r.revenu_brut), (r.taux_offre || '') + '%',
+      nb(r.honoraires_mj), (b ? partCohote(b) : '') + '%',
+      r.nuits || 0, nb(r.services_carte), nb(r.commission_services), nb(r.commission_cohote)
+    ].join(sep));
+  });
+  lignes.push(['TOTAL','','','','','','','','','', nb(total)].join(sep));
+
+  const blob = new Blob(['\uFEFF' + lignes.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `commissions_maison_jade_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('✅ Récap exporté');
+}
+
+// ── PRÉ-FACTURE PDF ──
+function genererPrefacture() {
+  const mois  = parseInt(document.getElementById('rev-mois').value);
+  const annee = parseInt(document.getElementById('rev-annee').value);
+  const lignes = historique.filter(r => r.mois === mois && r.annee === annee);
+
+  if (!lignes.length) {
+    showToast(`Aucun revenu enregistré pour ${MOIS_LBL[mois-1]} ${annee}`);
+    return;
+  }
+  if (!currentProfile?.siret) {
+    showToast('⚠️ Renseignez votre SIRET dans Mon profil avant de facturer');
+    return;
+  }
+
+  const p = currentProfile;
+  document.getElementById('f-ref').innerHTML =
+    `Période : <strong>${MOIS_LBL[mois-1]} ${annee}</strong> — Établie le ${new Date().toLocaleDateString('fr-FR')}`;
+  document.getElementById('f-cohote').textContent  = `${p.prenom || ''} ${p.nom || ''}`.trim();
+  document.getElementById('f-adresse').textContent = p.adresse || '—';
+  document.getElementById('f-siret').textContent   = 'SIRET : ' + (p.siret || '—');
+
+  let total = 0;
+  document.getElementById('f-lignes').innerHTML = lignes.map(r => {
+    const b = mesBiens.find(x => x.dossier_id === r.dossier_id);
+    const d = b?.dossier || {};
+    const part = b ? partCohote(b) : 0;
+    total += parseFloat(r.commission_cohote) || 0;
+    const commGestion = (parseFloat(r.commission_cohote) || 0) - (parseFloat(r.commission_services) || 0);
+
+    let html = `<tr>
+      <td>${`${d.prenom||''} ${d.nom||''}`.trim() || 'Bien ' + r.dossier_id}<br>
+        <span style="font-size:10px;color:#777">${(d.adresse||'').split(',')[0]}</span></td>
+      <td class="num">${eur(parseFloat(r.revenu_brut))}</td>
+      <td class="num">${r.taux_offre || '—'}%</td>
+      <td class="num">${eur(parseFloat(r.honoraires_mj))}</td>
+      <td class="num">${part}%</td>
+      <td class="num">${eur(commGestion)}</td>
+    </tr>`;
+
+    if (parseFloat(r.services_carte) > 0) {
+      html += `<tr>
+        <td style="padding-left:22px;font-style:italic">↳ Prestations à la carte</td>
+        <td class="num">${eur(parseFloat(r.services_carte))}</td>
+        <td class="num">—</td><td class="num">—</td>
+        <td class="num">85%</td>
+        <td class="num">${eur(parseFloat(r.commission_services))}</td>
+      </tr>`;
+    }
+    return html;
+  }).join('');
+
+  document.getElementById('f-total').textContent = eur(total);
+  window.print();
+}
+
+// ── CHECKLISTS ──
+function loadChecklistBiens() {
+  const sel = document.getElementById('cl-bien-select');
+  sel.innerHTML = '<option value="">— Choisir un bien —</option>';
+  mesBiens.forEach(b => {
+    const d = b.dossier || {};
+    sel.innerHTML += `<option value="${b.dossier_id}">${d.prenom||''} ${d.nom||''} — ${(d.adresse||'').split(',')[0]}</option>`;
+  });
+}
+
+async function loadChecklist() {
+  const dosId = document.getElementById('cl-bien-select').value;
+  const type = document.getElementById('cl-type-select').value;
+  const el = document.getElementById('cl-content');
+  if (!dosId) { el.innerHTML = '<div style="color:var(--ink3);font-size:13px">Sélectionnez un bien.</div>'; return; }
+
+  // Charger depuis Supabase
+  const { data } = await sb.from('cohote_checklists').select('*')
+    .eq('cohote_id', currentUser.id).eq('dossier_id', dosId).eq('type', type)
+    .order('created_at', { ascending: false }).limit(1);
+
+  const saved = data?.[0]?.items || [];
+  clState = {};
+  saved.forEach((item, i) => { clState[i] = item.checked || false; });
+
+  const items = CL_ITEMS[type] || [];
+  el.innerHTML = items.map((item, i) => `
+    <label class="cl-item ${clState[i] ? 'done' : ''}" id="cl-${i}" onclick="toggleCL(${i})">
+      <input type="checkbox" ${clState[i] ? 'checked' : ''} readonly>
+      <span>${item}</span>
+    </label>`).join('');
+
+  const done = Object.values(clState).filter(Boolean).length;
+  el.innerHTML += `<div style="margin-top:1rem;font-size:12px;color:var(--ink3)">Progression : <strong style="color:var(--jade)">${done}/${items.length}</strong></div>`;
+}
+
+function toggleCL(i) {
+  clState[i] = !clState[i];
+  const el = document.getElementById('cl-' + i);
+  if (el) {
+    el.classList.toggle('done', clState[i]);
+    el.querySelector('input').checked = clState[i];
+  }
+}
+
+async function saveChecklist() {
+  const dosId = document.getElementById('cl-bien-select').value;
+  const type = document.getElementById('cl-type-select').value;
+  if (!dosId) { showToast('Sélectionnez un bien'); return; }
+  const items = (CL_ITEMS[type] || []).map((label, i) => ({ label, checked: clState[i] || false }));
+  const { error } = await sb.from('cohote_checklists').insert({
+    cohote_id: currentUser.id, dossier_id: dosId, type, items
+  });
+  if (error) { showToast('❌ ' + error.message); return; }
+  showToast('✅ Checklist sauvegardée !');
+}
+
+function resetChecklist() { clState = {}; loadChecklist(); }
+
+// ── CALENDRIER ──
+async function loadCalCohote() {
+  const el = document.getElementById('cal-cohote-content');
+  if (!mesBiens.length) {
+    el.className = '';
+    el.innerHTML = '<div class="empty-state"><h3>Aucun bien assigné</h3><p>Votre calendrier apparaîtra ici une fois des biens assignés.</p></div>';
+    return;
+  }
+  el.innerHTML = '<div style="color:var(--ink3);font-size:13px">Vos biens : ajoutez les liens iCal dans les fiches pour synchroniser votre calendrier.<br><br>' +
+    mesBiens.map(b => {
+      const d = b.dossier || {};
+      const ical = d.ical_airbnb || '';
+      return `<div style="padding:10px 0;border-bottom:1px solid var(--border)"><strong>${d.prenom||''} ${d.nom||''}</strong> — ${(d.adresse||'').split(',')[0]}<br><span style="font-size:11px;color:${ical?'var(--jade)':'var(--red)'}">${ical?'✅ iCal configuré':'❌ Lien iCal non renseigné'}</span></div>`;
+    }).join('') + '</div>';
+}
+
+async function refreshCalCohote() { await loadCalCohote(); }
+
+// ── RÉSEAU ──
+async function loadReseau() {
+  const { data } = await sb.from('profiles').select('*').eq('parrain_id', currentUser.id);
+  const el = document.getElementById('reseau-list');
+  if (!data?.length) {
+    el.className = '';
+    el.innerHTML = '<div class="empty-state"><h3>Aucun filleul pour l\'instant</h3><p>Recrutez des co-hôtes pour percevoir 20% de leur commission.</p></div>';
+    return;
+  }
+  el.className = '';
+  el.innerHTML = data.map(f => `
+    <div class="filleul-card">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div class="filleul-avatar">${(f.prenom||f.email||'?')[0]}</div>
+        <div>
+          <div class="filleul-name">${f.prenom||''} ${f.nom||''}</div>
+          <div class="filleul-sub">${f.email} · <span class="badge ${f.statut==='ambassadeur'?'badge-attente':'badge-online'}">${f.statut}</span></div>
+        </div>
+      </div>
+      <div class="filleul-comm">
+        <div class="filleul-comm-num">20%</div>
+        <div class="filleul-comm-lbl">de sa commission</div>
+      </div>
+    </div>`).join('');
+}
+
+// ── ADMIN ──
+async function loadAdminData() {
+  // Charger tous les co-hôtes
+  const { data: cohotes } = await sb.from('profiles').select('*').order('created_at');
+  const el = document.getElementById('admin-cohotes-list');
+  if (!cohotes?.length) { el.innerHTML = '<div style="padding:1rem;color:var(--ink3);font-size:13px">Aucun co-hôte inscrit.</div>'; return; }
+  el.className = '';
+  el.innerHTML = `<table>
+    <thead><tr><th>Nom</th><th>Email</th><th>Statut</th><th>Inscrit le</th><th>Abonnement</th><th>Actions</th></tr></thead>
+    <tbody>${cohotes.map(c => `<tr>
+      <td style="font-weight:500">${c.prenom||''} ${c.nom||''}</td>
+      <td style="font-size:12px">${c.email}</td>
+      <td><span class="badge ${c.statut==='ambassadeur'?'badge-attente':'badge-online'}">${c.statut}</span></td>
+      <td style="font-size:12px">${new Date(c.created_at).toLocaleDateString('fr-FR')}</td>
+      <td>${c.abonnement_actif?'✅':'❌'}</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="toggleAbonnement('${c.id}',${!c.abonnement_actif})">${c.abonnement_actif?'Désactiver':'Activer'}</button>
+        <button class="btn btn-or btn-sm" onclick="setAmbassadeur('${c.id}','${c.statut}')">⭐</button>
+      </td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+
+  // Charger les dossiers pour l'assignation
+  const { data: dossiers } = await sb.from('dossiers').select('id, data');
+  const selD = document.getElementById('assign-dossier');
+  selD.innerHTML = '<option value="">— Choisir —</option>';
+  (dossiers||[]).forEach(d => {
+    const dat = d.data || {};
+    selD.innerHTML += `<option value="${d.id}">${dat.prenom||''} ${dat.nom||''} — ${(dat.adresse||'').split(',')[0]}</option>`;
+  });
+  const selC = document.getElementById('assign-cohote');
+  selC.innerHTML = '<option value="">— Choisir —</option>';
+  cohotes.forEach(c => {
+    selC.innerHTML += `<option value="${c.id}">${c.prenom||''} ${c.nom||''} (${c.email})</option>`;
+  });
+
+  // Tableau des biens déjà assignés (avec réassignation)
+  const { data: assigns } = await sb.from('cohote_biens').select('*');
+  const elA = document.getElementById('admin-assign-list');
+  elA.className = '';
+  if (!assigns?.length) {
+    elA.innerHTML = '<div style="padding:1rem;color:var(--ink3);font-size:13px">Aucun bien assigné pour le moment.</div>';
+    return;
+  }
+  const dosMap = {};
+  (dossiers || []).forEach(d => dosMap[d.id] = d.data || {});
+
+  elA.innerHTML = `<table>
+    <thead><tr><th>Bien</th><th>Co-hôte</th><th>Origine</th><th>Offre</th><th>Part</th><th>Effectif / CA net</th><th></th></tr></thead>
+    <tbody>${assigns.map(a => {
+      const d = dosMap[a.dossier_id] || {};
+      const c = cohotes.find(x => x.id === a.cohote_id);
+      const off = a.taux_offre || 22, part = a.type_bien === 'apporte' ? 70 : (a.taux_commission || 50);
+      return `<tr>
+        <td style="font-weight:500">${d.prenom||''} ${d.nom||''}<br>
+          <span style="font-size:11px;color:var(--ink3)">${(d.adresse||'').split(',')[0]}</span></td>
+        <td>${c ? `${c.prenom||''} ${c.nom||''}` : '<span style="color:var(--red)">Co-hôte introuvable</span>'}</td>
+        <td><span class="badge ${a.type_bien==='mj'?'badge-online':'badge-attente'}">${a.type_bien==='mj'?'🏠 MJ':'✋ Apporté'}</span></td>
+        <td>${OFFRES[off]||''} ${off}%</td>
+        <td>${part}%</td>
+        <td style="font-weight:600;color:var(--or)">${(off * part / 100).toFixed(1)}%</td>
+        <td><button class="btn btn-outline btn-sm" onclick="retirerAssignation('${a.id}')">Retirer</button></td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table>`;
+}
+
+function showCreateCohote() {
+  document.getElementById('create-form').style.display = 'block';
+}
+
+async function createCohote() {
+  const email = document.getElementById('adm-email').value;
+  const pwd = document.getElementById('adm-password').value;
+  const prenom = document.getElementById('adm-prenom').value;
+  const nom = document.getElementById('adm-nom').value;
+  const tel = document.getElementById('adm-tel').value;
+  const statut = document.getElementById('adm-statut').value;
+  if (!email || !pwd) { showToast('Email et mot de passe requis'); return; }
+
+  const { data, error } = await sb.auth.admin?.createUser({
+    email, password: pwd,
+    user_metadata: { prenom, nom, role: 'cohote' }
+  });
+
+  if (error) {
+    // Si pas d'admin API, utiliser signUp
+    const { data: sd, error: se } = await sb.auth.signUp({
+      email, password: pwd,
+      options: { data: { prenom, nom, role: 'cohote' } }
+    });
+    if (se) { showToast('❌ ' + se.message); return; }
+  }
+
+  showToast(`✅ Compte créé pour ${prenom} ${nom} — un email de confirmation a été envoyé.`);
+  document.getElementById('create-form').style.display = 'none';
+  loadAdminData();
+}
+
+async function assignBien() {
+  const cohoteId  = document.getElementById('assign-cohote').value;
+  const dossierId = document.getElementById('assign-dossier').value;
+  const type      = document.getElementById('assign-type').value;
+  const offre     = parseInt(document.getElementById('assign-offre').value);
+  if (!cohoteId || !dossierId) { showToast('Sélectionnez un co-hôte et un bien'); return; }
+
+  const dosId = parseInt(dossierId);
+  const taux = type === 'apporte' ? 70 : 50;
+
+  // Réassignation : un bien n'appartient qu'à un seul co-hôte à la fois
+  const { data: existant } = await sb.from('cohote_biens')
+    .select('id, cohote_id').eq('dossier_id', dosId).maybeSingle();
+
+  if (existant && existant.cohote_id !== cohoteId) {
+    if (!confirm('Ce bien est déjà assigné à un autre co-hôte. Le réassigner ?')) return;
+  }
+
+  const payload = { cohote_id: cohoteId, dossier_id: dosId, type_bien: type, taux_commission: taux, taux_offre: offre };
+  const { error } = existant
+    ? await sb.from('cohote_biens').update(payload).eq('id', existant.id)
+    : await sb.from('cohote_biens').insert(payload);
+
+  if (error) { showToast('❌ ' + error.message); return; }
+  showToast(existant ? '✅ Bien réassigné' : '✅ Bien assigné');
+  loadAdminData();
+}
+
+async function retirerAssignation(id) {
+  if (!confirm('Retirer ce bien au co-hôte ? Les revenus déjà saisis sont conservés.')) return;
+  const { error } = await sb.from('cohote_biens').delete().eq('id', id);
+  if (error) { showToast('❌ ' + error.message); return; }
+  showToast('✅ Assignation retirée');
+  loadAdminData();
+}
+
+async function toggleAbonnement(id, val) {
+  await sb.from('profiles').update({ abonnement_actif: val }).eq('id', id);
+  showToast('✅ Abonnement mis à jour');
+  loadAdminData();
+}
+
+async function setAmbassadeur(id, currentStatut) {
+  const newStatut = currentStatut === 'ambassadeur' ? 'actif' : 'ambassadeur';
+  await sb.from('profiles').update({ statut: newStatut }).eq('id', id);
+  showToast(`✅ Statut mis à jour : ${newStatut}`);
+  loadAdminData();
+}
+
+// ── PROFIL ──
+async function saveProfil() {
+  const maj = {
+    prenom: document.getElementById('p-prenom').value,
+    nom: document.getElementById('p-nom').value,
+    telephone: document.getElementById('p-tel').value,
+    siret: document.getElementById('p-siret').value,
+    adresse: document.getElementById('p-adresse').value
+  };
+  const { error } = await sb.from('profiles').update(maj).eq('id', currentUser.id);
+  if (error) { showToast('❌ ' + error.message); return; }
+  Object.assign(currentProfile, maj);
+  showToast('✅ Profil mis à jour !');
+}
+
+async function changePassword() {
+  const pwd = document.getElementById('p-pwd').value;
+  if (!pwd) { showToast('Entrez un nouveau mot de passe'); return; }
+  const { error } = await sb.auth.updateUser({ password: pwd });
+  if (error) { showToast('❌ ' + error.message); return; }
+  showToast('✅ Mot de passe mis à jour !');
+  document.getElementById('p-pwd').value = '';
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 3500);
+}
+
+// ── AUTO LOGIN ──
+sb.auth.onAuthStateChange((event, session) => {
+  if (session?.user && !currentUser) initApp(session.user);
+});
+
+// Enter key login
+document.getElementById('login-password').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+
+// ═══ SIMULATEUR DE REVENUS (identique à l'intranet) ═══
+const PROFILS_SAISON = {
+  plage:    { nom:'Balnéaire', taux:[0.30,0.32,0.40,0.55,0.65,0.78,0.93,0.95,0.72,0.48,0.30,0.28], prix:[0.7,0.7,0.8,0.85,0.9,1.0,1.3,1.4,0.95,0.8,0.7,0.7] },
+  montagne: { nom:'Montagne',  taux:[0.75,0.72,0.55,0.40,0.38,0.45,0.68,0.72,0.48,0.38,0.42,0.78], prix:[1.3,1.25,0.9,0.75,0.75,0.85,1.1,1.15,0.8,0.7,0.8,1.2] },
+  ville:    { nom:'Urbain',    taux:[0.60,0.62,0.68,0.72,0.74,0.76,0.72,0.68,0.74,0.70,0.62,0.58], prix:[0.85,0.85,0.9,0.95,1.0,1.05,1.1,1.1,1.0,0.9,0.85,0.85] },
+  aeroport: { nom:'Aéroport / Transit / Salons', taux:[0.70,0.68,0.80,0.74,0.75,0.82,0.66,0.55,0.83,0.81,0.78,0.64], prix:[1.0,0.92,1.12,0.98,1.0,1.15,0.95,0.85,1.15,1.10,1.05,0.90] },
+  affaires: { nom:'Affaires urbaines', taux:[0.72,0.74,0.78,0.75,0.76,0.68,0.55,0.52,0.76,0.78,0.74,0.65], prix:[0.9,0.9,0.95,0.95,1.0,0.9,0.8,0.8,1.0,1.0,0.95,0.85] },
+  campagne: { nom:'Campagne / Nature',   taux:[0.28,0.30,0.38,0.50,0.58,0.68,0.82,0.85,0.62,0.42,0.28,0.25], prix:[0.7,0.7,0.8,0.9,0.95,1.0,1.2,1.25,0.9,0.8,0.7,0.65] },
+  mixte:    { nom:'Mixte',     taux:[0.50,0.52,0.58,0.62,0.66,0.72,0.80,0.82,0.68,0.58,0.50,0.48], prix:[0.85,0.85,0.9,0.95,1.0,1.05,1.15,1.18,0.95,0.88,0.82,0.82] },
+};
+
+// Mélange précis des profils cochés (moyenne des taux et prix)
+function getProfilsCoches() {
+  const checked = [...document.querySelectorAll('input[name="attrait"]:checked')].map(c => c.value);
+  return checked.length ? checked : ['aeroport'];
+}
+
+function getProfilActif() {
+  const keys = getProfilsCoches();
+  if (keys.length === 1) return { ...PROFILS_SAISON[keys[0]], keys };
+  // Mélange : moyenne des taux et des multiplicateurs de prix
+  const taux = Array(12).fill(0), prix = Array(12).fill(0);
+  keys.forEach(k => {
+    const p = PROFILS_SAISON[k];
+    for (let i = 0; i < 12; i++) { taux[i] += p.taux[i]; prix[i] += p.prix[i]; }
+  });
+  for (let i = 0; i < 12; i++) { taux[i] = +(taux[i]/keys.length).toFixed(3); prix[i] = +(prix[i]/keys.length).toFixed(3); }
+  const nom = keys.map(k => PROFILS_SAISON[k].nom).join(' + ');
+  return { nom, taux, prix, keys };
+}
+
+const SIM_MOIS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const MOIS_COURT = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'];
+
+// Bonus équipements
+function getBonus() {
+  let b = 1.0;
+  if (document.getElementById('eq-piscine')?.checked) b += 0.12;
+  if (document.getElementById('eq-vue')?.checked) b += 0.08;
+  if (document.getElementById('eq-terrasse')?.checked) b += 0.04;
+  if (document.getElementById('eq-clim')?.checked) b += 0.03;
+  if (document.getElementById('eq-parking')?.checked) b += 0.02;
+  if (document.getElementById('eq-animaux')?.checked) b += 0.02;
+  return b;
+}
+
+// Bonus distance
+function getDistanceBonus() {
+  const d = document.getElementById('s-distance')?.value;
+  return d === 'proche' ? 1.10 : d === 'loin' ? 0.88 : 1.0;
+}
+
+// Prix de base par type de bien et profil
+// GRILLE DE PRIX PAR CAPACITÉ (calée sur marché réel : bien moyen 4 pers ≈ 99€)
+function getPrixBase(profilKeys, typeBien) {
+  const couchages = parseInt(document.getElementById('s-couchages')?.value) || 4;
+  const sdeau     = parseInt(document.getElementById('s-sdeau')?.value) || 1;
+  const BPC = 27; // €/couchage, dégressif
+  let base = 0;
+  for (let i = 1; i <= couchages; i++) base += i <= 2 ? BPC : i <= 4 ? BPC*0.85 : BPC*0.65;
+  // Bonus atouts (plafond +25%)
+  let bonus = 0;
+  if (sdeau >= 2) bonus += 0.08;
+  if (document.getElementById('s-maison-indiv')?.checked) bonus += 0.10;
+  if (document.getElementById('eq-parking')?.checked)     bonus += 0.05;
+  const terrasse = document.getElementById('eq-terrasse')?.checked;
+  const jardin   = document.getElementById('s-jardin')?.checked;
+  if (terrasse || jardin) bonus += 0.05;
+  if (terrasse && jardin) bonus += 0.03;
+  return Math.round(base * (1 + Math.min(bonus, 0.25)));
+}
+
+// Facteur d'occupation selon le type de bien (studio se loue plus souvent qu'une maison)
+function getFacteurOccupation(typeBien) {
+  const f = { studio:1.0, t2:0.92, t3:0.88, t4:0.78, maison:0.75, villa:0.72 };
+  return f[typeBien] || 0.90;
+}
+
+let simData = {}; // stockage des données pour le PDF
+
+function updateSaisonnalite() {
+  const profil = getProfilActif();
+  if (!profil || !profil.taux) return;
+
+  // Label profil
+  document.getElementById('profil-label').textContent = profil.nom;
+
+  // Barres saisonnières
+  const max = Math.max(...profil.taux);
+  const bars = document.getElementById('saison-bars');
+  if (!bars) return;
+
+  bars.innerHTML = profil.taux.map((t, i) => {
+    const pct = Math.round(t * 100);
+    const h = Math.round((t / max) * 80) + 20;
+    const col = t >= 0.75 ? '#A57C52' : t >= 0.55 ? '#31483F' : '#C2D4CD';
+    return `<div style="text-align:center">
+      <div style="font-size:9px;color:var(--ink3);margin-bottom:2px">${pct}%</div>
+      <div style="height:${h}px;background:${col};border-radius:3px 3px 0 0;min-height:8px"></div>
+    </div>`;
+  }).join('');
+
+  // Légende
+  document.getElementById('saison-legend').innerHTML = `
+    <span style="display:flex;align-items:center;gap:4px;font-size:11px"><span style="width:10px;height:10px;border-radius:2px;background:#A57C52;display:inline-block"></span>Haute saison (≥75%)</span>
+    <span style="display:flex;align-items:center;gap:4px;font-size:11px"><span style="width:10px;height:10px;border-radius:2px;background:#31483F;display:inline-block"></span>Moyenne saison (55-75%)</span>
+    <span style="display:flex;align-items:center;gap:4px;font-size:11px"><span style="width:10px;height:10px;border-radius:2px;background:#C2D4CD;display:inline-block"></span>Basse saison (<55%)</span>`;
+
+  // Mettre à jour les fourchettes indicatives à l'étape 2
+  updateFourchettes();
+}
+
+function showSimTab(tab, btn) {
+  document.getElementById('sim-tab-prix').style.display = tab === 'prix' ? 'block' : 'none';
+  document.getElementById('sim-tab-ref').style.display  = tab === 'ref'  ? 'block' : 'none';
+  document.querySelectorAll('#tab-sim-prix, #tab-sim-ref').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (tab === 'ref') renderRefAirbnb();
+}
+
+// Recalcule le prix suggéré depuis la grille (couchages/atouts) et rafraîchit tout
+function forcePrixSuggere() {
+  const base = getPrixBase(getProfilActif().keys, document.getElementById('s-type-bien')?.value || 't2');
+  const profil = getProfilActif();
+  const bassePrix = Math.round(base * Math.min(...profil.prix));
+  const moyPrix   = Math.round(base);
+  const hautePrix = Math.round(base * Math.max(...profil.prix));
+  // Réécrire les prix suggérés (écrase, car la capacité a changé)
+  const pb = document.getElementById('prix-basse'), pm = document.getElementById('prix-moy'), ph = document.getElementById('prix-haute');
+  if (pb) pb.value = bassePrix;
+  if (pm) pm.value = moyPrix;
+  if (ph) ph.value = hautePrix;
+  // Afficher le prix moyen calculé comme repère
+  const rep = document.getElementById('prix-repere');
+  if (rep) { rep.textContent = `💡 Prix moyen suggéré : ${moyPrix}€/nuit (calculé selon capacité et atouts)`; rep.style.display = 'block'; }
+  updatePrixMensuel();
+  if (document.getElementById('res-ca-annuel')?.textContent) calculerResultats();
+}
+
+function updateFourchettes() {
+  const profil = getProfilActif();
+  const typeBien = document.getElementById('s-type-bien')?.value || 't2';
+  const bonus = getBonus();
+  const distBonus = getDistanceBonus();
+  const base = getPrixBase(profil.keys, typeBien) * bonus * distBonus;
+  const prixMult = profil.prix;
+  const taux = profil.taux;
+
+  const bassePrix = Math.round(base * Math.min(...prixMult));
+  const hautePrix = Math.round(base * Math.max(...prixMult));
+  const moyPrix   = Math.round(base * 1.0);
+
+  // Calculer les taux moyens par saison
+  const tauxHaute = taux.filter(t => t >= 0.75);
+  const tauxMoyS  = taux.filter(t => t >= 0.55 && t < 0.75);
+  const tauxBasse = taux.filter(t => t < 0.55);
+  const avgH = tauxHaute.length ? Math.round(tauxHaute.reduce((a,b)=>a+b,0)/tauxHaute.length*100) : 0;
+  const avgM = tauxMoyS.length  ? Math.round(tauxMoyS.reduce((a,b)=>a+b,0)/tauxMoyS.length*100) : 0;
+  const avgB = tauxBasse.length ? Math.round(tauxBasse.reduce((a,b)=>a+b,0)/tauxBasse.length*100) : 0;
+
+  // Mois par saison
+  const SIM_MOIS_C = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+  const moisHaute = taux.map((t,i)=>t>=0.75?SIM_MOIS_C[i]:null).filter(Boolean).join(', ');
+  const moisMoy   = taux.map((t,i)=>t>=0.55&&t<0.75?SIM_MOIS_C[i]:null).filter(Boolean).join(', ');
+  const moisBasse = taux.map((t,i)=>t<0.55?SIM_MOIS_C[i]:null).filter(Boolean).join(', ');
+
+  // Afficher taux d'occupation
+  ['taux-basse','taux-moy','taux-haute','taux-basse-mini','taux-moy-mini','taux-haute-mini'].forEach(id => {
+    const el = document.getElementById(id); if (!el) return;
+    if (id.includes('haute')) el.textContent = avgH + '%';
+    else if (id.includes('moy'))  el.textContent = avgM + '%';
+    else                          el.textContent = avgB + '%';
+  });
+  const mb = document.getElementById('mois-basse'); if(mb) mb.textContent = moisBasse || '—';
+  const mm = document.getElementById('mois-moy');   if(mm) mm.textContent = moisMoy   || '—';
+  const mh = document.getElementById('mois-haute'); if(mh) mh.textContent = moisHaute || '—';
+
+  // Prix indicatifs
+  const fb = document.getElementById('fourch-basse'); if(fb) fb.textContent = bassePrix + '€';
+  const fm = document.getElementById('fourch-moy');   if(fm) fm.textContent = moyPrix + '€';
+  const fh = document.getElementById('fourch-haute'); if(fh) fh.textContent = hautePrix + '€';
+
+  // Pré-remplir si vides
+  const pb = document.getElementById('prix-basse');
+  const pm = document.getElementById('prix-moy');
+  const ph = document.getElementById('prix-haute');
+  if (pb && !pb.value) pb.value = bassePrix;
+  if (pm && !pm.value) pm.value = moyPrix;
+  if (ph && !ph.value) ph.value = hautePrix;
+
+  // Lien Airbnb
+  const ville = document.getElementById('s-ville')?.value || '';
+  const typeMap = { studio:'1', t2:'2', t3:'3', t4:'4', maison:'4', villa:'5' };
+  const vEncoded = encodeURIComponent(ville || 'France');
+  const btnAirbnb = document.getElementById('btn-airbnb');
+  if (btnAirbnb) btnAirbnb.href = `https://www.airbnb.fr/s/${vEncoded}/homes?room_types%5B%5D=Entire+home%2Fapt&min_bedrooms=${typeMap[typeBien]||2}`;
+
+  updatePrixMensuel();
+}
+
+// Références Airbnb
+let refsAirbnb = JSON.parse(localStorage.getItem('mj_refs_airbnb') || '[]');
+
+function saveRefAirbnb() {
+  const ville   = document.getElementById('s-ville')?.value?.trim() || '';
+  const typeBien = document.getElementById('s-type-bien');
+  const typeBienLabel = typeBien?.options[typeBien.selectedIndex]?.text || '';
+  const attrait = getProfilsCoches().join('+');
+  const pb = parseFloat(document.getElementById('prix-basse')?.value) || 0;
+  const pm = parseFloat(document.getElementById('prix-moy')?.value)   || 0;
+  const ph = parseFloat(document.getElementById('prix-haute')?.value) || 0;
+  if (!pb && !pm && !ph) { showToast('⚠️ Entrez au moins un prix avant de sauvegarder'); return; }
+  const ref = {
+    id: Date.now(),
+    ville, typeBienLabel, attrait,
+    prixBasse: pb, prixMoy: pm, prixHaute: ph,
+    date: new Date().toLocaleDateString('fr-FR'),
+    dateISO: new Date().toISOString(),
+    bonus: getBonus().toFixed(2),
+    notes: ''
+  };
+  refsAirbnb.unshift(ref);
+  localStorage.setItem('mj_refs_airbnb', JSON.stringify(refsAirbnb));
+  showToast('✅ Référence enregistrée — ' + (ville || typeBienLabel));
+}
+
+function renderRefAirbnb() {
+  const el = document.getElementById('ref-airbnb-list');
+  if (!el) return;
+  if (!refsAirbnb.length) {
+    el.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--ink3);font-size:13px"><div style="font-size:28px;margin-bottom:8px">📋</div>Aucune référence enregistrée.<br><small>Après avoir observé les prix sur Airbnb, cliquez sur "Sauvegarder comme référence".</small></div>';
+    return;
+  }
+  el.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:12px">
+    <thead><tr style="background:var(--jade);color:white">
+      <th style="padding:8px 10px;text-align:left">Zone / Bien</th>
+      <th style="padding:8px 10px;text-align:center">❄️ Basse</th>
+      <th style="padding:8px 10px;text-align:center">🌤 Moyenne</th>
+      <th style="padding:8px 10px;text-align:center">☀️ Haute</th>
+      <th style="padding:8px 10px;text-align:center">Enregistré le</th>
+      <th style="padding:8px 10px;text-align:center">Action</th>
+    </tr></thead>
+    <tbody>${refsAirbnb.map(r => `<tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:8px 10px">
+        <div style="font-weight:500">${r.ville || '—'}</div>
+        <div style="font-size:11px;color:var(--ink3)">${r.typeBienLabel || ''} · ${r.attrait || ''}</div>
+      </td>
+      <td style="padding:8px 10px;text-align:center;color:var(--ink3)">${r.prixBasse ? r.prixBasse+'€' : '—'}</td>
+      <td style="padding:8px 10px;text-align:center;color:var(--jade);font-weight:500">${r.prixMoy ? r.prixMoy+'€' : '—'}</td>
+      <td style="padding:8px 10px;text-align:center;color:var(--or);font-weight:500">${r.prixHaute ? r.prixHaute+'€' : '—'}</td>
+      <td style="padding:8px 10px;text-align:center;font-size:11px;color:var(--ink3)">${r.date}</td>
+      <td style="padding:8px 10px;text-align:center">
+        <button class="btn btn-ghost btn-sm" onclick="chargerRef(${r.id})">↑ Utiliser</button>
+        <button class="btn btn-red btn-sm" onclick="supprimerRef(${r.id})" style="margin-left:4px">🗑</button>
+      </td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+function chargerRef(id) {
+  const ref = refsAirbnb.find(r => r.id === id);
+  if (!ref) return;
+  if (document.getElementById('prix-basse')) document.getElementById('prix-basse').value = ref.prixBasse || '';
+  if (document.getElementById('prix-moy'))   document.getElementById('prix-moy').value   = ref.prixMoy   || '';
+  if (document.getElementById('prix-haute')) document.getElementById('prix-haute').value = ref.prixHaute || '';
+  if (ref.ville && document.getElementById('s-ville')) document.getElementById('s-ville').value = ref.ville;
+  updatePrixMensuel();
+  showSimTab('prix', document.getElementById('tab-sim-prix'));
+  showToast('✅ Référence chargée — ' + ref.ville);
+}
+
+function supprimerRef(id) {
+  refsAirbnb = refsAirbnb.filter(r => r.id !== id);
+  localStorage.setItem('mj_refs_airbnb', JSON.stringify(refsAirbnb));
+  renderRefAirbnb();
+}
+
+
+function updatePrixMensuel() {
+  const pb = parseFloat(document.getElementById('prix-basse')?.value) || 0;
+  const pm = parseFloat(document.getElementById('prix-moy')?.value) || 0;
+  const ph = parseFloat(document.getElementById('prix-haute')?.value) || 0;
+  if (!pb && !pm && !ph) return;
+
+  const profil = getProfilActif();
+  let totalCA = 0;
+  profil.taux.forEach((t, i) => {
+    const prixMult = profil.prix[i];
+    const prix = prixMult >= 1.15 ? ph : prixMult >= 0.9 ? pm : pb;
+    const nuits = Math.round(t * 30);
+    totalCA += nuits * prix;
+  });
+  const caMoy = Math.round(totalCA / 12);
+  const el = document.getElementById('ca-moy-preview');
+  if (el) el.textContent = caMoy.toLocaleString('fr-FR') + '€';
+  const elD = document.getElementById('ca-moy-detail');
+  if (elD) elD.textContent = 'soit ' + (caMoy*12).toLocaleString('fr-FR') + '€ / an estimé';
+}
+
+function goStep(n) {
+  [1,2,3].forEach(i => {
+    const s = document.getElementById('sim-step-' + i);
+    const b = document.getElementById('step-btn-' + i);
+    if (s) s.style.display = i === n ? 'block' : 'none';
+    if (b) { b.classList.toggle('active', i === n); }
+  });
+  if (n === 2) updateFourchettes();
+  if (n === 3) calculerResultats();
+}
+
+function calculerResultats() {
+  let profil   = getProfilActif();
+  // Si aucun profil coché manuellement, utiliser la courbe du secteur détecté (l'humain garde le dernier mot)
+  const casesCochees = document.querySelectorAll('input[name="attrait"]:checked').length;
+  if (!casesCochees && window._courbeSecteur) {
+    profil = { nom: window._courbeSecteur.nom, taux: window._courbeSecteur.taux, prix: window._courbeSecteur.prix, keys:['auto'] };
+  }
+  const tauxMJ   = parseFloat(document.getElementById('s-offre')?.value || 22) / 100;
+  const pb       = parseFloat(document.getElementById('prix-basse')?.value) || 0;
+  const pm       = parseFloat(document.getElementById('prix-moy')?.value) || 0;
+  const ph       = parseFloat(document.getElementById('prix-haute')?.value) || 0;
+  const proprio  = document.getElementById('s-proprio-nom')?.value || 'Propriétaire';
+  const ville    = document.getElementById('s-ville')?.value || '';
+  const offre    = document.getElementById('s-offre');
+  const offreLabel = offre?.options[offre.selectedIndex]?.text || '';
+  const typeBien = document.getElementById('s-type-bien');
+  const typeBienLabel = typeBien?.options[typeBien.selectedIndex]?.text || '';
+
+  // En-tête résultat
+  const titreEl = document.getElementById('res-titre');
+  const sousEl  = document.getElementById('res-sous-titre');
+  if (titreEl) titreEl.textContent = `Simulation — ${proprio}${ville ? ' · ' + ville : ''}`;
+  if (sousEl)  sousEl.textContent  = `${typeBienLabel} · ${profil.nom} · ${offreLabel}`;
+
+  // Calcul mois par mois
+  let totalCA = 0, totalNet = 0, totalNuits = 0, totalComm = 0;
+  // Coefficients géo (1 = neutre si aucune adresse géocodée)
+  const typeBienVal = document.getElementById('s-type-bien')?.value || 't2';
+  const fType = getFacteurOccupation(typeBienVal);
+  const cOcc  = (geoData ? geoData.coeffOcc  : 1) * fType; // occupation × facteur type de bien
+  const cPrix = geoData ? geoData.coeffPrix : 1;
+  const rows = profil.taux.map((t, i) => {
+    const tAj = Math.min(t * cOcc, 0.97); // occupation ajustée, jamais > 97%
+    const prixMult = profil.prix[i];
+    const prixBrut = prixMult >= 1.15 ? ph : prixMult >= 0.9 ? pm : pb;
+    const prix = Math.round(prixBrut * cPrix);
+    const nuits = Math.round(tAj * 30);
+    const ca = Math.round(nuits * prix);
+    const commAirbnb = Math.round(ca * 0.155);
+    const netAirbnb  = ca - commAirbnb;
+    const commMJ     = Math.round(netAirbnb * tauxMJ);
+    const netProprio = netAirbnb - commMJ;
+    totalCA   += ca;
+    totalNet  += netProprio;
+    totalNuits+= nuits;
+    totalComm += commMJ;
+    const saison = tAj >= 0.75 ? 'haute' : tAj >= 0.55 ? 'moy' : 'basse';
+    const saisonCols = { haute:'background:#FFF3E0', moy:'', basse:'background:#F5F0F8' };
+    return { mois:SIM_MOIS[i], taux:Math.round(tAj*100), nuits, prix, ca, commMJ, netProprio, style:saisonCols[saison] };
+  });
+
+  // Remplir le tableau
+  const tbody = document.getElementById('res-table-mois');
+  if (tbody) tbody.innerHTML = rows.map(r => `
+    <tr style="${r.style}">
+      <td style="padding:7px 10px;font-weight:500">${r.mois}</td>
+      <td style="padding:7px 10px;text-align:center;font-size:12px">
+        <div style="background:${r.taux>=75?'#A57C52':r.taux>=55?'#31483F':'#C2D4CD'};color:white;border-radius:10px;padding:2px 6px;display:inline-block">${r.taux}%</div>
+      </td>
+      <td style="padding:7px 10px;text-align:center">${r.nuits}</td>
+      <td style="padding:7px 10px;text-align:center">${r.prix}€</td>
+      <td style="padding:7px 10px;text-align:center;font-weight:500">${r.ca.toLocaleString('fr-FR')}€</td>
+      <td style="padding:7px 10px;text-align:center;color:var(--or)">-${r.commMJ.toLocaleString('fr-FR')}€</td>
+      <td style="padding:7px 10px;text-align:right;font-weight:600;color:var(--jade)">${r.netProprio.toLocaleString('fr-FR')}€</td>
+    </tr>`).join('');
+
+  // Total
+  const tfoot = document.getElementById('res-table-total');
+  if (tfoot) tfoot.innerHTML = `<tr style="background:var(--jade);color:white">
+    <td style="padding:9px 10px;font-weight:600;border-radius:0 0 0 4px">TOTAL ANNUEL</td>
+    <td style="padding:9px 10px;text-align:center">${Math.round(totalNuits/12*100/30)}%</td>
+    <td style="padding:9px 10px;text-align:center">${totalNuits}</td>
+    <td style="padding:9px 10px;text-align:center">—</td>
+    <td style="padding:9px 10px;text-align:center;font-weight:700">${totalCA.toLocaleString('fr-FR')}€</td>
+    <td style="padding:9px 10px;text-align:center;color:rgba(185,154,94,0.9)">-${totalComm.toLocaleString('fr-FR')}€</td>
+    <td style="padding:9px 10px;text-align:right;font-weight:700;font-size:16px;border-radius:0 0 4px 0">${totalNet.toLocaleString('fr-FR')}€</td>
+  </tr>`;
+
+  // KPIs annuels
+  const tauxMoyAn = Math.round(totalNuits / (30*12) * 100);
+  document.getElementById('res-ca-annuel').textContent  = totalCA.toLocaleString('fr-FR') + '€';
+  document.getElementById('res-net-annuel').textContent = totalNet.toLocaleString('fr-FR') + '€';
+  document.getElementById('res-nuits-annuel').textContent = totalNuits + ' nuits';
+  document.getElementById('res-taux-annuel').textContent  = tauxMoyAn + '%';
+
+  // 3 scénarios
+  const sc = (mult) => {
+    const ca  = Math.round(totalCA * mult);
+    const net = Math.round(ca * (1 - 0.155) * (1 - tauxMJ));
+    return { ca, net };
+  };
+  const prudent  = sc(0.80);
+  const realiste = sc(1.00);
+  const optimist = sc(1.15);
+
+  document.getElementById('sc-prudent-ca').textContent   = prudent.ca.toLocaleString('fr-FR')  + '€';
+  document.getElementById('sc-prudent-net').textContent  = prudent.net.toLocaleString('fr-FR') + '€';
+  document.getElementById('sc-realiste-ca').textContent  = realiste.ca.toLocaleString('fr-FR') + '€';
+  document.getElementById('sc-realiste-net').textContent = realiste.net.toLocaleString('fr-FR')+ '€';
+  document.getElementById('sc-optimiste-ca').textContent = optimist.ca.toLocaleString('fr-FR') + '€';
+  document.getElementById('sc-optimiste-net').textContent= optimist.net.toLocaleString('fr-FR')+ '€';
+
+  // ── SCORE MAISON JADE /100 (explicatif, n'entre pas dans le calcul des revenus) ──
+  (function calculerScoreMJ() {
+    const g = geoData ? (geoData.coeffOcc - 1) : 0;
+    const sect = secteurDetecte ? secteurDetecte.type : 'standard';
+    const couch = parseInt(document.getElementById('s-couchages')?.value) || 4;
+    const chamb = parseInt(document.getElementById('s-chambres')?.value) || 1;
+    const sde   = parseInt(document.getElementById('s-sdeau')?.value) || 1;
+    const maison = document.getElementById('s-maison-indiv')?.checked;
+    const parking = document.getElementById('eq-parking')?.checked;
+    const terrasse = document.getElementById('eq-terrasse')?.checked;
+    const jardin = document.getElementById('s-jardin')?.checked;
+    const piscine = document.getElementById('eq-piscine')?.checked;
+    const clim = document.getElementById('eq-clim')?.checked;
+    const occ = tauxMoyAn / 100;
+
+    // Emplacement /25
+    let emp = 8;
+    if (g > 0.10) emp += 7; else if (g > 0.05) emp += 4; else if (g > 0) emp += 2;
+    if (['salons','balneaire','montagne'].includes(sect)) emp += 4;
+    emp = Math.min(emp, 25);
+    // Caractéristiques /25
+    let car = 3 + Math.min(couch*1.5, 9) + Math.min(chamb*2.5, 6) + (sde>=2?4:sde>=1?2:0);
+    car = Math.min(Math.round(car), 25);
+    // Standing /25
+    let sta = 5 + (maison?4:0) + (parking?3:0) + (terrasse?3:0) + (jardin?3:0) + (piscine?5:0) + (clim?2:0);
+    sta = Math.min(sta, 25);
+    // Potentiel /25
+    // niveau de confiance recalculé localement (confNiv est défini plus bas dans la fonction)
+    const _nbPrix = [pb, pm, ph].filter(x => x > 0).length;
+    const _conf = (_nbPrix >= 3 && geoData) ? 'haute' : _nbPrix >= 2 ? 'moyenne' : 'faible';
+    let pot = 6 + (occ>=0.70?10:occ>=0.60?7:occ>=0.50?4:1) + (_conf==='haute'?6:_conf==='moyenne'?3:0);
+    pot = Math.min(pot, 25);
+
+    const total = emp + car + sta + pot;
+    window._scoreMJ = { total, emp, car, sta, pot };
+
+    const el = document.getElementById('score-mj');
+    if (el) {
+      const couleur = total >= 75 ? 'var(--jade)' : total >= 55 ? '#A57C52' : '#B0703C';
+      const barre = (v) => `<div style="flex:1"><div style="font-size:10px;color:var(--ink3);margin-bottom:2px">${v.l}</div><div style="height:6px;background:var(--surface2);border-radius:3px;overflow:hidden"><div style="height:100%;width:${v.n/25*100}%;background:${couleur}"></div></div><div style="font-size:11px;color:var(--noyer);margin-top:2px">${v.n}/25</div></div>`;
+      el.innerHTML = `<div style="padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px">
+          <span style="font-size:26px;font-weight:700;color:${couleur}">${total}</span>
+          <span style="font-size:13px;color:var(--ink3)">/100 · Score Maison Jade</span>
+        </div>
+        <div style="display:flex;gap:12px">
+          ${barre({l:'Emplacement',n:emp})}${barre({l:'Caractéristiques',n:car})}${barre({l:'Standing',n:sta})}${barre({l:'Potentiel',n:pot})}
+        </div>
+      </div>`;
+      el.style.display = 'block';
+    }
+  })();
+
+  // ── INDICE DE CONFIANCE ──
+  // Basé sur : nb de prix de benchmark renseignés + présence d'une adresse géocodée
+  const nbPrix = [pb, pm, ph].filter(x => x > 0).length;
+  const aGeo = !!geoData;
+  let confNiv, confIco, confTxt;
+  if (nbPrix >= 3 && aGeo)      { confNiv='haute';  confIco='🟢'; confTxt='Fiabilité haute — 3 prix de référence + localisation'; }
+  else if (nbPrix >= 2)         { confNiv='moyenne';confIco='🟡'; confTxt='Fiabilité moyenne — complétez les 3 prix Airbnb pour affiner'; }
+  else                          { confNiv='faible'; confIco='🟠'; confTxt='À confirmer — renseignez les prix Airbnb observés du secteur'; }
+  const confiance = { niveau: confNiv, icone: confIco, texte: confTxt };
+
+  // Afficher l'indice à l'écran
+  const confEl2 = document.getElementById('indice-confiance');
+  if (confEl2) {
+    const bg = confNiv==='haute' ? '#E8EDEA' : confNiv==='moyenne' ? '#FBF3E0' : '#FBEDE3';
+    const bd = confNiv==='haute' ? 'var(--jade-bd)' : confNiv==='moyenne' ? '#E5C88A' : '#E0B088';
+    confEl2.innerHTML = `<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:${bg};border:1px solid ${bd};border-radius:8px;font-size:13px">
+      <span style="font-size:18px">${confIco}</span>
+      <span style="color:var(--noyer)">${confTxt}</span></div>`;
+    confEl2.style.display = 'block';
+  }
+
+  // Stocker pour PDF (avec géo + confiance)
+  simData = { proprio, ville, typeBienLabel, offreLabel, profil:profil.nom, tauxMJ,
+    totalCA, totalNet, totalNuits, tauxMoyAn, rows,
+    prudent, realiste, optimist, date: new Date().toLocaleDateString('fr-FR'),
+    geoDetail: geoData ? geoData.detail : [], confiance, scoreMJ: window._scoreMJ };
+
+  // Afficher bouton PDF
+  const btnPdf = document.getElementById('btn-pdf-sim');
+  if (btnPdf) btnPdf.style.display = 'flex';
+}
+
+function genererPDFSimulation() {
+  if (!simData.proprio) { showToast('⚠️ Complétez d\'abord la simulation'); return; }
+  const d = simData;
+
+  const html = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter:wght@300;400;500;600&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;color-adjust:exact !important}
+  @page{size:A4;margin:0}
+  @media print{body{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}}
+  body{font-family:'Inter',sans-serif;color:#2A1F15;background:white;font-size:12px}
+  .page{width:210mm;min-height:297mm;padding:12mm 14mm;margin:0 auto}
+  .header{background:#31483F;padding:16px 20px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+  .logo{font-family:'Cormorant Garamond',serif;font-size:28px;color:white;letter-spacing:0.06em}
+  .logo em{color:#A57C52;font-style:italic}
+  .header-right{text-align:right;font-size:11px;color:rgba(255,255,255,0.6)}
+  .header-right strong{color:white;display:block;font-size:13px;margin-bottom:2px}
+  .title-block{margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid #D8CFBF}
+  h1{font-family:'Cormorant Garamond',serif;font-size:26px;color:#31483F;font-weight:300}
+  h1 em{color:#A57C52}
+  .meta{font-size:11px;color:#9A8878;margin-top:4px}
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+  .kpi{background:#F5F0E8;border-radius:8px;padding:12px;text-align:center}
+  .kpi-val{font-family:'Cormorant Garamond',serif;font-size:22px;color:#31483F;font-weight:300}
+  .kpi-label{font-size:9px;color:#9A8878;text-transform:uppercase;letter-spacing:0.1em;margin-top:3px}
+  table{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:11px}
+  th{background:#31483F;color:white;padding:7px 8px;text-align:center}
+  th:first-child{text-align:left;border-radius:4px 0 0 0}
+  th:last-child{border-radius:0 4px 0 0}
+  td{padding:6px 8px;border-bottom:1px solid rgba(216,207,191,0.4);text-align:center}
+  td:first-child{text-align:left;font-weight:500}
+  .sc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+  .sc-card{border-radius:8px;padding:14px;text-align:center}
+  .sc-prudent{background:#F5F0E8}
+  .sc-realiste{background:#EAF0EE;border:1px solid #C2D4CD}
+  .sc-optimiste{background:#FDF5E9;border:1px solid #D4B896}
+  .sc-val{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300}
+  .sc-label{font-size:9px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+  .footer{margin-top:auto;padding-top:12px;border-top:1px solid #D8CFBF;display:flex;justify-content:space-between;font-size:10px;color:#9A8878}
+  .badge{display:inline-block;padding:2px 6px;border-radius:10px;font-size:9px;font-weight:600;color:white}
+  .note{background:#EAF0EE;border:1px solid #C2D4CD;border-radius:6px;padding:10px 12px;font-size:10px;color:#5B4335;margin-bottom:16px;line-height:1.6}
+  tr.total-row{background:#31483F;color:white;font-weight:600}
+  tr.total-row td{color:white;border:none}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="logo">Maison <em>Jade</em></div>
+    <div class="header-right">
+      <strong>Simulation de revenus locatifs</strong>
+      Préparé le ${d.date} · Confidentiel
+    </div>
+  </div>
+
+  <div class="title-block">
+    <h1>Estimation <em>locative</em> — ${d.proprio}</h1>
+    <div class="meta">${d.ville ? d.ville + ' · ' : ''}${d.typeBienLabel} · ${d.profil} · ${d.offreLabel}</div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-val">${d.totalCA.toLocaleString('fr-FR')}€</div><div class="kpi-label">CA brut annuel</div></div>
+    <div class="kpi"><div class="kpi-val" style="color:#2D6A4F">${d.totalNet.toLocaleString('fr-FR')}€</div><div class="kpi-label">Net propriétaire / an</div></div>
+    <div class="kpi"><div class="kpi-val">${d.totalNuits}</div><div class="kpi-label">Nuits estimées / an</div></div>
+    <div class="kpi"><div class="kpi-val">${d.tauxMoyAn}%</div><div class="kpi-label">Taux d'occupation moy.</div></div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="text-align:left">Mois</th>
+        <th>Taux occ.</th>
+        <th>Nuits</th>
+        <th>Prix/nuit</th>
+        <th>CA brut</th>
+        <th>Comm. MJ</th>
+        <th style="text-align:right">Net propriétaire</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${d.rows.map(r => `<tr>
+        <td>${r.mois}</td>
+        <td style="text-align:center">${r.taux}%</td>
+        <td style="text-align:center">${r.nuits}</td>
+        <td style="text-align:center">${r.prix}€</td>
+        <td style="text-align:center">${r.ca.toLocaleString('fr-FR')}€</td>
+        <td style="text-align:center;color:#A57C52">-${r.commMJ.toLocaleString('fr-FR')}€</td>
+        <td style="text-align:right;font-weight:600;color:#31483F">${r.netProprio.toLocaleString('fr-FR')}€</td>
+      </tr>`).join('')}
+    </tbody>
+    <tfoot>
+      <tr class="total-row">
+        <td>TOTAL ANNUEL</td>
+        <td style="text-align:center">${d.tauxMoyAn}%</td>
+        <td style="text-align:center">${d.totalNuits}</td>
+        <td style="text-align:center">—</td>
+        <td style="text-align:center">${d.totalCA.toLocaleString('fr-FR')}€</td>
+        <td style="text-align:center;color:rgba(185,154,94,0.9)">—</td>
+        <td style="text-align:right;font-size:14px">${d.totalNet.toLocaleString('fr-FR')}€</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="sc-grid">
+    <div class="sc-card sc-prudent">
+      <div class="sc-label" style="color:#9A8878">😐 Scénario prudent</div>
+      <div class="sc-val">${d.prudent.ca.toLocaleString('fr-FR')}€</div>
+      <div style="font-size:9px;color:#9A8878;margin-top:2px">CA annuel (taux -20%)</div>
+      <div class="sc-val" style="font-size:16px;margin-top:8px">${d.prudent.net.toLocaleString('fr-FR')}€</div>
+      <div style="font-size:9px;color:#9A8878">Net propriétaire</div>
+    </div>
+    <div class="sc-card sc-realiste">
+      <div class="sc-label" style="color:#31483F">✅ Scénario réaliste</div>
+      <div class="sc-val" style="color:#31483F">${d.realiste.ca.toLocaleString('fr-FR')}€</div>
+      <div style="font-size:9px;color:#31483F;margin-top:2px">CA annuel estimé</div>
+      <div class="sc-val" style="font-size:16px;margin-top:8px;color:#31483F">${d.realiste.net.toLocaleString('fr-FR')}€</div>
+      <div style="font-size:9px;color:#31483F">Net propriétaire</div>
+    </div>
+    <div class="sc-card sc-optimiste">
+      <div class="sc-label" style="color:#7A5530">🚀 Scénario optimiste</div>
+      <div class="sc-val" style="color:#A57C52">${d.optimist.ca.toLocaleString('fr-FR')}€</div>
+      <div style="font-size:9px;color:#7A5530;margin-top:2px">CA annuel (taux +15%)</div>
+      <div class="sc-val" style="font-size:16px;margin-top:8px;color:#A57C52">${d.optimist.net.toLocaleString('fr-FR')}€</div>
+      <div style="font-size:9px;color:#7A5530">Net propriétaire</div>
+    </div>
+  </div>
+
+  ${(document.getElementById('pdf-show-confiance')?.checked && d.confiance) ? `
+  <div style="margin:16px 0;padding:12px 16px;background:#F7F4EF;border:1px solid #E0D8C8;border-radius:8px">
+    <div style="font-size:13px;font-weight:600;color:#31483F;margin-bottom:4px">${d.confiance.icone} Indice de confiance de l'estimation</div>
+    <div style="font-size:12px;color:#5B4335">${d.confiance.texte}</div>
+    ${d.geoDetail && d.geoDetail.length ? '<div style="font-size:11px;color:#8A8278;margin-top:6px">Ajustements localisation : ' + d.geoDetail.join(' · ') + '</div>' : ''}
+  </div>` : ''}
+
+  <div class="note">
+    ⚠️ <strong>Note importante :</strong> Ces projections sont des estimations basées sur les profils de marché observés dans des zones comparables. Les revenus réels dépendent de la qualité du bien, de sa notation Airbnb, de la concurrence locale et de la stratégie tarifaire appliquée. Maison Jade optimise en continu les tarifs pour maximiser votre taux d'occupation et vos revenus.
+  </div>
+
+  <div class="footer">
+    <span>Maison Jade Ltd · contact@maisonjade.com · maisonjade.github.io/maison-jade</span>
+    <span>Simulation préparée par Maison Jade · ${d.date}</span>
+  </div>
+</div>
+</body>
+</html>`;
+
+  const win = window.open('', '_blank');
+  win.document.write(html);
+  win.document.close();
+  setTimeout(() => win.print(), 800);
+}
+
+function resetSimulateur() {
+  goStep(1);
+  simData = {};
+  ['s-proprio-nom','s-ville','s-adresse','prix-basse','prix-moy','prix-haute'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  ['eq-piscine','eq-terrasse','eq-parking','eq-clim','eq-vue','eq-animaux'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.checked = false;
+  });
+  document.querySelectorAll('input[name="attrait"]').forEach(c => c.checked = c.value === 'aeroport');
+  document.getElementById('saison-bars').innerHTML = '';
+  document.getElementById('ca-moy-preview').textContent = '—';
+  const confEl = document.getElementById('adresse-confirmee');
+  if (confEl) confEl.style.display = 'none';
+  coordsBien = null;
+  const btnPdf = document.getElementById('btn-pdf-sim');
+  if (btnPdf) btnPdf.style.display = 'none';
+}
+
+// Init simulateur quand on ouvre la vue
+
+
+const EJS_SERVICE  = 'service_MJ';
+const EJS_TEMPLATE = '4hr9ubc';
+const EJS_PUBLIC   = 'n9pQrNC68qD4-NKa0';
+
+
+let adresseTimer = null;
+let coordsBien = null; // [lon, lat] du bien sélectionné
+let geoData = null;
+function recalcPopulation() {
+  if (!coordsBien) return;
+  const pop = parseInt(document.getElementById('s-population')?.value) || null;
+  const cp = document.getElementById('s-adresse')?.dataset.postcode || '';
+  appliquerGeo(coordsBien[1], coordsBien[0], cp, pop);
+}    // résultat du calcul géo (coeffs, détail, confiance)
+
+function _plusProche(lat, lon, liste) {
+  let min = Infinity, nom = null;
+  for (const p of liste) { const d = distKm(lat, lon, p.lat, p.lon); if (d < min) { min = d; nom = p.nom; } }
+  return { dist: min, nom };
+}
+
+// ── DÉTECTION AUTOMATIQUE DU SECTEUR ──
+// ═══════════════════════════════════════════════════════════
+//  MAISON JADE — Détection automatique du secteur (France entière)
+//  Classe un bien selon sa localisation → applique la bonne courbe saisonnière
+//  Couche 1 : type de secteur détecté. Couche 2 : événements enrichissables.
+// ═══════════════════════════════════════════════════════════
+
+// ── PÔLES D'EXPOSITIONS MAJEURS (courbe "salons" : creux août, pics printemps/automne) ──
+const POLES_SALONS = [
+  { nom:'Paris Nord Villepinte', lat:48.9722, lon:2.5158, rayon:12 },
+  { nom:'Paris Porte de Versailles', lat:48.8312, lon:2.2872, rayon:8 },
+  { nom:'Paris Le Bourget', lat:48.9564, lon:2.4350, rayon:10 },
+  { nom:'Eurexpo Lyon', lat:45.7290, lon:4.9440, rayon:12 },
+  { nom:'Parc Chanot Marseille', lat:43.2670, lon:5.3910, rayon:8 },
+  { nom:'Parc Expo Bordeaux', lat:44.8880, lon:-0.5230, rayon:10 },
+  { nom:'Parc Expo Toulouse', lat:43.6520, lon:1.3760, rayon:10 },
+  { nom:'Parc Expo Lille', lat:50.6100, lon:3.1420, rayon:10 },
+  { nom:'Parc Expo Nantes', lat:47.2570, lon:-1.5240, rayon:10 },
+  { nom:'Strasbourg Wacken', lat:48.5980, lon:7.7580, rayon:8 },
+  { nom:'Nice Acropolis/Expo', lat:43.7030, lon:7.2770, rayon:8 },
+];
+
+// ── STATIONS DE SKI (courbe montagne : pics hiver) ──
+// Cœurs de massifs skiables (rayons resserrés). La confirmation se fait par l'altitude
+// (via le champ population/altitude ou saisie) pour éviter de classer une ville de plaine.
+const POLES_MONTAGNE = [
+  { nom:'Tarentaise (Alpes)', lat:45.45, lon:6.70, rayon:35 },
+  { nom:'Maurienne (Alpes)', lat:45.20, lon:6.55, rayon:30 },
+  { nom:'Oisans/Grandes Rousses', lat:45.10, lon:6.10, rayon:30 },
+  { nom:'Chamonix/Mont-Blanc', lat:45.92, lon:6.87, rayon:25 },
+  { nom:'Alpes du Sud', lat:44.70, lon:6.60, rayon:35 },
+  { nom:'Pyrénées centrales', lat:42.80, lon:0.40, rayon:45 },
+  { nom:'Hautes Vosges (crêtes)', lat:48.00, lon:6.95, rayon:20 },
+];
+
+// ── LITTORAL (courbe balnéaire : pic été) → détecté par distance à la côte via département ──
+const DEP_LITTORAL = ['06','83','13','34','66','11','30','2A','2B','20','40','64','17','85','44','56','29','22','35','50','14','76','80','62','59'];
+
+// ── COURBES SAISONNIÈRES PAR TYPE DE SECTEUR ──
+// taux = occupation mensuelle de base ; prix = multiplicateur mensuel
+const COURBES = {
+  salons:    { nom:'Salons / Affaires', taux:[0.70,0.68,0.80,0.74,0.75,0.82,0.66,0.55,0.83,0.81,0.78,0.64], prix:[1.0,0.92,1.12,0.98,1.0,1.15,0.95,0.85,1.15,1.10,1.05,0.90] },
+  balneaire: { nom:'Balnéaire',         taux:[0.30,0.32,0.40,0.55,0.65,0.78,0.93,0.95,0.72,0.48,0.30,0.28], prix:[0.7,0.7,0.8,0.85,0.9,1.0,1.3,1.4,0.95,0.8,0.7,0.7] },
+  montagne:  { nom:'Montagne',          taux:[0.85,0.82,0.68,0.40,0.35,0.42,0.60,0.62,0.42,0.35,0.45,0.80], prix:[1.4,1.35,1.0,0.7,0.7,0.8,1.0,1.05,0.75,0.7,0.85,1.35] },
+  urbain:    { nom:'Urbain',            taux:[0.60,0.62,0.68,0.72,0.74,0.76,0.72,0.68,0.74,0.70,0.62,0.58], prix:[0.85,0.85,0.9,0.95,1.0,1.05,1.1,1.1,1.0,0.9,0.85,0.85] },
+  transit:   { nom:'Aéroport / Transit',taux:[0.68,0.68,0.72,0.72,0.73,0.74,0.72,0.66,0.74,0.73,0.70,0.66], prix:[0.9,0.9,0.95,0.95,1.0,1.0,1.0,0.95,1.0,0.98,0.92,0.90] },
+  standard:  { nom:'Standard',          taux:[0.45,0.47,0.52,0.58,0.62,0.70,0.80,0.82,0.65,0.55,0.46,0.44], prix:[0.8,0.8,0.85,0.9,0.95,1.0,1.15,1.18,0.95,0.88,0.82,0.80] },
+};
+
+const _dist = (a,b,c,d) => distKm(a,b,c,d); // réutilise distKm du simulateur
+
+// DÉTECTION : retourne le type de secteur + la courbe + l'explication
+function detecterSecteur(lat, lon, postcode, altitude) {
+  const dep = (postcode||'').substring(0,2);
+
+  // 1. Proche d'un pôle de salons ? (prioritaire : demande pro forte et datée)
+  for (const p of POLES_SALONS) {
+    const d = _dist(lat, lon, p.lat, p.lon);
+    if (d <= p.rayon) return { type:'salons', courbe:COURBES.salons, raison:`Proche de ${p.nom} (${d.toFixed(0)} km) — demande rythmée par les salons`, pole:p.nom };
+  }
+  // 2. Zone montagne ? (confirmée par l'altitude si disponible : une station de ski est en altitude)
+  for (const p of POLES_MONTAGNE) {
+    const d = _dist(lat, lon, p.lat, p.lon);
+    if (d <= p.rayon) {
+      // Si l'altitude est connue et < 600m, ce n'est pas une station → on ne classe pas montagne
+      if (typeof altitude === 'number' && altitude < 600) break;
+      return { type:'montagne', courbe:COURBES.montagne, raison:`Zone ${p.nom} — saisonnalité hiver`, pole:p.nom };
+    }
+  }
+  // 3. Département littoral ?
+  if (DEP_LITTORAL.includes(dep)) {
+    return { type:'balneaire', courbe:COURBES.balneaire, raison:`Département littoral (${dep}) — saisonnalité estivale`, pole:null };
+  }
+  // 4. Grande ville ? (approché par densité — ici, on laisse le profil manuel décider)
+  //    Par défaut : standard (saisonnalité estivale modérée)
+  return { type:'standard', courbe:COURBES.standard, raison:`Secteur sans pôle majeur détecté — profil standard`, pole:null };
+}
+
+// (intégré au simulateur)
+
+
+// Calcule les coefficients géo. Principe : la géo AJUSTE (±), le benchmark Airbnb PRIME.
+function calculerCoeffsGeo(lat, lon, postcode, population) {
+  const detail = [];
+  let bonusOcc = 0, bonusPrix = 0, malusOcc = 0;
+
+  const gare = _plusProche(lat, lon, POI_GARES_TGV);
+  if (gare.dist < 5) {
+    const b = gare.dist <= 2 ? 0.13 : 0.13 * (5 - gare.dist) / 3;
+    bonusOcc += b;
+    detail.push(`Gare ${gare.nom} à ${gare.dist.toFixed(1)} km → +${(b*100).toFixed(0)}% occ.`);
+  }
+  const apt = _plusProche(lat, lon, POI_AEROPORTS);
+  if (apt.dist < 15) {
+    const b = apt.dist <= 5 ? 0.11 : 0.11 * (15 - apt.dist) / 10;
+    bonusOcc += b;
+    detail.push(`Aéroport ${apt.nom} à ${apt.dist.toFixed(0)} km → +${(b*100).toFixed(0)}% occ.`);
+  }
+  const dep = (postcode || '').substring(0, 2);
+  if (DEP_TOURISTIQUES.includes(dep)) { bonusPrix += 0.05; detail.push(`Département touristique (${dep}) → +5% prix`); }
+
+  const aPole = gare.dist < 5 || apt.dist < 15;
+  if (population && population < 1500 && !aPole) { malusOcc += 0.10; detail.push(`Petite commune isolée (${population} hab.) → −10% occ.`); }
+
+  const bonusPlafonne = Math.min(bonusOcc, 0.15);
+  if (bonusOcc > 0.15) detail.push(`⚠️ Bonus occ. plafonné à +15% (cumul limité)`);
+
+  return { coeffOcc: 1 + bonusPlafonne - malusOcc, coeffPrix: 1 + bonusPrix, detail, gare, apt };
+}
+
+// Coordonnées des principaux aéroports et littoraux pour suggestion de profil
+// Gares TGV / grandes lignes (attrait affaires/transit)
+const POI_GARES_TGV = [
+  { nom:'Paris Gare de Lyon', lat:48.8443, lon:2.3743 }, { nom:'Paris Montparnasse', lat:48.8409, lon:2.3200 },
+  { nom:'Paris Nord', lat:48.8809, lon:2.3553 }, { nom:'Paris Est', lat:48.8766, lon:2.3591 },
+  { nom:'Lyon Part-Dieu', lat:45.7605, lon:4.8595 }, { nom:'Marseille St-Charles', lat:43.3027, lon:5.3803 },
+  { nom:'Lille Europe', lat:50.6392, lon:3.0757 }, { nom:'Bordeaux St-Jean', lat:44.8258, lon:-0.5563 },
+  { nom:'Nantes', lat:47.2173, lon:-1.5419 }, { nom:'Rennes', lat:48.1035, lon:-1.6725 },
+  { nom:'Strasbourg', lat:48.5850, lon:7.7340 }, { nom:'Montpellier St-Roch', lat:43.6045, lon:3.8807 },
+  { nom:'Nice Ville', lat:43.7047, lon:7.2620 }, { nom:'Aix-en-Provence TGV', lat:43.4556, lon:5.3175 },
+  { nom:'Avignon TGV', lat:43.9219, lon:4.7861 }, { nom:'Tours', lat:47.3897, lon:0.6942 },
+  { nom:'Reims', lat:49.2589, lon:4.0250 }, { nom:'Dijon Ville', lat:47.3234, lon:5.0273 },
+  { nom:'Toulouse Matabiau', lat:43.6112, lon:1.4536 }, { nom:'Nancy', lat:48.6899, lon:6.1745 },
+];
+const DEP_TOURISTIQUES = ['06','83','13','2A','2B','74','73','33','17','85','64','66','34','56','29','40','05'];
+
+const POI_AEROPORTS = [
+  { nom:'CDG',   lat:49.0097, lon:2.5479 },
+  { nom:'Orly',  lat:48.7262, lon:2.3652 },
+  { nom:'Lyon St-Ex', lat:45.7256, lon:5.0811 },
+  { nom:'Nice',  lat:43.6584, lon:7.2159 },
+  { nom:'Marseille', lat:43.4393, lon:5.2214 },
+  { nom:'Toulouse', lat:43.6293, lon:1.3638 },
+  { nom:'Bordeaux', lat:44.8283, lon:-0.7156 },
+  { nom:'Nantes', lat:47.1532, lon:-1.6107 },
+  { nom:'Beauvais', lat:49.4544, lon:2.1128 }, { nom:'Bâle-Mulhouse', lat:47.5896, lon:7.5299 },
+];
+
+function distKm(lat1, lon1, lat2, lon2) {
+  const R = 6371, dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function rechercheAdresse(q) {
+  clearTimeout(adresseTimer);
+  const sugEl = document.getElementById('adresse-suggestions');
+  if (!q || q.length < 3) { sugEl.style.display = 'none'; return; }
+  adresseTimer = setTimeout(async () => {
+    try {
+      // API IGN Geoplateforme (l'ancienne api-adresse.data.gouv.fr a ete decommissionnee fin janvier 2026)
+      const r = await fetch(`https://data.geopf.fr/geocodage/search?q=${encodeURIComponent(q)}&limit=5`);
+      if (!r.ok) throw new Error('api ' + r.status);
+      const data = await r.json();
+      if (!data.features?.length) { sugEl.style.display = 'none'; return; }
+      window._adrResults = data.features; // stocker : on passe un index, pas l'objet (évite les bugs d'apostrophes/accents)
+      sugEl.innerHTML = data.features.map((f, i) => {
+        const p = f.properties;
+        return `<div onclick="selectAdresseParIndex(${i})" style="padding:10px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);color:var(--ink)" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='none'">
+          <div style="font-weight:500">${p.label}</div>
+          <div style="font-size:11px;color:var(--ink3)">${p.context || ''}</div>
+        </div>`;
+      }).join('');
+      sugEl.style.display = 'block';
+    } catch(e) {
+      // Ne plus masquer en silence : informer que la saisie manuelle reste possible
+      sugEl.innerHTML = '<div style="padding:10px 14px;font-size:12px;color:var(--ink3)">Recherche d\'adresse indisponible — saisissez l\'adresse manuellement.</div>';
+      sugEl.style.display = 'block';
+    }
+  }, 300);
+}
+
+function selectAdresseParIndex(i) {
+  const f = (window._adrResults || [])[i];
+  if (f) selectAdresse(JSON.stringify(f));
+}
+
+function selectAdresse(fJson) {
+  const f = JSON.parse(fJson);
+  const p = f.properties;
+  const [lon, lat] = f.geometry.coordinates;
+  coordsBien = [lon, lat];
+
+  // Remplir les champs
+  document.getElementById('s-adresse').value = p.label;
+  document.getElementById('s-adresse').dataset.postcode = p.postcode || '';
+  document.getElementById('s-ville').value = p.city || p.label;
+  document.getElementById('adresse-suggestions').style.display = 'none';
+
+  // Suggérer un profil selon la géographie
+  let suggestion = null, distance = null;
+  // 1. Proximité aéroport (< 15 km)
+  for (const apt of POI_AEROPORTS) {
+    const d = distKm(lat, lon, apt.lat, apt.lon);
+    if (d < 15) { suggestion = 'aeroport'; distance = `${apt.nom} à ${Math.round(d)} km`; break; }
+  }
+  // 2. Grande ville (population via contexte — les préfectures/grandes villes)
+  if (!suggestion) {
+    const grandesVilles = ['Paris','Lyon','Marseille','Toulouse','Nice','Nantes','Strasbourg','Montpellier','Bordeaux','Lille'];
+    if (grandesVilles.some(v => (p.city||'').includes(v))) { suggestion = 'ville'; distance = p.city; }
+  }
+  // 3. Littoral approximatif (départements côtiers méditerranée/atlantique)
+  if (!suggestion) {
+    const depCotiers = ['06','11','13','14','17','2A','2B','22','29','30','33','34','35','40','44','50','56','59','62','64','66','76','80','83','85'];
+    const dep = (p.postcode||'').substring(0,2);
+    if (depCotiers.includes(dep)) { suggestion = 'plage'; distance = 'département littoral'; }
+  }
+  // 4. Départements montagne
+  if (!suggestion) {
+    const depMontagne = ['04','05','09','31','38','65','73','74','88'];
+    const dep = (p.postcode||'').substring(0,2);
+    if (depMontagne.includes(dep)) { suggestion = 'montagne'; distance = 'département montagne'; }
+  }
+
+  const confEl = document.getElementById('adresse-confirmee');
+  if (suggestion) {
+    document.querySelectorAll('input[name="attrait"]').forEach(c => c.checked = false);
+    const cb = document.querySelector(`input[name="attrait"][value="${suggestion}"]`);
+    if (cb) { cb.checked = true; updateSaisonnalite(); }
+    const nomProfil = PROFILS_SAISON[suggestion]?.nom || suggestion;
+    confEl.innerHTML = `📍 <strong>${p.city || p.label}</strong> — profil suggéré : <strong>${nomProfil}</strong> (${distance}). Vous pouvez le modifier ci-contre.`;
+  } else {
+    confEl.innerHTML = `📍 <strong>${p.city || p.label}</strong> — sélectionnez le profil le plus adapté ci-contre.`;
+  }
+  confEl.style.display = 'block';
+
+  // Récupérer la population via le code INSEE (citycode) puis calculer les coeffs géo
+  const citycode = p.citycode || '';
+  const champPop = document.getElementById('s-population');
+  if (citycode) {
+    fetch(`https://geo.api.gouv.fr/communes/${citycode}?fields=population`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        const pop = data?.population || null;
+        if (champPop && pop) champPop.value = pop;
+        // Altitude via IGN (pour fiabiliser la détection montagne), repli si indisponible
+        fetch(`https://data.geopf.fr/altimetrie/1.0/calcul/alti/rest/elevation.json?lon=${lon}&lat=${lat}`)
+          .then(r => r.ok ? r.json() : null)
+          .then(alt => appliquerGeo(lat, lon, p.postcode, pop, alt?.elevations?.[0]?.z))
+          .catch(() => appliquerGeo(lat, lon, p.postcode, pop, undefined));
+      })
+      .catch(() => appliquerGeo(lat, lon, p.postcode, champPop ? (parseInt(champPop.value)||null) : null, undefined));
+  } else {
+    appliquerGeo(lat, lon, p.postcode, champPop ? (parseInt(champPop.value)||null) : null);
+  }
+}
+
+// Applique les coeffs géo, affiche le panneau détaillé, recalcule si résultats déjà là
+let secteurDetecte = null;
+function appliquerGeo(lat, lon, postcode, population, altitude) {
+  geoData = calculerCoeffsGeo(lat, lon, postcode, population);
+  // Détection du secteur → proposition de courbe saisonnière (l'utilisateur peut corriger)
+  secteurDetecte = detecterSecteur(lat, lon, postcode, altitude);
+  const bandeau = document.getElementById('secteur-detecte');
+  if (bandeau && secteurDetecte) {
+    bandeau.innerHTML = `<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--jade-bg);border:1px solid var(--jade-bd);border-radius:8px;font-size:12.5px;color:var(--jade)">
+      <span style="font-size:16px">🎯</span>
+      <span><strong>Secteur détecté : ${secteurDetecte.courbe.nom}.</strong> ${secteurDetecte.raison}. Vous pouvez corriger le profil ci-dessous.</span></div>`;
+    bandeau.style.display = 'block';
+    // Mémoriser la courbe détectée pour calculerResultats (sauf si l'utilisateur a coché manuellement)
+    window._courbeSecteur = secteurDetecte.courbe;
+  }
+  const panneau = document.getElementById('geo-panneau');
+  if (panneau) {
+    if (geoData.detail.length) {
+      panneau.innerHTML = `<div style="font-weight:600;color:var(--jade);margin-bottom:6px">📊 Ajustements liés à la localisation</div>`
+        + geoData.detail.map(d => `<div style="font-size:12px;padding:2px 0;color:var(--noyer)">• ${d}</div>`).join('')
+        + `<div style="font-size:11px;color:var(--ink3);margin-top:6px;font-style:italic">Ces ajustements affinent l'estimation. Le benchmark Airbnb réel, si renseigné, reste prioritaire.</div>`;
+      panneau.style.display = 'block';
+    } else {
+      panneau.style.display = 'none';
+    }
+  }
+  if (document.getElementById('res-ca-annuel')?.textContent) calculerResultats();
+}
+
+// ══ CRÉER UN PROSPECT DEPUIS LA SIMULATION ══
+
+
+// ══ CRÉER UN PROSPECT DEPUIS LA SIMULATION ══
+
+</script>
+</body>
+</html>
