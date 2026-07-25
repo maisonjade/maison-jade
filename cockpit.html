@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maison Jade · Cockpit admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+:root{
+  /* Palette Quiet Luxury — Maison Jade (reprise d'index.html) */
+  --bg:#F5F0E8; --surface:#FDFAF6; --surface2:#EDE8DF; --surface3:#DDD0BF;
+  --travertin:#CDBCA7; --noyer:#5B4335;
+  --bronze:#A57C52; --bronze-bg:#F4EDE3; --bronze-bd:#D4B898;
+  --jade:#31483F; --jade-mid:#3D5A50; --jade-bg:#E8EDEA; --jade-bd:#9AAFA8;
+  --border:#D8CFBF;
+  --ink:#2A1F15; --ink2:#5B4335; --ink3:#9A8878; --ink4:#B8AAA0;
+  --gold:#A57C52; --goldbg:#F4EDE3; --goldbd:#D4B898;
+  /* Couleurs sémantiques (badges / statuts) */
+  --green:#2D6A4F; --green-bg:#E8F5EE;
+  --red:#8B2020;   --red-bg:#FDF0F0;
+  --blue:#185FA5;  --blue-bg:#E6F1FB;
+  --amber:#8A6D1F; --amber-bg:#FBF3DD;
+  --radius:8px;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;}
+a{color:var(--bronze);}
+
+/* ══ ÉCRAN DE CONNEXION (repris d'index.html) ══ */
+#login-screen{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:var(--jade);padding:20px;}
+.login-card{background:var(--surface);border-radius:6px;padding:40px 32px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.login-logo{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--jade);text-align:center;letter-spacing:0.02em;}
+.login-logo em{font-style:italic;color:var(--bronze);}
+.login-sub{text-align:center;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink3);margin-top:4px;}
+.login-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--noyer);text-align:center;margin:26px 0 4px;font-weight:500;}
+.login-desc{text-align:center;font-size:12.5px;color:var(--ink3);margin-bottom:22px;}
+.login-group{margin-bottom:14px;}
+.login-group label{display:block;font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--jade);margin-bottom:6px;}
+.login-group input{width:100%;padding:11px 13px;font-size:14px;font-family:inherit;border:1px solid var(--surface3);border-radius:3px;background:var(--bg);color:var(--noyer);}
+.login-group input:focus{outline:2px solid var(--bronze);outline-offset:1px;}
+.btn-login{width:100%;padding:13px;margin-top:8px;cursor:pointer;background:var(--jade);color:var(--bg);border:none;border-radius:3px;font-family:inherit;font-size:13px;font-weight:600;letter-spacing:0.06em;}
+.btn-login:hover{background:var(--jade-mid);}
+.btn-login:disabled{opacity:0.6;cursor:wait;}
+.login-error{display:none;background:#FBEAE8;border-left:3px solid var(--red);color:#9B2C22;padding:10px 12px;border-radius:3px;font-size:12.5px;margin-bottom:14px;}
+.login-forgot{text-align:center;margin-top:16px;font-size:12px;}
+.login-forgot a{color:var(--bronze);text-decoration:none;cursor:pointer;}
+.login-note{margin-top:20px;padding-top:16px;border-top:1px solid var(--surface2);font-size:11px;color:var(--ink3);text-align:center;line-height:1.6;}
+
+/* ══ TOPBAR ══ */
+.topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;background:var(--jade);color:var(--bg);}
+.brand-name{font-family:'Cormorant Garamond',serif;font-size:22px;letter-spacing:0.02em;}
+.brand-name em{font-style:italic;color:var(--goldlight,#C09870);}
+.topbar-sub{font-size:9.5px;letter-spacing:0.18em;text-transform:uppercase;opacity:0.7;margin-left:2px;}
+.topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+.tb-user{font-size:11px;opacity:0.85;}
+.tb-btn{padding:5px 11px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.25);border-radius:4px;color:var(--bg);font-family:inherit;font-size:10.5px;cursor:pointer;text-decoration:none;white-space:nowrap;}
+.tb-btn:hover{background:rgba(255,255,255,0.16);}
+
+/* ══ LAYOUT COCKPIT ══ */
+.wrap{max-width:1200px;margin:0 auto;padding:20px 20px 60px;}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:30px;color:var(--jade);margin:8px 0 2px;font-weight:600;}
+.page-sub{font-size:12.5px;color:var(--ink3);margin-bottom:20px;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:21px;color:var(--noyer);margin:28px 0 12px;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:6px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;}
+.grid{display:grid;gap:14px;}
+.grid-kpi{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;}
+.kpi-label{font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);}
+.kpi-value{font-family:'Cormorant Garamond',serif;font-size:30px;color:var(--jade);font-weight:600;line-height:1.1;margin-top:6px;}
+.kpi-value.mono{font-family:'JetBrains Mono',monospace;font-size:22px;}
+.kpi-note{font-size:11px;color:var(--ink3);margin-top:4px;}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:600;letter-spacing:0.03em;}
+.badge-green{background:var(--green-bg);color:var(--green);}
+.badge-red{background:var(--red-bg);color:var(--red);}
+.badge-blue{background:var(--blue-bg);color:var(--blue);}
+.badge-amber{background:var(--amber-bg);color:var(--amber);}
+.placeholder{background:var(--surface2);border:1px dashed var(--border);border-radius:var(--radius);padding:16px 18px;color:var(--ink3);font-size:12.5px;}
+.placeholder strong{color:var(--ink2);}
+.muted{color:var(--ink3);}
+#load-msg{font-size:12px;color:var(--ink3);}
+
+/* Filtres */
+.filters{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;margin-bottom:6px;}
+.filter-grp{display:flex;flex-direction:column;gap:5px;}
+.filter-grp label{font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);}
+.filter-grp select{padding:8px 11px;font-family:inherit;font-size:13px;border:1px solid var(--surface3);border-radius:5px;background:var(--surface);color:var(--noyer);min-width:150px;cursor:pointer;}
+.filter-grp select:focus{outline:2px solid var(--bronze);outline-offset:1px;}
+
+/* Sous-titres & tableaux */
+.sub{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink2);margin:22px 0 8px;}
+.twrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:520px;}
+thead th{text-align:left;padding:10px 12px;background:var(--jade-bg);color:var(--jade);font-size:10.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;border-bottom:1px solid var(--border);vertical-align:bottom;}
+tbody td{padding:9px 12px;border-bottom:1px solid var(--surface2);color:var(--ink);}
+tbody tr:last-child td{border-bottom:none;}
+th.r,td.r{text-align:right;}
+td.mono,.mono{font-family:'JetBrains Mono',monospace;}
+.th-note{font-weight:400;font-size:9px;letter-spacing:0.04em;color:var(--jade-mid);opacity:0.8;}
+.th-legend{font-size:11px;color:var(--ink3);margin-top:8px;line-height:1.5;}
+code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--surface2);padding:1px 5px;border-radius:3px;color:var(--noyer);}
+.alertes{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;}
+.alertes li{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:6px;padding:10px 12px;font-size:12.5px;}
+
+@media (max-width:600px){
+  .wrap{padding:14px 12px 50px;}
+  .page-title{font-size:24px;}
+  .kpi-value{font-size:26px;}
+  .topbar{padding:10px 12px;}
+  .brand-name{font-size:18px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ CONNEXION (accès réservé admin) ══ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Maison <em>Jade</em></div>
+    <div class="login-sub">Cockpit administration</div>
+    <h2 class="login-title">Connexion</h2>
+    <p class="login-desc">Accès réservé à l'administration</p>
+    <div id="login-error" class="login-error"></div>
+    <div class="login-group"><label>Adresse email</label>
+      <input type="email" id="login-email" placeholder="contact@maisonjade.com" autocomplete="email"></div>
+    <div class="login-group"><label>Mot de passe</label>
+      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
+    <button class="btn-login" id="btn-login" onclick="doLogin()">Se connecter →</button>
+    <div class="login-forgot"><a onclick="doReset()">Mot de passe oublié ?</a></div>
+    <div class="login-note">Retour à l'application&nbsp;:
+      <a href="index.html" style="color:var(--bronze)">Espace professionnel →</a></div>
+  </div>
+</div>
+
+<!-- ══ COCKPIT ══ -->
+<div id="app-body" style="display:none">
+  <div class="topbar">
+    <div>
+      <span class="brand-name">Maison <em>Jade</em></span>
+      <span class="topbar-sub">Cockpit</span>
+    </div>
+    <div class="topbar-right">
+      <span class="tb-user" id="tb-user"></span>
+      <a class="tb-btn" href="index.html">← Espace pro</a>
+      <button class="tb-btn" onclick="doLogout()">Déconnexion</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <h1 class="page-title">Cockpit administration</h1>
+    <p class="page-sub">Vue de pilotage en lecture seule — <span id="today-date"></span></p>
+
+    <div class="card" style="margin-bottom:8px">
+      <div id="load-msg">⏳ Chargement des données…</div>
+    </div>
+
+    <!-- Les blocs (Vue d'ensemble, Finances, Opérations) seront ajoutés aux étapes suivantes. -->
+    <div id="cockpit-content"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  Maison Jade — Cockpit admin (lecture seule)
+//  Étape 1 : connexion admin + chargement des données autorisées.
+//  Config Supabase identique aux autres espaces (clé publique/anon).
+// ══════════════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://lvfncstosaaqgtfozthw.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_UrB6X04fyAOhnN7aHropFQ_mwubBip2';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let currentProfile = null;
+// Cache des données chargées depuis Supabase (lecture seule).
+const DATA = { dossiers: [], revenus: [], menages: [], profiles: [] };
+
+// ── Authentification (reprise fidèle d'index.html) ──
+async function doLogin(){
+  const email = document.getElementById('login-email').value.trim();
+  const pwd   = document.getElementById('login-password').value;
+  const btn   = document.getElementById('btn-login');
+  if(!email || !pwd){ showLoginErr('Veuillez remplir tous les champs.'); return; }
+  btn.disabled = true; btn.textContent = 'Connexion…';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pwd });
+  btn.disabled = false; btn.textContent = 'Se connecter →';
+  if(error){
+    const m = (error.message || '').toLowerCase();
+    if(m.includes('confirm')) showLoginErr("Compte non confirmé côté Supabase.");
+    else if(m.includes('rate') || m.includes('too many')) showLoginErr("Trop de tentatives. Patientez quelques minutes.");
+    else showLoginErr('Email ou mot de passe incorrect.');
+    return;
+  }
+  await ouvrirApp(data.user);
+}
+function showLoginErr(msg){ const e = document.getElementById('login-error'); e.textContent = msg; e.style.display = 'block'; }
+async function doReset(){
+  const email = document.getElementById('login-email').value.trim();
+  if(!email){ showLoginErr('Entrez votre email pour recevoir un lien de réinitialisation.'); return; }
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
+  if(error){ showLoginErr('Erreur : ' + error.message); return; }
+  showLoginErr('✅ Email de réinitialisation envoyé.');
+}
+async function doLogout(){ await sb.auth.signOut(); currentUser = null; currentProfile = null; location.reload(); }
+function afficherLogin(){ document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app-body').style.display = 'none'; }
+
+// Ouvre le cockpit UNIQUEMENT si profiles.role === 'admin' (même règle qu'index.html).
+async function ouvrirApp(user){
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  if(!profile || profile.role !== 'admin'){
+    await sb.auth.signOut(); afficherLogin();
+    showLoginErr("Cet espace est réservé à l'administration.");
+    return;
+  }
+  currentUser = user; currentProfile = profile;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app-body').style.display = 'block';
+  const tb = document.getElementById('tb-user');
+  if(tb) tb.textContent = `${profile.prenom || ''} ${profile.nom || ''}`.trim() || profile.email;
+  document.getElementById('today-date').textContent = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  await chargerDonnees();
+}
+async function initAuth(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(session?.user){ await ouvrirApp(session.user); } else { afficherLogin(); }
+}
+document.addEventListener('keydown', e => {
+  if(e.key === 'Enter' && document.getElementById('login-screen').style.display === 'flex') doLogin();
+});
+
+// ── État des filtres (étape 7) ──
+const _now = new Date();
+const state = { mois: _now.getMonth() + 1, annee: _now.getFullYear(), dossierId: 'all', cohoteId: 'all' };
+
+// Étapes du portefeuille considérées comme « bien actif ».
+const ACTIVE_ETAPES = ['online', 'annonce'];
+
+// ── Helpers de formatage ──
+const num  = v => { const n = Number(v); return isFinite(n) ? n : 0; };
+const eur0 = n => new Intl.NumberFormat('fr-FR', { style:'currency', currency:'EUR', maximumFractionDigits:0 }).format(num(n));
+const eur2 = n => new Intl.NumberFormat('fr-FR', { style:'currency', currency:'EUR', minimumFractionDigits:2, maximumFractionDigits:2 }).format(num(n));
+const MOIS_FR = ['','janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// Cartes de correspondance construites après chargement.
+let dossierMap = {}, profileMap = {};
+// Écarts de reversement détectés (remplis par le bloc Finances, lus par le bloc Opérations).
+let ecartsReversement = [];
+
+// ── Chargement des données (LECTURE SEULE — aucun insert/update/delete) ──
+// On ne lit JAMAIS dossiers.data en entier (contient l'IBAN) : uniquement les
+// clés JSON non sensibles (surnom, etape, comm) via sélection ciblée PostgREST.
+async function chargerDonnees(){
+  const msg = document.getElementById('load-msg');
+  try{
+    const [dossiers, revenus, menages, profiles] = await Promise.all([
+      sb.from('dossiers').select('id, cohote_id, updated_at, surnom:data->>surnom, etape:data->>etape, comm:data->>comm'),
+      sb.from('cohote_revenus').select('id, cohote_id, dossier_id, mois, annee, revenu_brut, honoraires_mj, commission_cohote, commission_mj, services_carte, commission_services, taux_offre, nuits'),
+      sb.from('menages_proprio').select('id, dossier_id, date, statut'),
+      sb.from('profiles').select('id, prenom, nom, role')
+    ]);
+    DATA.dossiers = dossiers.data || [];
+    DATA.revenus  = revenus.data || [];
+    DATA.menages  = menages.data || [];
+    DATA.profiles = profiles.data || [];
+    dossierMap = {}; DATA.dossiers.forEach(d => dossierMap[d.id] = d);
+    profileMap = {}; DATA.profiles.forEach(p => profileMap[p.id] = p);
+
+    const errs = [dossiers.error, revenus.error, menages.error, profiles.error].filter(Boolean);
+    if(errs.length){
+      msg.innerHTML = '⚠️ Certaines données n\'ont pas pu être chargées (droits RLS ?). Détail : ' + esc(errs.map(e=>e.message).join(' · '));
+    }else{
+      msg.innerHTML = `✅ Données à jour — <strong>${DATA.dossiers.length}</strong> bien(s), <strong>${DATA.revenus.length}</strong> ligne(s) de revenus, <strong>${DATA.menages.length}</strong> ménage(s).`;
+    }
+  }catch(e){
+    msg.textContent = '⚠️ Erreur de chargement : ' + (e.message || e);
+  }
+  renderCockpit();
+}
+
+// ── Nom lisible d'un bien / d'un co-hôte ──
+function nomBien(id){ const d = dossierMap[id]; return d && d.surnom ? d.surnom : ('Bien #' + id); }
+function nomCohote(id){ const p = profileMap[id]; if(!p) return 'Co-hôte inconnu'; return `${p.prenom||''} ${p.nom||''}`.trim() || 'Co-hôte'; }
+
+// ── Application des filtres à la liste des revenus ──
+function revenusFiltres({ periode }){
+  return DATA.revenus.filter(r => {
+    if(state.dossierId !== 'all' && String(r.dossier_id) !== String(state.dossierId)) return false;
+    if(state.cohoteId  !== 'all' && String(r.cohote_id)  !== String(state.cohoteId))  return false;
+    if(num(r.annee) !== state.annee) return false;
+    if(periode === 'mois' && num(r.mois) !== state.mois) return false;
+    return true;
+  });
+}
+
+// ══ RENDU ══
+function renderCockpit(){
+  ecartsReversement = [];
+  const html = renderFiltres()
+    + renderFinances()      // calcule aussi ecartsReversement
+    + renderVueEnsemble()
+    + renderOperations();   // lit ecartsReversement
+  document.getElementById('cockpit-content').innerHTML = html;
+  brancherFiltres();
+}
+
+// ── Barre de filtres (étape 7) ──
+function renderFiltres(){
+  const annees = [...new Set(DATA.revenus.map(r => num(r.annee)).filter(Boolean))].sort((a,b)=>b-a);
+  if(!annees.includes(state.annee)) annees.unshift(state.annee);
+  const cohotes = DATA.profiles.filter(p => p.role === 'cohote' || DATA.revenus.some(r => r.cohote_id === p.id));
+  const optMois = MOIS_FR.map((m,i)=> i? `<option value="${i}" ${i===state.mois?'selected':''}>${m}</option>`:'').join('');
+  const optAnnee = annees.map(a=> `<option value="${a}" ${a===state.annee?'selected':''}>${a}</option>`).join('');
+  const optBien = `<option value="all">Tous les biens</option>` + DATA.dossiers.map(d=> `<option value="${d.id}" ${String(state.dossierId)===String(d.id)?'selected':''}>${esc(d.surnom||('Bien #'+d.id))}</option>`).join('');
+  const optCoh = `<option value="all">Tous les co-hôtes</option>` + cohotes.map(p=> `<option value="${p.id}" ${String(state.cohoteId)===String(p.id)?'selected':''}>${esc(nomCohote(p.id))}</option>`).join('');
+  return `
+  <div class="filters card">
+    <div class="filter-grp"><label>Mois</label><select id="f-mois">${optMois}</select></div>
+    <div class="filter-grp"><label>Année</label><select id="f-annee">${optAnnee}</select></div>
+    <div class="filter-grp"><label>Bien</label><select id="f-bien">${optBien}</select></div>
+    <div class="filter-grp"><label>Co-hôte</label><select id="f-cohote">${optCoh}</select></div>
+  </div>`;
+}
+function brancherFiltres(){
+  const bind = (id, key, isNum) => { const el = document.getElementById(id); if(el) el.onchange = () => { state[key] = isNum ? num(el.value) : el.value; renderCockpit(); }; };
+  bind('f-mois','mois',true); bind('f-annee','annee',true); bind('f-bien','dossierId',false); bind('f-cohote','cohoteId',false);
+}
+
+// ── BLOC VUE D'ENSEMBLE (étape 5) ──
+function renderVueEnsemble(){
+  const biens = DATA.dossiers.filter(d => !state.dossierId || state.dossierId==='all' || String(d.id)===String(state.dossierId));
+  const actifs = biens.filter(d => ACTIVE_ETAPES.includes((d.etape||'').toLowerCase())).length;
+  const nd = `<span class="muted">— non disponible</span>`;
+  return `
+  <h2 class="section-title">Vue d'ensemble</h2>
+  <div class="grid grid-kpi">
+    <div class="kpi"><div class="kpi-label">Biens actifs</div><div class="kpi-value">${actifs}</div><div class="kpi-note">${biens.length} bien(s) au total</div></div>
+    <div class="kpi"><div class="kpi-label">Réservations 7 jours</div><div class="kpi-value" style="font-size:22px;color:var(--ink4)">—</div><div class="kpi-note">Données de réservation non synchronisées (voir TODO.md · DATA-1)</div></div>
+    <div class="kpi"><div class="kpi-label">Arrivées / départs du jour</div><div class="kpi-value" style="font-size:22px;color:var(--ink4)">—</div><div class="kpi-note">Nécessite la synchro iCal Airbnb (à venir)</div></div>
+  </div>
+  <div class="placeholder" style="margin-top:12px">ℹ️ Les compteurs de réservations (7/30 jours, arrivées/départs du jour) exigent des réservations datées, <strong>absentes de la base actuelle</strong>. Ils resteront vides tant que la synchronisation Airbnb (iCal) n'est pas mise en place — jamais remplacés par un chiffre estimé. Détail dans <strong>TODO.md</strong>.</div>`;
+}
+
+// ── BLOC FINANCES (étapes 2, 3, 4) ──
+function renderFinances(){
+  const mois = revenusFiltres({ periode:'mois' });
+  const annee = revenusFiltres({ periode:'annee' });
+  const sum = (arr, k) => arr.reduce((s,r)=> s + num(r[k]), 0);
+
+  // KPIs synthétiques
+  const kpis = `
+  <div class="grid grid-kpi">
+    <div class="kpi"><div class="kpi-label">Revenu brut · ${MOIS_FR[state.mois]}</div><div class="kpi-value mono">${eur0(sum(mois,'revenu_brut'))}</div><div class="kpi-note">Cumul ${state.annee} : ${eur0(sum(annee,'revenu_brut'))}</div></div>
+    <div class="kpi"><div class="kpi-label">Commissions co-hôtes · ${MOIS_FR[state.mois]}</div><div class="kpi-value mono">${eur0(sum(mois,'commission_cohote'))}</div><div class="kpi-note">Cumul ${state.annee} : ${eur0(sum(annee,'commission_cohote'))}</div></div>
+    <div class="kpi"><div class="kpi-label">Nuits · ${MOIS_FR[state.mois]}</div><div class="kpi-value">${sum(mois,'nuits')}</div><div class="kpi-note">Cumul ${state.annee} : ${sum(annee,'nuits')} nuits</div></div>
+  </div>`;
+
+  // Table 1 — Commissions dues par co-hôte (mois + cumul annuel)
+  const parCohote = {};
+  annee.forEach(r => { const k=r.cohote_id; (parCohote[k]=parCohote[k]||{mois:0,an:0}); parCohote[k].an += num(r.commission_cohote); if(num(r.mois)===state.mois) parCohote[k].mois += num(r.commission_cohote); });
+  const rowsCoh = Object.entries(parCohote).sort((a,b)=>b[1].an-a[1].an).map(([id,v])=>
+    `<tr><td>${esc(nomCohote(id))}</td><td class="r mono">${eur2(v.mois)}</td><td class="r mono">${eur2(v.an)}</td></tr>`).join('') || `<tr><td colspan="3" class="muted">Aucune donnée pour ${state.annee}.</td></tr>`;
+  const tableCoh = `
+  <h3 class="sub">Commissions dues aux co-hôtes</h3>
+  <div class="twrap"><table>
+    <thead><tr><th>Co-hôte</th><th class="r">${MOIS_FR[state.mois]}</th><th class="r">Cumul ${state.annee}</th></tr></thead>
+    <tbody>${rowsCoh}</tbody>
+  </table></div>`;
+
+  // Table 2 — Revenus & reversements par bien (mois)
+  const parBien = {};
+  mois.forEach(r => { const k=r.dossier_id; const b=(parBien[k]=parBien[k]||{brut:0,commMj:0,honoMj:0,commCoh:0,nuits:0}); b.brut+=num(r.revenu_brut); b.commMj+=num(r.commission_mj); b.honoMj+=num(r.honoraires_mj); b.commCoh+=num(r.commission_cohote); b.nuits+=num(r.nuits); });
+  const rowsBien = Object.entries(parBien).sort((a,b)=>b[1].brut-a[1].brut).map(([id,b])=>{
+    const revBase = b.brut - b.commMj;                            // chiffre principal (valeurs stockées)
+    const comm = num(dossierMap[id] ? dossierMap[id].comm : 0);   // taux du dossier (%)
+    const revProprio = b.brut - b.brut * comm/100;                // recalcul façon proprio.html
+    const ecart = revBase - revProprio;
+    let flag = '';
+    if(Math.abs(ecart) >= 1){ flag = `<span class="badge badge-amber" title="Écart base vs calcul propriétaire">Δ ${eur0(ecart)}</span>`; ecartsReversement.push({ id, brut:b.brut, revBase, revProprio, ecart, comm }); }
+    return `<tr><td>${esc(nomBien(id))}</td><td class="r mono">${eur2(b.brut)}</td><td class="r mono">${eur2(b.commCoh)}</td><td class="r mono">${eur2(revBase)}</td><td class="r mono muted">${eur2(revProprio)}</td><td class="r">${flag}</td></tr>`;
+  }).join('') || `<tr><td colspan="6" class="muted">Aucune donnée pour ${MOIS_FR[state.mois]} ${state.annee}.</td></tr>`;
+  const tableBien = `
+  <h3 class="sub">Revenus & reversements par bien — ${MOIS_FR[state.mois]} ${state.annee}</h3>
+  <div class="twrap"><table>
+    <thead><tr><th>Bien</th><th class="r">Revenu brut</th><th class="r">Comm. co-hôte</th><th class="r">Reversement<br><span class="th-note">base</span></th><th class="r">Reversement<br><span class="th-note">calc. proprio</span></th><th class="r">Écart</th></tr></thead>
+    <tbody>${rowsBien}</tbody>
+  </table></div>
+  <div class="th-legend">« base » = revenu brut − commission MJ (valeurs stockées en <code>cohote_revenus</code>). « calc. proprio » = revenu brut − (revenu brut × taux du dossier), formule de <code>proprio.html</code>. Un écart ≥ 1 € est signalé (aucun montant n'est corrigé).</div>`;
+
+  return `<h2 class="section-title">Finances</h2>${kpis}${tableCoh}${tableBien}`;
+}
+
+// ── BLOC OPÉRATIONS (étape 6) ──
+function renderOperations(){
+  const auj = new Date(); auj.setHours(0,0,0,0);
+  const menages = DATA.menages.filter(m => state.dossierId==='all' || String(m.dossier_id)===String(state.dossierId));
+  const estFait = s => ['fait','effectue','effectué','termine','terminé','done'].includes((s||'').toLowerCase());
+  const faits = menages.filter(m => estFait(m.statut)).length;
+  const planifies = menages.length - faits;
+  const retard = menages.filter(m => !estFait(m.statut) && m.date && new Date(m.date) < auj).length;
+
+  // Alerte : bien actif sans taux de commission renseigné (dossier incomplet)
+  const incomplets = DATA.dossiers.filter(d => ACTIVE_ETAPES.includes((d.etape||'').toLowerCase()) && (!d.comm || num(d.comm)===0));
+
+  const alertes = [];
+  ecartsReversement.forEach(e => alertes.push(`<li><span class="badge badge-amber">Écart reversement</span> ${esc(nomBien(e.id))} : base ${eur0(e.revBase)} vs calcul propriétaire ${eur0(e.revProprio)} (écart ${eur0(e.ecart)}).</li>`));
+  incomplets.forEach(d => alertes.push(`<li><span class="badge badge-red">Dossier incomplet</span> ${esc(nomBien(d.id))} : taux de commission manquant.</li>`));
+  const alertesHtml = alertes.length ? `<ul class="alertes">${alertes.join('')}</ul>` : `<div class="placeholder">Aucune alerte détectée sur le périmètre sélectionné.</div>`;
+
+  return `
+  <h2 class="section-title">Opérations</h2>
+  <div class="grid grid-kpi">
+    <div class="kpi"><div class="kpi-label">Ménages planifiés</div><div class="kpi-value">${planifies}</div><div class="kpi-note">non encore effectués</div></div>
+    <div class="kpi"><div class="kpi-label">Ménages effectués</div><div class="kpi-value" style="color:var(--green)">${faits}</div><div class="kpi-note">${menages.length} au total</div></div>
+    <div class="kpi"><div class="kpi-label">Ménages en retard</div><div class="kpi-value" style="color:${retard?'var(--red)':'var(--jade)'}">${retard}</div><div class="kpi-note">date passée, non effectués</div></div>
+  </div>
+  <h3 class="sub">Alertes</h3>
+  ${alertesHtml}
+  <div class="placeholder" style="margin-top:12px">ℹ️ L'alerte « checkout sans ménage planifié » nécessite les réservations datées (non disponibles — voir TODO.md · DATA-1).</div>`;
+}
+
+initAuth();
+</script>
+</body>
+</html>
