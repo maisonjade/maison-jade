@@ -3387,8 +3387,10 @@ function setSaveStatus(status) {
 async function loadFromSupabase() {
   // Charger immédiatement depuis le localStorage pour affichage instantané
   const local = JSON.parse(localStorage.getItem('mj_v3') || '{"dossiers":[],"prevObj":{}}');
+  stripIban(local.dossiers);        // S3 : purge tout IBAN résiduel du cache navigateur
   if (local.dossiers?.length) {
     D = local;
+    localStorage.setItem('mj_v3', JSON.stringify(D));  // réécrit le cache local purgé
     refreshAll();
     renderKanban();
   }
@@ -3402,6 +3404,7 @@ async function loadFromSupabase() {
     ]);
     if (e1) throw e1;
     D.dossiers = (dos || []).map(r => r.data);
+    stripIban(D.dossiers);          // S3 : au cas où d'anciennes lignes contiendraient encore un iban
     D.prevObj = (prev && prev.data) ? prev.data : {};
     isOnline = true;
     setSaveStatus('saved');
@@ -3459,9 +3462,29 @@ async function savePrevToSupabase() {
   }
 }
 
+// ── IBAN (S3) : stocké séparément dans `donnees_bancaires` (admin only),
+// jamais dans dossiers.data ni dans le localStorage. ──
+async function saveIbanToSupabase(dossierId, iban) {
+  if (!isOnline) return;
+  try {
+    const val = (iban || '').trim();
+    if (val) await sb.from('donnees_bancaires').upsert({ dossier_id: dossierId, iban: val, updated_at: new Date().toISOString() });
+    else await sb.from('donnees_bancaires').delete().eq('dossier_id', dossierId);
+  } catch (err) { console.warn('Échec sauvegarde IBAN', err); }
+}
+async function loadIbanForDossier(dossierId) {
+  try {
+    const { data } = await sb.from('donnees_bancaires').select('iban').eq('dossier_id', dossierId).maybeSingle();
+    return data?.iban || '';
+  } catch (err) { return ''; }
+}
+// Retire toute donnée bancaire des dossiers avant stockage local/JSONB.
+function stripIban(dossiers) { (dossiers || []).forEach(d => { if (d && 'iban' in d) delete d.iban; }); }
+
 // persist() reste l'unique point d'entrée utilisé partout dans le code existant.
 // Elle sauvegarde en local (toujours, comme filet de sécurité) + vers Supabase (si en ligne).
 function persist() {
+  stripIban(D.dossiers);            // S3 : jamais d'IBAN en local ni dans dossiers.data
   localStorage.setItem('mj_v3', JSON.stringify(D));
   refreshAll();
   if (!isOnline) return;
@@ -4292,9 +4315,12 @@ function openDos(id) {
   if (alertSurnom) alertSurnom.style.display = !dos.surnom ? 'flex' : 'none';
   document.getElementById('e-notes-pros').value = dos.notesPros || '';
   // Relation propriétaire
-  ['reporting','dispo-urgence','obj-revenus','iban','canal-comm','langue-comm'].forEach(f => {
+  ['reporting','dispo-urgence','obj-revenus','canal-comm','langue-comm'].forEach(f => {
     const e = document.getElementById('e-' + f); if (e) e.value = dos[f.replace(/-/g,'_')] || '';
   });
+  // IBAN (S3) : chargé depuis la table dédiée `donnees_bancaires` (admin only), jamais depuis dos
+  const ibanEl = document.getElementById('e-iban');
+  if (ibanEl) { ibanEl.value = ''; loadIbanForDossier(dos.id).then(v => { ibanEl.value = v; }); }
   // Liens iCal
   ['ical-airbnb','ical-booking','ical-abritel','ical-autre'].forEach(f => {
     const e = document.getElementById('e-' + f); if (e) e.value = dos[f.replace(/-/g,'_')] || '';
@@ -4408,10 +4434,14 @@ function saveDosEdit() {
   ['prenom','nom','email','tel','source'].forEach(f => { dos[f] = document.getElementById('e-' + f)?.value || ''; });
   dos.notesPros = document.getElementById('e-notes-pros')?.value || '';
   // Relation propriétaire
-  ['reporting','dispo_urgence','obj_revenus','iban','canal_comm','langue_comm'].forEach(f => {
+  ['reporting','dispo_urgence','obj_revenus','canal_comm','langue_comm'].forEach(f => {
     const id = 'e-' + f.replace(/_/g,'-');
     dos[f] = document.getElementById(id)?.value || '';
   });
+  // IBAN (S3) : enregistré séparément dans `donnees_bancaires`, jamais dans dos
+  const ibanVal = document.getElementById('e-iban')?.value || '';
+  delete dos.iban;
+  saveIbanToSupabase(dos.id, ibanVal);
   // Liens iCal
   ['ical_airbnb','ical_booking','ical_abritel','ical_autre'].forEach(f => {
     dos[f] = document.getElementById('e-' + f.replace(/_/g,'-'))?.value || '';
@@ -4493,6 +4523,7 @@ function delDos(id) {
   if (!confirm('Supprimer ce dossier ?')) return;
   D.dossiers = D.dossiers.filter(x => x.id !== id);
   deleteDosFromSupabase(id);
+  if (isOnline) { try { sb.from('donnees_bancaires').delete().eq('dossier_id', id); } catch (e) {} }  // S3 : nettoyer l'IBAN associé
   persist();
   closeModal('modal-dossier');
 }
