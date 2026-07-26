@@ -1,0 +1,17 @@
+# ══════════════════════════════════════════════════════════════════
+#  Dépôt PUBLIC — ne jamais publier de document interne.
+#  Seuls les fichiers de l'application (.html du site) + README.md
+#  doivent être versionnés/poussés. Le reste reste EN LOCAL uniquement.
+# ══════════════════════════════════════════════════════════════════
+
+# Tous les .md sont internes… sauf le README public
+*.md
+!README.md
+
+# Fichiers SQL internes (schéma, RLS, migrations, vérifications de sécurité)
+*.sql
+
+# Notes/brouillons éventuels
+*.local
+*.draft
+NOTES*.txt
