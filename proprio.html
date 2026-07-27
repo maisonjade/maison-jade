@@ -433,12 +433,27 @@ async function doLogout() {
 
 // ── INIT APP ──
 async function loadApp() {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-
-  // Charger le profil propriétaire
+  // Charger le profil propriétaire (AVANT d'ouvrir l'espace — contrôle d'accès S4)
   const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
   proprioProfile = profile;
+
+  // ── Contrôle de rôle (S4) : espace réservé aux propriétaires (ou admin) ──
+  // Défense en profondeur : même si un co-hôte/inconnu se connecte ici, il est refusé.
+  // (La RLS empêche de toute façon de lire les données d'autrui.)
+  const role = (profile && profile.role) || '';
+  if (role !== 'proprio' && role !== 'admin') {
+    await sb.auth.signOut();
+    currentUser = null;
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    const errEl = document.getElementById('login-err');
+    if (errEl) errEl.textContent = "Cet espace est réservé aux propriétaires. Contactez Maison Jade si besoin.";
+    return;
+  }
+
+  // Accès autorisé → ouvrir l'espace
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
 
   // Nom utilisateur
   const nom = profile?.nom || profile?.prenom || currentUser.email.split('@')[0];
