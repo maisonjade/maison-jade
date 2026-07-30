@@ -184,6 +184,22 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);co
   <div class="login-footer">Maison Jade Ltd · contact@maisonjade.com</div>
 </div>
 
+<!-- SET PASSWORD (arrivée par lien d'invitation) -->
+<div id="setpw-screen" style="display:none">
+  <div class="login-card">
+    <div class="login-logo">Maison <em>Jade</em></div>
+    <div class="login-sub">Bienvenue — choisissez votre mot de passe</div>
+    <label class="login-label">Nouveau mot de passe</label>
+    <input type="password" class="login-input" id="setpw-pass" placeholder="••••••••" autocomplete="new-password">
+    <label class="login-label">Confirmez le mot de passe</label>
+    <input type="password" class="login-input" id="setpw-pass2" placeholder="••••••••" autocomplete="new-password"
+      onkeydown="if(event.key==='Enter')doSetPassword()">
+    <button class="login-btn" onclick="doSetPassword()">Valider et accéder à mon espace</button>
+    <div class="login-err" id="setpw-err"></div>
+  </div>
+  <div class="login-footer">Maison Jade Ltd · contact@maisonjade.com</div>
+</div>
+
 <!-- APP -->
 <div id="app">
 
@@ -389,6 +405,10 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);co
 </div><!-- /app -->
 
 <script>
+// ── Contexte d'arrivée par lien d'invitation (capturé AVANT que Supabase ne nettoie l'URL) ──
+const _arrivalHash = window.location.hash || '';
+function isInviteArrival() { return /type=(invite|recovery|signup)/i.test(_arrivalHash); }
+
 // ── CONFIG ──
 const SUPABASE_URL = 'https://lvfncstosaaqgtfozthw.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_UrB6X04fyAOhnN7aHropFQ_mwubBip2';
@@ -429,6 +449,29 @@ async function doLogout() {
   document.getElementById('app').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
   currentUser = null;
+}
+
+// ── DÉFINIR SON MOT DE PASSE (arrivée par lien d'invitation) ──
+function showSetPassword() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('setpw-screen').style.display = 'flex';
+}
+
+async function doSetPassword() {
+  const p1 = document.getElementById('setpw-pass').value;
+  const p2 = document.getElementById('setpw-pass2').value;
+  const errEl = document.getElementById('setpw-err');
+  errEl.textContent = '';
+  if (!p1 || p1.length < 8) { errEl.textContent = 'Mot de passe : 8 caractères minimum'; return; }
+  if (p1 !== p2) { errEl.textContent = 'Les deux mots de passe ne correspondent pas'; return; }
+  const { error } = await sb.auth.updateUser({ password: p1 });
+  if (error) { errEl.textContent = 'Erreur : ' + error.message; return; }
+  // Nettoyer l'URL (retirer le jeton) puis ouvrir l'espace
+  history.replaceState(null, '', window.location.pathname);
+  document.getElementById('setpw-screen').style.display = 'none';
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) { currentUser = session.user; await loadApp(); }
 }
 
 // ── INIT APP ──
@@ -831,7 +874,11 @@ function showSection(id, btn) {
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
     currentUser = session.user;
-    await loadApp();
+    if (isInviteArrival()) {
+      showSetPassword();   // arrivée par lien d'invitation → définir le mot de passe d'abord
+    } else {
+      await loadApp();
+    }
   }
 })();
 </script>
