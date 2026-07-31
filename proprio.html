@@ -511,8 +511,7 @@ async function loadBiensProprio() {
   // OU les cohote_biens assignés à ce proprio via proprio_user_id
   const { data: propBiens } = await sb.from('proprio_biens')
     .select('*, dossier:dossier_id(*)')
-    .eq('proprio_id', currentUser.id)
-    .catch(() => ({ data: null }));
+    .eq('proprio_id', currentUser.id);
 
   // Fallback : chercher dans dossiers par email propriétaire
   const { data: dossiers } = await sb.from('dossiers').select('id, data');
@@ -565,8 +564,7 @@ async function loadReservationsProprio() {
   });
 
   // Charger les ménages
-  const { data: menages } = await sb.from('menages_proprio').select('*')
-    .catch(() => ({ data: null }));
+  const { data: menages } = await sb.from('menages_proprio').select('*');
   allMenages = menages || [];
 }
 
@@ -815,8 +813,7 @@ async function renderIncidents() {
   const el = document.getElementById('incidents-list');
   const { data } = await sb.from('tickets').select('*')
     .eq('dossier_id', selectedDossierId)
-    .order('created_at', { ascending: false })
-    .catch(() => ({ data: null }));
+    .order('created_at', { ascending: false });
 
   if (!data || !data.length) {
     el.innerHTML = '<div class="empty"><div class="empty-icon">✅</div>Aucun incident signalé — tout va bien !</div>';
