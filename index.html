@@ -7919,7 +7919,8 @@ function updateProprioAccessBox() {
 async function genProprioLink() {
   const dos = D.dossiers.find(x => x.id === currentDosId);
   const email = (dos?.email || '').trim();
-  if (!email) { showToast("❌ Ce dossier n'a pas d'email propriétaire"); return; }
+  const disp0 = document.getElementById('proprio-link-display');
+  if (!email) { if (disp0) disp0.textContent = "❌ Ce dossier n'a pas d'email propriétaire"; return; }
   const disp = document.getElementById('proprio-link-display');
   if (disp) disp.textContent = '⏳ Génération du lien…';
   try {
@@ -7927,14 +7928,12 @@ async function genProprioLink() {
     const msg = (data && data.error) || (error && error.message);
     if (msg || !data || !data.link) {
       if (disp) disp.textContent = '❌ ' + (msg || 'Échec de génération');
-      showToast('❌ ' + (msg || 'Échec de génération'));
       return;
     }
     _proprioLink = data.link;
-    if (disp) disp.innerHTML = `<span style="font-family:'JetBrains Mono',monospace;color:var(--or);font-size:11px;word-break:break-all">${data.link}</span>`;
+    if (disp) disp.innerHTML = `<div style="color:#1a7a4a;font-weight:600;margin-bottom:6px">✅ Lien généré — copiez-le et envoyez-le au propriétaire</div><span style="font-family:'JetBrains Mono',monospace;color:var(--or);font-size:11px;word-break:break-all">${data.link}</span>`;
     const copyBtn = document.getElementById('proprio-copy-btn');
     if (copyBtn) copyBtn.style.display = 'inline-flex';
-    showToast('✅ Lien généré — copiez-le et envoyez-le au propriétaire');
   } catch (e) {
     if (disp) disp.textContent = '❌ ' + (e?.message || e);
   }
@@ -7943,7 +7942,8 @@ async function genProprioLink() {
 function copyProprioLink() {
   if (!_proprioLink) return;
   navigator.clipboard.writeText(_proprioLink).then(() => {
-    showToast('✅ Lien copié — envoyez-le au propriétaire');
+    const b = document.getElementById('proprio-copy-btn');
+    if (b) { const t = b.textContent; b.textContent = '✅ Copié !'; setTimeout(() => { b.textContent = t; }, 2000); }
   });
 }
 
