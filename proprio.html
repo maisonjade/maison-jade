@@ -878,6 +878,28 @@ function showSection(id, btn) {
     }
   }
 })();
+
+// ── Auto-mise à jour : recharge la page si une nouvelle version est publiée ──
+// Évite au propriétaire d'avoir à vider le cache. Sûr : espace en lecture seule,
+// et on ne recharge jamais pendant la saisie du mot de passe.
+(function() {
+  let _ver = null;
+  async function checkUpdate() {
+    try {
+      const sp = document.getElementById('setpw-screen');
+      if (sp && sp.style.display !== 'none') return; // pas pendant la saisie du mot de passe
+      const res = await fetch(location.pathname, { method: 'HEAD', cache: 'no-store' });
+      const v = res.headers.get('ETag') || res.headers.get('Last-Modified');
+      if (!v) return;
+      if (_ver && v !== _ver) { location.reload(); return; }
+      _ver = v;
+    } catch (_) { /* hors-ligne / fichier local : on ignore */ }
+  }
+  checkUpdate();
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') checkUpdate();
+  });
+})();
 </script>
 </body>
 </html>

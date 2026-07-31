@@ -3384,6 +3384,21 @@ const SUPABASE_URL = 'https://lvfncstosaaqgtfozthw.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_UrB6X04fyAOhnN7aHropFQ_mwubBip2';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// ── Notification (toast) — autonome, ne dépend d'aucun autre élément ──
+function showToast(msg) {
+  let el = document.getElementById('_mj_toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = '_mj_toast';
+    el.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#2A3B2E;color:#fff;padding:12px 20px;border-radius:8px;font-size:13px;z-index:99999;box-shadow:0 4px 16px rgba(0,0,0,.25);opacity:0;transition:opacity .2s;max-width:90vw;text-align:center;pointer-events:none';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.opacity = '1';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.style.opacity = '0'; }, 3000);
+}
+
 let saveTimer = null;
 let isOnline = true;
 
