@@ -555,8 +555,8 @@ async function loadBiensProprio() {
 }
 
 async function loadReservationsProprio() {
-  // Charger depuis la table ical_events si elle existe, sinon via cohote_revenus
-  const { data: revs } = await sb.from('cohote_revenus').select('*');
+  // Réservations (planning) depuis la table reservations — hors annulées
+  const { data: revs } = await sb.from('reservations').select('*').neq('statut', 'annulee');
   allReservations = {};
   (revs || []).forEach(r => {
     if (!allReservations[r.dossier_id]) allReservations[r.dossier_id] = [];

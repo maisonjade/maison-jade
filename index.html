@@ -2881,6 +2881,12 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
           <div><label class="fl">🏡 iCal Abritel/Vrbo</label><input type="text" id="e-ical-abritel" placeholder="https://www.vrbo.com/icalendar/..."></div>
           <div><label class="fl">🔗 iCal autre plateforme</label><input type="text" id="e-ical-autre" placeholder="Tout lien iCal compatible"></div>
         </div>
+        <div style="margin-bottom:1rem;padding:12px 14px;background:var(--goldbg,#f7f1e4);border:1px solid var(--gold,#c9a54a)55;border-radius:8px">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-primary btn-sm" onclick="syncPlanning()">🔄 Rafraîchir le planning de ce bien</button>
+            <span id="sync-planning-status" style="font-size:12px;color:var(--ink3)">Récupère les réservations depuis les liens iCal ci-dessus et les rend visibles au propriétaire.</span>
+          </div>
+        </div>
         <div class="fg fr2" style="margin-bottom:1rem">
           <div><label class="fl">Prestataire ménage</label><input type="text" id="e-prestataire-menage" placeholder="Nom + téléphone"></div>
           <div><label class="fl">Prestataire blanchisserie</label><input type="text" id="e-prestataire-blanc" placeholder="Nom + téléphone"></div>
@@ -7871,6 +7877,34 @@ window.addEventListener('beforeinstallprompt', e => {
 
 // Initialisation PWA
 installPWA();
+
+// ══ PLANNING — synchronisation iCal (Edge Function) ══
+async function syncPlanning() {
+  const el = document.getElementById('sync-planning-status');
+  const dos = D.dossiers.find(x => x.id === currentDosId);
+  if (!dos) { if (el) el.textContent = 'Ouvrez un bien d\'abord.'; return; }
+  if (el) el.textContent = '⏳ Sauvegarde des liens + synchronisation…';
+  try {
+    // 1) S'assurer que les liens iCal saisis sont bien enregistrés en base
+    ['ical_airbnb','ical_booking','ical_abritel','ical_autre'].forEach(f => {
+      const inp = document.getElementById('e-' + f.replace(/_/g,'-'));
+      if (inp) dos[f] = inp.value || '';
+    });
+    await saveDosToSupabase(dos);
+    // 2) Lancer la synchro côté serveur (fetch iCal + upsert reservations)
+    const { data, error } = await sb.functions.invoke('sync-planning', { body: { dossierId: dos.id } });
+    if (error || (data && data.error)) {
+      if (el) el.textContent = '❌ ' + ((data && data.error) || error.message);
+      return;
+    }
+    const r = (data.report || []).find(x => String(x.dossier_id) === String(dos.id)) || (data.report || [])[0] || {};
+    const errs = (r.erreurs && r.erreurs.length) ? ' · ⚠️ ' + r.erreurs.join(' ; ') : '';
+    if (el) el.textContent = `✅ ${r.synchronisees || 0} réservation(s)${r.annulees ? `, ${r.annulees} annulée(s)` : ''}.${errs}`;
+    showToast('✅ Planning rafraîchi');
+  } catch (e) {
+    if (el) el.textContent = '❌ ' + (e?.message || e);
+  }
+}
 
 // ══ CHATBOT VOYAGEUR ══
 function getChatbotUrl() {
