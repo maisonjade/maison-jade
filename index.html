@@ -2887,6 +2887,17 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
             <span id="sync-planning-status" style="font-size:12px;color:var(--ink3)">Récupère les réservations depuis les liens iCal ci-dessus et les rend visibles au propriétaire.</span>
           </div>
         </div>
+
+        <!-- Montants par réservation (récap financier propriétaire) -->
+        <div style="margin-bottom:1.5rem">
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:10px">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold,#A57C52)">💰 Montants par réservation</span>
+            <label style="font-size:12px;color:var(--ink2)">Commission MJ
+              <input type="number" id="e-comm" min="0" max="100" step="1" placeholder="22" style="width:58px;padding:4px 8px;margin-left:4px;text-align:right" oninput="renderReservationsAmounts(currentDosId)" onchange="updateComm()"> %
+            </label>
+          </div>
+          <div id="reservations-amounts" style="font-size:12px;color:var(--ink3)">Cliquez « Rafraîchir le planning » pour charger les réservations, puis saisissez les montants.</div>
+        </div>
         <div class="fg fr2" style="margin-bottom:1rem">
           <div><label class="fl">Prestataire ménage</label><input type="text" id="e-prestataire-menage" placeholder="Nom + téléphone"></div>
           <div><label class="fl">Prestataire blanchisserie</label><input type="text" id="e-prestataire-blanc" placeholder="Nom + téléphone"></div>
@@ -7901,9 +7912,83 @@ async function syncPlanning() {
     const errs = (r.erreurs && r.erreurs.length) ? ' · ⚠️ ' + r.erreurs.join(' ; ') : '';
     if (el) el.textContent = `✅ ${r.synchronisees || 0} réservation(s)${r.annulees ? `, ${r.annulees} annulée(s)` : ''}.${errs}`;
     showToast('✅ Planning rafraîchi');
+    renderReservationsAmounts(dos.id);
   } catch (e) {
     if (el) el.textContent = '❌ ' + (e?.message || e);
   }
+}
+
+// ══ MONTANTS PAR RÉSERVATION (récap financier) ══
+function updateComm() {
+  const dos = D.dossiers.find(x => x.id === currentDosId);
+  if (!dos) return;
+  dos.comm = parseFloat(document.getElementById('e-comm').value) || 0;
+  saveDosToSupabase(dos);
+}
+
+async function renderReservationsAmounts(dossierId) {
+  const cont = document.getElementById('reservations-amounts');
+  if (!cont || !dossierId) return;
+  const dos = D.dossiers.find(x => x.id === dossierId);
+  const taux = (parseFloat(dos?.comm || 22)) / 100;
+  const { data: revs } = await sb.from('reservations').select('*')
+    .eq('dossier_id', dossierId).neq('statut', 'annulee')
+    .order('date_debut', { ascending: false });
+  if (!revs || !revs.length) {
+    cont.innerHTML = '<div style="color:var(--ink3)">Aucune réservation. Cliquez « Rafraîchir le planning ».</div>';
+    return;
+  }
+  const fmt = d => new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+  const inp = 'text-align:right;border:1px solid var(--border);border-radius:5px;padding:4px 6px;font-size:12px;font-family:inherit';
+  const rows = revs.map(r => {
+    const brut = r.montant_brut || 0, fp = r.frais_plateforme || 0, fm = r.frais_menage || 0;
+    const cm = Math.round(brut * taux), net = Math.round(brut - fp - fm - cm);
+    return `<tr data-id="${r.id}" style="border-bottom:1px solid var(--border)">
+      <td style="white-space:nowrap;padding:7px 6px">${fmt(r.date_debut)} → ${fmt(r.date_fin)}</td>
+      <td style="color:var(--ink2)">${r.bloque ? '🔒 Bloqué' : (r.voyageur || '—')}</td>
+      <td style="text-align:right;color:var(--ink3)">${r.nuits}</td>
+      <td><input type="number" class="ra-brut" value="${brut || ''}" placeholder="0" style="width:78px;${inp}"></td>
+      <td><input type="number" class="ra-fp" value="${fp || ''}" placeholder="0" style="width:64px;${inp}"></td>
+      <td><input type="number" class="ra-fm" value="${fm || ''}" placeholder="0" style="width:64px;${inp}"></td>
+      <td class="ra-comm" style="text-align:right;color:var(--gold,#A57C52);white-space:nowrap">${cm ? '-' + cm + '€' : '—'}</td>
+      <td class="ra-net" style="text-align:right;font-weight:600;white-space:nowrap">${net ? net + '€' : '—'}</td>
+      <td style="text-align:center"><button class="btn btn-primary btn-sm" onclick="saveReservationAmount(${r.id}, this)">💾</button></td>
+    </tr>`;
+  }).join('');
+  cont.innerHTML = `<div style="overflow-x:auto;border:1px solid var(--border);border-radius:8px">
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+    <thead><tr style="text-align:left;color:var(--ink3);background:var(--surface2,#f5f0e8);border-bottom:1px solid var(--border)">
+      <th style="padding:8px 6px">Séjour</th><th>Voyageur</th><th style="text-align:right">Nuits</th>
+      <th style="text-align:right">Brut €</th><th style="text-align:right">Frais plat.</th><th style="text-align:right">Ménage</th>
+      <th style="text-align:right">Comm. MJ</th><th style="text-align:right">Net proprio</th><th></th>
+    </tr></thead><tbody>${rows}</tbody></table></div>`;
+  cont.querySelectorAll('tr[data-id]').forEach(tr => {
+    const recompute = () => {
+      const b = parseFloat(tr.querySelector('.ra-brut').value) || 0;
+      const fp = parseFloat(tr.querySelector('.ra-fp').value) || 0;
+      const fm = parseFloat(tr.querySelector('.ra-fm').value) || 0;
+      const cm = Math.round(b * taux), net = Math.round(b - fp - fm - cm);
+      tr.querySelector('.ra-comm').textContent = cm ? '-' + cm + '€' : '—';
+      tr.querySelector('.ra-net').textContent = net ? net + '€' : '—';
+    };
+    tr.querySelectorAll('input').forEach(i => i.addEventListener('input', recompute));
+  });
+}
+
+async function saveReservationAmount(id, btn) {
+  const tr = btn.closest('tr');
+  const dos = D.dossiers.find(x => x.id === currentDosId);
+  const taux = (parseFloat(dos?.comm || 22)) / 100;
+  const brut = parseFloat(tr.querySelector('.ra-brut').value) || 0;
+  const fp = parseFloat(tr.querySelector('.ra-fp').value) || 0;
+  const fm = parseFloat(tr.querySelector('.ra-fm').value) || 0;
+  const cm = Math.round(brut * taux), net = Math.round(brut - fp - fm - cm);
+  const { error } = await sb.from('reservations').update({
+    montant_brut: brut, frais_plateforme: fp, frais_menage: fm,
+    commission_mj: cm, net_proprio: net, updated_at: new Date().toISOString()
+  }).eq('id', id);
+  if (error) { showToast('❌ ' + error.message); return; }
+  showToast('✅ Montant enregistré');
 }
 
 // ══ CHATBOT VOYAGEUR ══
@@ -8000,7 +8085,13 @@ function copyProprioLink() {
 const _origOpenDos = openDos;
 openDos = function(id) {
   _origOpenDos(id);
-  setTimeout(() => { updateChatbotLinkDisplay(); updateProprioAccessBox(); }, 100);
+  setTimeout(() => {
+    updateChatbotLinkDisplay(); updateProprioAccessBox();
+    const dos = D.dossiers.find(x => x.id === id);
+    const c = document.getElementById('e-comm');
+    if (c) c.value = dos?.comm || 22;
+    renderReservationsAmounts(id);
+  }, 120);
 };
 
 // ══ DÉMARRAGE ══

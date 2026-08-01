@@ -602,17 +602,22 @@ function renderKPIs(dosData) {
   const mois = now.getMonth();
   const annee = now.getFullYear();
 
-  // Réservations ce mois depuis cohote_revenus
+  // Réservations ce mois (vrais séjours uniquement)
   const revsMois = (allReservations[selectedDossierId] || []).filter(r => {
+    if (r.bloque) return false;
     const d = new Date(r.date_debut || r.created_at);
     return d.getMonth() === mois && d.getFullYear() === annee;
   });
 
-  const totalCA = revsMois.reduce((s, r) => s + (parseFloat(r.montant_brut || r.montant || 0)), 0);
   const taux = parseFloat(dosData.comm || 22) / 100;
-  const commMJ = totalCA * taux;
-  const netProprio = totalCA - commMJ;
-  const totalNuits = revsMois.reduce((s, r) => s + (parseInt(r.nuits || 0)), 0);
+  let totalCA = 0, commMJ = 0, netProprio = 0, totalNuits = 0;
+  revsMois.forEach(r => {
+    const brut = parseFloat(r.montant_brut || 0);
+    const fp = parseFloat(r.frais_plateforme || 0), fm = parseFloat(r.frais_menage || 0);
+    const comm = (r.commission_mj != null) ? parseFloat(r.commission_mj) : Math.round(brut * taux);
+    const net  = (r.net_proprio  != null) ? parseFloat(r.net_proprio)  : Math.round(brut - fp - fm - comm);
+    totalCA += brut; commMJ += comm; netProprio += net; totalNuits += parseInt(r.nuits || 0);
+  });
 
   document.getElementById('kpi-resas').textContent = revsMois.length || '—';
   document.getElementById('kpi-nuits').textContent = totalNuits ? totalNuits + ' nuits' : 'Synchronisez le calendrier';
@@ -775,37 +780,48 @@ function renderMenagesProprio() {
 // ── REVENUS ──
 function renderRevenusTable(dosData) {
   const taux = parseFloat(dosData.comm || 22) / 100;
-  const revs = (allReservations[selectedDossierId] || [])
-    .sort((a,b) => new Date(b.created_at||b.date) - new Date(a.created_at||a.date));
+  const body = document.getElementById('revenus-body');
+  // On ne compte que les vrais séjours (pas les dates bloquées)
+  const revs = (allReservations[selectedDossierId] || []).filter(r => !r.bloque);
 
   if (!revs.length) {
-    document.getElementById('revenus-body').innerHTML = '<tr><td colspan="5" class="empty">Aucun revenu enregistré — le co-hôte doit saisir les montants</td></tr>';
+    body.innerHTML = '<tr><td colspan="5" class="empty">Aucun revenu enregistré pour le moment.</td></tr>';
     return;
   }
 
-  // Grouper par mois
+  // Grouper par mois + totaux (net = brut − frais − commission)
   const byMonth = {};
+  let tBrut = 0, tComm = 0, tNet = 0, tNuits = 0;
   revs.forEach(r => {
-    const d = new Date(r.date_debut || r.date || r.created_at);
+    const d = new Date(r.date_debut || r.created_at);
     const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-    if (!byMonth[key]) byMonth[key] = { mois: d, ca: 0, nuits: 0 };
-    byMonth[key].ca += parseFloat(r.montant_brut || r.montant || 0);
-    byMonth[key].nuits += parseInt(r.nuits || 0);
+    if (!byMonth[key]) byMonth[key] = { mois: d, brut: 0, comm: 0, net: 0, nuits: 0 };
+    const brut = parseFloat(r.montant_brut || 0);
+    const fp = parseFloat(r.frais_plateforme || 0), fm = parseFloat(r.frais_menage || 0);
+    const comm = (r.commission_mj != null) ? parseFloat(r.commission_mj) : Math.round(brut * taux);
+    const net  = (r.net_proprio  != null) ? parseFloat(r.net_proprio)  : Math.round(brut - fp - fm - comm);
+    byMonth[key].brut += brut; byMonth[key].comm += comm; byMonth[key].net += net; byMonth[key].nuits += parseInt(r.nuits || 0);
+    tBrut += brut; tComm += comm; tNet += net; tNuits += parseInt(r.nuits || 0);
   });
 
-  document.getElementById('revenus-body').innerHTML = Object.entries(byMonth)
-    .sort(([a],[b]) => b.localeCompare(a))
-    .map(([key, v]) => {
-      const comm = v.ca * taux;
-      const net  = v.ca - comm;
-      return `<tr>
-        <td>${v.mois.toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</td>
-        <td>${v.ca.toLocaleString('fr-FR')}€</td>
-        <td class="rev-negative">-${Math.round(comm).toLocaleString('fr-FR')}€</td>
-        <td class="rev-positive">${Math.round(net).toLocaleString('fr-FR')}€</td>
-        <td>${v.nuits} nuits</td>
-      </tr>`;
-    }).join('');
+  const euro = n => Math.round(n).toLocaleString('fr-FR') + '€';
+  const lignes = Object.entries(byMonth).sort(([a],[b]) => b.localeCompare(a)).map(([key, v]) => `
+    <tr>
+      <td>${v.mois.toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</td>
+      <td>${euro(v.brut)}</td>
+      <td class="rev-negative">-${euro(v.comm)}</td>
+      <td class="rev-positive">${euro(v.net)}</td>
+      <td>${v.nuits} nuits</td>
+    </tr>`).join('');
+
+  body.innerHTML = lignes + `
+    <tr style="font-weight:700;border-top:2px solid var(--jade-bd)">
+      <td>Total</td>
+      <td>${euro(tBrut)}</td>
+      <td class="rev-negative">-${euro(tComm)}</td>
+      <td class="rev-positive">${euro(tNet)}</td>
+      <td>${tNuits} nuits</td>
+    </tr>`;
 }
 
 // ── INCIDENTS ──
