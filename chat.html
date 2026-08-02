@@ -417,6 +417,7 @@ const SUPABASE_KEY = 'sb_publishable_UrB6X04fyAOhnN7aHropFQ_mwubBip2';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let bienData = null;
+let bienId = null;
 let conversation = [];
 let isTyping = false;
 
@@ -424,20 +425,23 @@ let isTyping = false;
 async function init() {
   // Récupérer l'ID du bien depuis l'URL
   const params = new URLSearchParams(window.location.search);
-  const bienId = params.get('bien') || params.get('id');
+  bienId = params.get('bien') || params.get('id');
 
   if (!bienId) {
     showError();
     return;
   }
 
-  // Charger les données du bien depuis Supabase
+  // Charger les infos publiques du bien via la fonction serveur (chat-proxy).
+  // On ne lit plus les dossiers en direct (l'accès anonyme est bloqué par RLS).
+  let info;
   try {
-    const { data, error } = await sb.from('dossiers').select('data').eq('id', bienId).single();
-    if (error || !data) { showError(); return; }
-    bienData = data.data;
+    const { data, error } = await sb.functions.invoke('clever-endpoint', {
+      body: { bienId, action: 'info' }
+    });
+    if (error || !data || data.error) { showError(); return; }
+    info = data;
   } catch(e) {
-    // Fallback : chercher dans les params URL
     showError();
     return;
   }
@@ -448,14 +452,14 @@ async function init() {
   document.getElementById('share-btn').style.display = 'flex';
 
   // En-tête
-  const adresse = bienData.adresse || bienData.ville || 'votre logement';
-  document.getElementById('header-bien').textContent = adresse.split(',')[0];
-  document.title = 'Assistant · ' + adresse.split(',')[0];
+  const nom = info.name || 'votre logement';
+  document.getElementById('header-bien').textContent = nom;
+  document.title = 'Assistant · ' + nom;
 
   // Message d'accueil
   const heure = new Date().getHours();
   const salut = heure < 12 ? 'Bonjour' : heure < 18 ? 'Bon après-midi' : 'Bonsoir';
-  const type = bienData.type || 'logement';
+  const type = info.type || 'logement';
   addBotMessage(`${salut} ! 👋\n\nBienvenue dans votre ${type.toLowerCase()} Maison Jade.\n\nJe suis votre assistant disponible **24h/24** pour répondre à toutes vos questions — check-in, accès, WiFi, recommandations locales...\n\nComment puis-je vous aider ?`);
 
   // URL de partage
@@ -550,19 +554,12 @@ async function sendMessage() {
   showTyping();
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 600,
-        system: buildSystemPrompt(),
-        messages: conversation
-      })
+    // Appel via la fonction serveur (chat-proxy) — la clé API reste côté serveur
+    const { data, error } = await sb.functions.invoke('clever-endpoint', {
+      body: { bienId, messages: conversation }
     });
-
-    const data = await response.json();
-    const reply = data.content?.[0]?.text || '';
+    if (error || !data || data.error) throw new Error(data?.error || 'proxy');
+    const reply = data.reply || '';
 
     hideTyping();
 
@@ -585,36 +582,6 @@ async function sendMessage() {
 
   isTyping = false;
   document.getElementById('send-btn').disabled = false;
-}
-
-function buildSystemPrompt() {
-  const d = bienData || {};
-  return `Tu es l'assistant virtuel de Maison Jade, une conciergerie premium de location courte durée.
-Tu réponds aux voyageurs de façon chaleureuse, précise et professionnelle.
-Tu es disponible 24h/24 et tu parles la langue du voyageur automatiquement.
-
-INFORMATIONS SUR LE LOGEMENT :
-- Adresse : ${d.adresse || 'Non renseignée'}
-- Type : ${d.type || 'Appartement'} ${d.surface ? '— ' + d.surface + ' m²' : ''}
-- Check-in : ${d.checkin || 'À partir de 15h00'}
-- Check-out : ${d.checkout || 'Avant 11h00'}
-- Accès / Boîte à clés : ${d.acces || d.boite_cles || 'Informations transmises par email avant l\'arrivée'}
-- Code WiFi : ${d.wifi || 'Disponible — code affiché dans le logement'}
-- Parking : ${d.parking || 'Se renseigner auprès de l\'hôte'}
-- Transports : ${d.transport || 'Voir guide d\'accueil'}
-- Règles maison : ${d.regles || 'Non-fumeur · Pas d\'animaux · Respect du voisinage'}
-- Équipements : ${d.equip || 'WiFi, cuisine équipée, linge fourni'}
-- Recommandations locales : ${d.recommandations || d.reco || ''}
-- Notes importantes : ${d.notesPros || ''}
-
-RÈGLES DE COMPORTEMENT :
-- Réponds toujours dans la langue du voyageur
-- Sois chaleureux et professionnel
-- Si tu ne connais pas une information précise, dis-le clairement et propose de contacter l'hôte
-- Ne divulgue jamais les coordonnées personnelles du propriétaire
-- Pour les urgences (fuite d'eau, incendie, accident) : oriente vers les services d'urgence (18, 15, 17)
-- Signe toujours avec "L'équipe Maison Jade"
-- Garde tes réponses concises — max 150 mots sauf si on te pose une question détaillée`;
 }
 
 function detectNeedsHuman(question, reponse) {
