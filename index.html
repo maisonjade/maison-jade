@@ -7018,6 +7018,7 @@ async function syncCalMenages() {
   const el=document.getElementById('sync-result');
   if(el) el.innerHTML='<span style="color:var(--jade)">⏳ Synchronisation…</span>';
   if(Object.keys(calReservations).length===0) await refreshCal();
+  await loadMenages();
   const created=[], skipped=[];
   const now=new Date(); now.setHours(0,0,0,0);
   for(const dos of D.dossiers.filter(d=>['signe','annonce','online'].includes(d.etape))){
@@ -7032,18 +7033,23 @@ async function syncCalMenages() {
       const heureCO=(dos.checkout||'11:00').replace(/[^0-9:]/g,'').slice(0,5)||'11:00';
       if(menages.find(m=>String(m.dosId)===String(dos.id)&&m.date===dateStr)){skipped.push(bienLabel(dos));continue;}
       const nm={
-        id:Date.now()+Math.random(), bienId:String(dos.id), dosId:String(dos.id),
+        bienId:String(dos.id), dosId:String(dos.id),
         bienLabel:bienLabel(dos), prestataireId:presta?.id||null,
         prestataireNom:presta?presta.prenom+' '+(presta.nom||''):'—',
         date:dateStr, heure:heureCO, prestataire:presta?presta.prenom+' '+(presta.nom||''):'',
         duree:presta?.dureeHab||'2', type:'menage', cout:presta?.tarif||'',
-        notes:`Checkout · check-in suivant : ${dos.checkin||'16:00'}`,
-        statut:'planifie', source:'ical_auto', createdAt:new Date().toISOString()
+        notes:`Checkout · check-in suivant : ${dos.checkin||'16:00'}`, statut:'planifie'
       };
-      menages.push(nm); created.push({menage:nm,dos,presta});
+      const { error } = await sb.from('menages_proprio').insert({
+        dossier_id: nm.bienId, date: nm.date, heure: nm.heure, prestataire: nm.prestataire,
+        prestataire_id: nm.prestataireId, duree: nm.duree || null, type: nm.type,
+        cout: nm.cout || null, notes: nm.notes, statut: nm.statut, source: 'ical_auto'
+      });
+      if (error) { console.warn('Échec création ménage auto', error); continue; }
+      menages.push({ ...nm, createdAt: new Date().toISOString() });
+      created.push({menage:nm,dos,presta});
     }
   }
-  saveMenagesLocal();
   let emailsSent=0;
   for(const{menage,dos,presta}of created){
     if(presta&&presta.email){const ok=await envoyerEmailMission(presta,menage,dos);if(ok)emailsSent++;}
@@ -8101,13 +8107,28 @@ openDos = function(id) {
 
 // ══ DÉMARRAGE ══
 initAuth();
-let menages = JSON.parse(localStorage.getItem('mj_menages') || '[]');
-let tickets = JSON.parse(localStorage.getItem('mj_tickets') || '[]');
+let menages = [];
+let tickets = [];
 let currentMenageId = null, currentTicketId = null;
 
-function saveMenagesLocal() {
-  localStorage.setItem('mj_menages', JSON.stringify(menages));
-  localStorage.setItem('mj_tickets', JSON.stringify(tickets));
+// Ménages et tickets vivent dans Supabase (menages_proprio / tickets), visibles par le propriétaire.
+async function loadMenages() {
+  const { data, error } = await sb.from('menages_proprio').select('*').order('date', { ascending: true });
+  if (error) { console.warn('Échec chargement ménages', error); menages = []; return; }
+  menages = (data || []).map(r => {
+    const dos = D.dossiers.find(d => String(d.id) === String(r.dossier_id));
+    return { ...r, bienId: r.dossier_id, dosId: r.dossier_id, bienLabel: dos ? bienLabel(dos) : '—',
+      prestataireNom: r.prestataire, prestataireId: r.prestataire_id, createdAt: r.created_at, validatedAt: r.validated_at };
+  });
+}
+async function loadTickets() {
+  const { data, error } = await sb.from('tickets').select('*').order('created_at', { ascending: false });
+  if (error) { console.warn('Échec chargement tickets', error); tickets = []; return; }
+  tickets = (data || []).map(r => {
+    const dos = D.dossiers.find(d => String(d.id) === String(r.dossier_id));
+    return { ...r, bienId: r.dossier_id, bienLabel: dos ? bienLabel(dos) : '—',
+      desc: r.description, dateInterv: r.date_interv, createdAt: r.created_at, updatedAt: r.updated_at };
+  });
 }
 
 function openNewMenage() {
@@ -8122,28 +8143,28 @@ function openNewMenage() {
   openModal('modal-menage');
 }
 
-function saveMenage() {
+async function saveMenage() {
   const bienId = document.getElementById('m-bien-select').value;
   const date = document.getElementById('m-date').value;
   if (!bienId || !date) { alert('Bien et date requis'); return; }
-  const dos = D.dossiers.find(d => String(d.id) === String(bienId));
-  const m = {
-    id: currentMenageId || Date.now(),
-    bienId, bienLabel: `${dos?.prenom||''} ${dos?.nom||''} — ${(dos?.adresse||'').split(',')[0]}`,
-    date, heure: document.getElementById('m-heure').value,
+  const payload = {
+    dossier_id: bienId, date,
+    heure: document.getElementById('m-heure').value,
     prestataire: document.getElementById('m-prestataire').value,
-    duree: document.getElementById('m-duree').value,
+    duree: document.getElementById('m-duree').value || null,
     type: document.getElementById('m-type').value,
-    cout: document.getElementById('m-cout').value,
-    notes: document.getElementById('m-notes').value,
-    statut: 'planifie', createdAt: new Date().toISOString()
+    cout: document.getElementById('m-cout').value || null,
+    notes: document.getElementById('m-notes').value
   };
-  if (currentMenageId) { const i=menages.findIndex(x=>x.id===currentMenageId); if(i>-1) menages[i]=m; }
-  else menages.push(m);
-  saveMenagesLocal(); closeModal('modal-menage'); renderMenages();
+  if (currentMenageId) payload.id = currentMenageId;
+  else payload.statut = 'planifie';
+  const { error } = await sb.from('menages_proprio').upsert(payload);
+  if (error) { alert('Erreur d\'enregistrement : ' + error.message); return; }
+  closeModal('modal-menage'); await renderMenages();
 }
 
-function renderMenages(filtre = 'all') {
+async function renderMenages(filtre = 'all') {
+  await loadMenages();
   const now = new Date(); now.setHours(0,0,0,0);
   const m2 = now.getMonth(), y2 = now.getFullYear();
   const cesMois = menages.filter(m => { const d=new Date(m.date); return d.getMonth()===m2&&d.getFullYear()===y2; });
@@ -8180,14 +8201,16 @@ function renderMenages(filtre = 'all') {
   }).join('');
 }
 
-function validerMenage(id) {
-  const m=menages.find(x=>x.id===id); if(!m) return;
-  m.statut='valide'; m.validatedAt=new Date().toISOString();
-  saveMenagesLocal(); renderMenages();
+async function validerMenage(id) {
+  const { error } = await sb.from('menages_proprio').update({ statut: 'valide', validated_at: new Date().toISOString() }).eq('id', id);
+  if (error) { alert('Erreur : ' + error.message); return; }
+  await renderMenages();
 }
-function deleteMenage(id) {
+async function deleteMenage(id) {
   if(!confirm('Supprimer ?')) return;
-  menages=menages.filter(m=>m.id!==id); saveMenagesLocal(); renderMenages();
+  const { error } = await sb.from('menages_proprio').delete().eq('id', id);
+  if (error) { alert('Erreur : ' + error.message); return; }
+  await renderMenages();
 }
 function filterMenages(f) { renderMenages(f); }
 function editMenage(id) {
@@ -8218,32 +8241,31 @@ function openNewTicket() {
   openModal('modal-ticket');
 }
 
-function saveTicket() {
+async function saveTicket() {
   const titre=document.getElementById('mt-titre').value;
   if(!titre){alert('Titre requis');return;}
   const bienId=document.getElementById('mt-bien-select').value;
-  const dos=D.dossiers.find(d=>String(d.id)===String(bienId));
   const existing = currentTicketId ? tickets.find(t=>t.id===currentTicketId) : null;
-  const ticket = {
-    id: currentTicketId||Date.now(),
+  const payload = {
+    dossier_id: bienId || null,
     num: existing?.num || '#'+String(tickets.length+1).padStart(3,'0'),
-    bienId, bienLabel: dos?`${dos.prenom||''} ${dos.nom||''} — ${(dos.adresse||'').split(',')[0]}`:'—',
-    titre, desc:document.getElementById('mt-desc').value,
+    titre, description:document.getElementById('mt-desc').value,
     priorite:document.getElementById('mt-priorite').value,
     statut:document.getElementById('mt-statut').value,
     artisan:document.getElementById('mt-artisan').value,
-    dateInterv:document.getElementById('mt-date-interv').value,
-    cout:document.getElementById('mt-cout').value,
+    date_interv:document.getElementById('mt-date-interv').value || null,
+    cout:document.getElementById('mt-cout').value || null,
     resolution:document.getElementById('mt-resolution').value,
-    createdAt: existing?.createdAt||new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updated_at: new Date().toISOString()
   };
-  if(currentTicketId){const i=tickets.findIndex(t=>t.id===currentTicketId);if(i>-1)tickets[i]=ticket;}
-  else tickets.push(ticket);
-  saveMenagesLocal(); closeModal('modal-ticket'); renderTickets();
+  if (currentTicketId) payload.id = currentTicketId;
+  const { error } = await sb.from('tickets').upsert(payload);
+  if (error) { alert('Erreur d\'enregistrement : ' + error.message); return; }
+  closeModal('modal-ticket'); await renderTickets();
 }
 
-function renderTickets() {
+async function renderTickets() {
+  await loadTickets();
   const now=new Date(); const m2=now.getMonth(), y2=now.getFullYear();
   document.getElementById('mt-kpi-total').textContent=tickets.filter(t=>t.statut!=='resolu').length;
   document.getElementById('mt-kpi-urgent').textContent=tickets.filter(t=>t.statut==='urgent'||t.priorite==='urgent').length;
@@ -8301,9 +8323,11 @@ function editTicket(id) {
     document.getElementById('mt-resolution').value=t.resolution;
   },60);
 }
-function deleteTicket(id){
+async function deleteTicket(id){
   if(!confirm('Supprimer ce ticket ?'))return;
-  tickets=tickets.filter(t=>t.id!==id); saveMenagesLocal(); renderTickets();
+  const { error } = await sb.from('tickets').delete().eq('id', id);
+  if (error) { alert('Erreur : ' + error.message); return; }
+  await renderTickets();
 }
 
 // ══ CHAMPS iCal — sauvegarde ══

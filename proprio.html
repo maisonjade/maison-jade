@@ -335,8 +335,9 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);co
             <select id="menage-filter" style="padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--ivoire)" onchange="renderMenagesProprio()">
               <option value="">Tous</option>
               <option value="planifie">Planifiés</option>
-              <option value="en_cours">En cours</option>
+              <option value="encours">En cours</option>
               <option value="valide">Validés</option>
+              <option value="annule">Annulés</option>
             </select>
           </div>
         </div>
@@ -682,8 +683,8 @@ function renderRecentMenages() {
     return;
   }
   el.innerHTML = m.map(men => {
-    const statuts = { planifie:'badge-planifie', en_cours:'badge-en-cours', valide:'badge-valide', retard:'badge-retard' };
-    const labels  = { planifie:'Planifié', en_cours:'En cours', valide:'Validé ✓', retard:'En retard' };
+    const statuts = { planifie:'badge-planifie', encours:'badge-en-cours', valide:'badge-valide', annule:'badge-retard' };
+    const labels  = { planifie:'Planifié', encours:'En cours', valide:'Validé ✓', annule:'Annulé' };
     return `<div class="menage-row">
       <div>
         <div class="menage-date">${new Date(men.date).toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'})}</div>
@@ -760,8 +761,8 @@ function renderMenagesProprio() {
     el.innerHTML = '<div class="empty"><div class="empty-icon">🧹</div>Aucun ménage trouvé</div>';
     return;
   }
-  const statuts = { planifie:'badge-planifie', en_cours:'badge-en-cours', valide:'badge-valide', retard:'badge-retard' };
-  const labels  = { planifie:'Planifié', en_cours:'En cours', valide:'Validé ✓', retard:'En retard' };
+  const statuts = { planifie:'badge-planifie', encours:'badge-en-cours', valide:'badge-valide', annule:'badge-retard' };
+  const labels  = { planifie:'Planifié', encours:'En cours', valide:'Validé ✓', annule:'Annulé' };
   el.innerHTML = m.map(men => `
     <div class="menage-row">
       <div>
@@ -835,14 +836,15 @@ async function renderIncidents() {
     el.innerHTML = '<div class="empty"><div class="empty-icon">✅</div>Aucun incident signalé — tout va bien !</div>';
     return;
   }
-  const priorites = { urgent:'badge-urgent', normal:'badge-normal', resolu:'badge-resolu' };
+  const prioClass = { urgent:'badge-urgent', haute:'badge-urgent', normale:'badge-normal', basse:'badge-normal' };
+  const statutLbl = { urgent:'Urgent', todo:'À traiter', encours:'En cours', resolu:'Résolu' };
   el.innerHTML = data.map(t => `
     <div class="incident-row">
       <div class="incident-title">${t.titre || t.description?.substring(0,60) || 'Incident'}</div>
       <div class="incident-meta">
-        ${new Date(t.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'long'})} · 
-        <span class="badge ${priorites[t.priorite]||'badge-normal'}">${t.priorite||'normal'}</span>
-        ${t.statut ? ` · ${t.statut}` : ''}
+        ${new Date(t.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'long'})} ·
+        <span class="badge ${prioClass[t.priorite]||'badge-normal'}">${t.priorite||'normale'}</span>
+        ${t.statut ? ` · ${statutLbl[t.statut]||t.statut}` : ''}
       </div>
     </div>`).join('');
 }
