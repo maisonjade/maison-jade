@@ -614,8 +614,8 @@ function renderKPIs(dosData) {
   revsMois.forEach(r => {
     const brut = parseFloat(r.montant_brut || 0);
     const fp = parseFloat(r.frais_plateforme || 0), fm = parseFloat(r.frais_menage || 0);
-    const comm = (r.commission_mj != null) ? parseFloat(r.commission_mj) : Math.round(brut * taux);
-    const net  = (r.net_proprio  != null) ? parseFloat(r.net_proprio)  : Math.round(brut - fp - fm - comm);
+    const comm = (r.commission_mj != null) ? parseFloat(r.commission_mj) : Math.round((brut - fp) * taux);
+    const net  = (r.net_proprio  != null) ? parseFloat(r.net_proprio)  : Math.round((brut - fp) - comm);
     totalCA += brut; commMJ += comm; netProprio += net; totalNuits += parseInt(r.nuits || 0);
   });
 
@@ -798,8 +798,8 @@ function renderRevenusTable(dosData) {
     if (!byMonth[key]) byMonth[key] = { mois: d, brut: 0, comm: 0, net: 0, nuits: 0 };
     const brut = parseFloat(r.montant_brut || 0);
     const fp = parseFloat(r.frais_plateforme || 0), fm = parseFloat(r.frais_menage || 0);
-    const comm = (r.commission_mj != null) ? parseFloat(r.commission_mj) : Math.round(brut * taux);
-    const net  = (r.net_proprio  != null) ? parseFloat(r.net_proprio)  : Math.round(brut - fp - fm - comm);
+    const comm = (r.commission_mj != null) ? parseFloat(r.commission_mj) : Math.round((brut - fp) * taux);
+    const net  = (r.net_proprio  != null) ? parseFloat(r.net_proprio)  : Math.round((brut - fp) - comm);
     byMonth[key].brut += brut; byMonth[key].comm += comm; byMonth[key].net += net; byMonth[key].nuits += parseInt(r.nuits || 0);
     tBrut += brut; tComm += comm; tNet += net; tNuits += parseInt(r.nuits || 0);
   });
