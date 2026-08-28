@@ -1302,7 +1302,7 @@ tr:hover td { background: var(--ivoire); }
 // ── CONFIG SUPABASE ──
 const SUPABASE_URL = 'https://lvfncstosaaqgtfozthw.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_UrB6X04fyAOhnN7aHropFQ_mwubBip2';
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { lock: async (name, acquireTimeout, fn) => await fn() } });
 
 let currentUser = null;
 let currentProfile = null;
