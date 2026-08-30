@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://lvfncstosaaqgtfozthw.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self';">
 <title>Maison Jade · Espace Propriétaire</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -428,6 +429,11 @@ const SUPABASE_URL = 'https://lvfncstosaaqgtfozthw.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_UrB6X04fyAOhnN7aHropFQ_mwubBip2';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { lock: async (name, acquireTimeout, fn) => await fn() } });
 
+// Échappement HTML — à utiliser sur tout texte d'origine externe (voyageurs, ménages, incidents) avant injection dans innerHTML.
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 let currentUser = null;
 let proprioProfile = null;
 let biensDossiers = []; // dossiers assignés à ce propriétaire
@@ -704,7 +710,7 @@ function renderNextArrival() {
         <div style="font-size:11px;color:var(--ink3);margin-top:4px">${r.heure_checkout || '11:00'}</div>
       </div>
     </div>
-    ${r.voyageur ? `<div style="margin-top:12px;padding:10px 14px;background:var(--surface2);border-radius:8px;font-size:13px;color:var(--ink3)">Voyageur : <strong style="color:var(--ink)">${r.voyageur}</strong></div>` : ''}`;
+    ${r.voyageur ? `<div style="margin-top:12px;padding:10px 14px;background:var(--surface2);border-radius:8px;font-size:13px;color:var(--ink3)">Voyageur : <strong style="color:var(--ink)">${esc(r.voyageur)}</strong></div>` : ''}`;
 }
 
 // ── MÉNAGES RÉCENTS ──
@@ -723,7 +729,7 @@ function renderRecentMenages() {
     return `<div class="menage-row">
       <div>
         <div class="menage-date">${new Date(men.date).toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'})}</div>
-        <div class="menage-info">${men.prestataire_nom || men.prestataire || 'Prestataire non assigné'} · ${men.heure || '11:00'}</div>
+        <div class="menage-info">${esc(men.prestataire_nom || men.prestataire || 'Prestataire non assigné')} · ${esc(men.heure) || '11:00'}</div>
       </div>
       <span class="badge ${statuts[men.statut]||'badge-planifie'}">${labels[men.statut]||men.statut}</span>
     </div>`;
@@ -803,10 +809,10 @@ function renderMenagesProprio() {
       <div>
         <div class="menage-date">${new Date(men.date).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})}</div>
         <div class="menage-info">
-          ${men.prestataire_nom || men.prestataire || '—'} · 
-          ${men.heure || '11:00'} · 
+          ${esc(men.prestataire_nom || men.prestataire || '—')} ·
+          ${esc(men.heure) || '11:00'} ·
           ${men.duree ? men.duree+'h' : ''}
-          ${men.notes ? ' · '+men.notes : ''}
+          ${men.notes ? ' · '+esc(men.notes) : ''}
         </div>
       </div>
       <span class="badge ${statuts[men.statut]||'badge-planifie'}">${labels[men.statut]||men.statut}</span>
@@ -880,7 +886,7 @@ async function renderIncidents() {
   const statutLbl = { urgent:'Urgent', todo:'À traiter', encours:'En cours', resolu:'Résolu' };
   el.innerHTML = data.map(t => `
     <div class="incident-row">
-      <div class="incident-title">${t.titre || t.description?.substring(0,60) || 'Incident'}</div>
+      <div class="incident-title">${esc(t.titre || t.description?.substring(0,60) || 'Incident')}</div>
       <div class="incident-meta">
         ${new Date(t.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'long'})} ·
         <span class="badge ${prioClass[t.priorite]||'badge-normal'}">${t.priorite||'normale'}</span>

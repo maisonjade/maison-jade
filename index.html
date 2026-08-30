@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://chart.googleapis.com; connect-src 'self' https://lvfncstosaaqgtfozthw.supabase.co https://data.geopf.fr https://geo.api.gouv.fr https://api.emailjs.com; object-src 'none'; base-uri 'self'; form-action 'self';">
 <title>Maison Jade · Espace professionnel</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -3407,6 +3408,11 @@ const SUPABASE_URL = 'https://lvfncstosaaqgtfozthw.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_UrB6X04fyAOhnN7aHropFQ_mwubBip2';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { lock: async (name, acquireTimeout, fn) => await fn() } });
 
+// Échappement HTML — à utiliser sur tout texte d'origine externe (voyageurs, co-hôtes, tickets, ménages) avant injection dans innerHTML.
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 // ── Notification (toast) — autonome, ne dépend d'aucun autre élément ──
 function showToast(msg) {
   let el = document.getElementById('_mj_toast');
@@ -5542,7 +5548,7 @@ function renderCal() {
         return `<tr style="cursor:pointer" onmouseover="this.style.background='var(--goldbg)'" onmouseout="this.style.background=''" onclick="openReservModal(${dos.id},'${uid}')">
           <td><div style="display:flex;align-items:center;gap:8px"><div style="width:10px;height:10px;border-radius:50%;background:${color}"></div><div><div style="font-size:12px;font-weight:600">${bienLabel(dos)}</div><div style="font-size:10px;color:var(--ink3)">${dos.type || ''} ${dos.surface ? '· '+dos.surface+'m²' : ''}</div></div></div></td>
           <td>${r.platformIcon} ${r.platformLabel}</td>
-          <td style="font-weight:600">${voyageur}</td>
+          <td style="font-weight:600">${esc(voyageur)}</td>
           <td style="font-size:12px">${new Date(r.start).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'})}</td>
           <td style="font-size:12px">${new Date(r.end).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'})}</td>
           <td style="text-align:center;font-weight:700;color:var(--gold);font-size:16px">${nuits}</td>
@@ -5590,7 +5596,7 @@ function openReservModal(dosId, uidEnc) {
         <!-- Header -->
         <div style="background:var(--jade);padding:16px 20px;display:flex;justify-content:space-between;align-items:center">
           <div>
-            <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:white;font-weight:300">${voyageur}</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:white;font-weight:300">${esc(voyageur)}</div>
             <div style="font-size:11px;color:rgba(185,154,94,0.8);margin-top:3px">${r.platformIcon} ${r.platformLabel} · ${bienLabel(dos)}</div>
           </div>
           <button onclick="document.getElementById('reserModal').innerHTML='';document.getElementById('reserModal').style.display='none';" style="background:none;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;line-height:1">✕</button>
@@ -7966,7 +7972,7 @@ async function renderReservationsAmounts(dossierId) {
     const cm = Math.round((brut - fp) * taux), net = Math.round((brut - fp) - cm);
     return `<tr data-id="${r.id}" style="border-bottom:1px solid var(--border)">
       <td style="white-space:nowrap;padding:7px 6px">${fmt(r.date_debut)} → ${fmt(r.date_fin)}</td>
-      <td style="color:var(--ink2)">${r.bloque ? '🔒 Bloqué' : (r.voyageur || '—')}</td>
+      <td style="color:var(--ink2)">${r.bloque ? '🔒 Bloqué' : esc(r.voyageur || '—')}</td>
       <td style="text-align:right;color:var(--ink3)">${r.nuits}</td>
       <td><input type="number" class="ra-brut" value="${brut || ''}" placeholder="0" style="width:78px;${inp}"></td>
       <td><input type="number" class="ra-fp" value="${fp || ''}" placeholder="0" style="width:64px;${inp}"></td>
@@ -8195,10 +8201,10 @@ async function renderMenages(filtre = 'all') {
   tbody.innerHTML = sorted.map(m => {
     const late = m.statut==='planifie' && new Date(m.date) < now;
     return `<tr>
-      <td class="tm">${m.bienLabel}</td>
+      <td class="tm">${esc(m.bienLabel)}</td>
       <td>${new Date(m.date).toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'})}${late?'<br><span style="font-size:10px;color:var(--red)">⚠ En retard</span>':''}</td>
-      <td>${m.heure||'—'}</td>
-      <td>${m.prestataire||'<span style="color:var(--ink3)">—</span>'}</td>
+      <td>${esc(m.heure)||'—'}</td>
+      <td>${m.prestataire?esc(m.prestataire):'<span style="color:var(--ink3)">—</span>'}</td>
       <td>${m.duree?m.duree+'h':'—'}</td>
       <td>${STLBL[m.statut]||m.statut}</td>
       <td>${m.cout?m.cout+'€':'—'}</td>
@@ -8289,11 +8295,11 @@ async function renderTickets() {
     if(!items.length){el.innerHTML='<div class="mt-ticket-empty">Aucun ticket</div>';return;}
     el.innerHTML=items.map(t=>`<div class="mt-ticket" onclick="editTicket(${t.id})">
       <div class="mt-priority ${t.priorite}">${PRIO[t.priorite]||t.priorite}</div>
-      <div class="mt-ticket-title">${t.titre}</div>
-      <div class="mt-ticket-sub">${t.bienLabel}</div>
-      ${t.artisan?`<div style="font-size:11px;color:var(--jade);margin-top:4px">🔧 ${t.artisan}</div>`:''}
+      <div class="mt-ticket-title">${esc(t.titre)}</div>
+      <div class="mt-ticket-sub">${esc(t.bienLabel)}</div>
+      ${t.artisan?`<div style="font-size:11px;color:var(--jade);margin-top:4px">🔧 ${esc(t.artisan)}</div>`:''}
       <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--ink4)">
-        <span>${t.num||''}</span><span>${new Date(t.createdAt).toLocaleDateString('fr-FR')}</span>
+        <span>${esc(t.num)||''}</span><span>${new Date(t.createdAt).toLocaleDateString('fr-FR')}</span>
       </div>
     </div>`).join('');
   });
@@ -8302,11 +8308,11 @@ async function renderTickets() {
   if(!tickets.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--ink3)">Aucun ticket</td></tr>';return;}
   const sorted=[...tickets].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
   tbody.innerHTML=sorted.map(t=>`<tr>
-    <td class="ts">${t.num||'—'}</td>
-    <td class="tm">${t.bienLabel}</td>
-    <td>${t.titre}</td>
+    <td class="ts">${esc(t.num)||'—'}</td>
+    <td class="tm">${esc(t.bienLabel)}</td>
+    <td>${esc(t.titre)}</td>
     <td>${PRIO[t.priorite]||t.priorite}</td>
-    <td>${t.artisan||'<span style="color:var(--ink3)">—</span>'}</td>
+    <td>${t.artisan?esc(t.artisan):'<span style="color:var(--ink3)">—</span>'}</td>
     <td class="ts">${new Date(t.createdAt).toLocaleDateString('fr-FR')}</td>
     <td>${STLBL[t.statut]||t.statut}</td>
     <td>${t.cout?t.cout+'€':'—'}</td>
