@@ -200,6 +200,19 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);co
   <div class="login-footer">Maison Jade Ltd · contact@maisonjade.com</div>
 </div>
 
+<!-- ERREUR RÉSEAU (jamais de déconnexion sur simple souci de connexion) -->
+<div id="network-error-screen" style="display:none">
+  <div class="login-card">
+    <div class="login-logo">Maison <em>Jade</em></div>
+    <div class="login-sub">Problème de connexion</div>
+    <p style="text-align:center;color:var(--noyer);font-size:13px;margin:12px 0">
+      Impossible de contacter le serveur pour le moment. Vérifiez votre connexion internet et réessayez — vous restez connecté.
+    </p>
+    <button class="login-btn" onclick="loadApp()">Réessayer</button>
+  </div>
+  <div class="login-footer">Maison Jade Ltd · contact@maisonjade.com</div>
+</div>
+
 <!-- APP -->
 <div id="app">
 
@@ -478,7 +491,17 @@ async function doSetPassword() {
 // ── INIT APP ──
 async function loadApp() {
   // Charger le profil propriétaire (AVANT d'ouvrir l'espace — contrôle d'accès S4)
-  const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+  const { data: profile, error } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+
+  // Erreur réseau/serveur (≠ profil absent) : ne JAMAIS déconnecter — on réessaie, la session reste valide.
+  if (error) {
+    console.warn('Échec chargement profil', error);
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('network-error-screen').style.display = 'flex';
+    return;
+  }
+  document.getElementById('network-error-screen').style.display = 'none';
   proprioProfile = profile;
 
   // ── Contrôle de rôle (S4) : espace réservé aux propriétaires (ou admin) ──
@@ -510,13 +533,19 @@ async function loadApp() {
 async function loadBiensProprio() {
   // Chercher les dossiers où proprio_id = currentUser.id
   // OU les cohote_biens assignés à ce proprio via proprio_user_id
-  const { data: propBiens } = await sb.from('proprio_biens')
+  const { data: propBiens, error: e1 } = await sb.from('proprio_biens')
     .select('*, dossier:dossier_id(*)')
     .eq('proprio_id', currentUser.id);
 
   // Fallback : chercher dans dossiers par email propriétaire
-  const { data: dossiers } = await sb.from('dossiers').select('id, data');
+  const { data: dossiers, error: e2 } = await sb.from('dossiers').select('id, data');
   const userEmail = currentUser.email.toLowerCase();
+
+  // Erreur réseau/serveur : ne pas confondre avec "aucun bien" — prévenir plutôt qu'inquiéter à tort.
+  if (e1 || e2) {
+    console.warn('Échec chargement des biens', e1, e2);
+    toast('⚠️ Problème de connexion — vos biens n\'ont peut-être pas pu être chargés. Réessayez.', 5000);
+  }
 
   biensDossiers = (dossiers || []).filter(d => {
     const data = d.data || {};
@@ -538,7 +567,9 @@ async function loadBiensProprio() {
   const sel = document.getElementById('bien-select');
   sel.innerHTML = '';
   if (!biensDossiers.length) {
-    sel.innerHTML = '<option value="">Aucun bien trouvé — contactez Maison Jade</option>';
+    sel.innerHTML = (e1 || e2)
+      ? '<option value="">⚠️ Erreur de connexion — rechargez la page</option>'
+      : '<option value="">Aucun bien trouvé — contactez Maison Jade</option>';
     return;
   }
   biensDossiers.forEach(d => {
@@ -557,7 +588,8 @@ async function loadBiensProprio() {
 
 async function loadReservationsProprio() {
   // Réservations (planning) depuis la table reservations — hors annulées
-  const { data: revs } = await sb.from('reservations').select('*').neq('statut', 'annulee');
+  const { data: revs, error: e1 } = await sb.from('reservations').select('*').neq('statut', 'annulee');
+  if (e1) console.warn('Échec chargement réservations', e1);
   allReservations = {};
   (revs || []).forEach(r => {
     if (!allReservations[r.dossier_id]) allReservations[r.dossier_id] = [];
@@ -565,8 +597,11 @@ async function loadReservationsProprio() {
   });
 
   // Charger les ménages
-  const { data: menages } = await sb.from('menages_proprio').select('*');
+  const { data: menages, error: e2 } = await sb.from('menages_proprio').select('*');
+  if (e2) console.warn('Échec chargement ménages', e2);
   allMenages = menages || [];
+
+  if (e1 || e2) toast('⚠️ Problème de connexion — planning/ménages peut-être incomplets.', 5000);
 }
 
 async function onBienChange() {
@@ -828,10 +863,15 @@ function renderRevenusTable(dosData) {
 // ── INCIDENTS ──
 async function renderIncidents() {
   const el = document.getElementById('incidents-list');
-  const { data } = await sb.from('tickets').select('*')
+  const { data, error } = await sb.from('tickets').select('*')
     .eq('dossier_id', selectedDossierId)
     .order('created_at', { ascending: false });
 
+  if (error) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div>Problème de connexion — impossible de charger les incidents. Réessayez.</div>';
+    console.warn('Échec chargement incidents', error);
+    return;
+  }
   if (!data || !data.length) {
     el.innerHTML = '<div class="empty"><div class="empty-icon">✅</div>Aucun incident signalé — tout va bien !</div>';
     return;

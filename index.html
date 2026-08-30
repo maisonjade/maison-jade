@@ -652,6 +652,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
     <h2 class="login-title">Connexion</h2>
     <p class="login-desc">Accès réservé à l'administration</p>
     <div id="login-error" class="login-error"></div>
+    <button class="btn-login" id="btn-retry-auth" style="display:none;margin-bottom:12px" onclick="initAuth()">↻ Réessayer</button>
     <div class="login-group"><label>Adresse email</label>
       <input type="email" id="login-email" placeholder="contact@maisonjade.com" autocomplete="email"></div>
     <div class="login-group"><label>Mot de passe</label>
@@ -7700,7 +7701,16 @@ async function doLogout() {
 }
 function afficherLogin() { document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app-body').style.display = 'none'; }
 async function ouvrirApp(user) {
-  const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  const { data: profile, error } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  // Erreur réseau/serveur (≠ profil absent) : ne JAMAIS déconnecter — la session reste valide, on propose de réessayer.
+  if (error) {
+    console.warn('Échec chargement profil', error);
+    afficherLogin();
+    showLoginErr('⚠️ Problème de connexion au serveur. Vérifiez votre connexion et réessayez.');
+    document.getElementById('btn-retry-auth').style.display = 'block';
+    return;
+  }
+  document.getElementById('btn-retry-auth').style.display = 'none';
   if (!profile || profile.role !== 'admin') {
     await sb.auth.signOut(); afficherLogin();
     showLoginErr("Cet espace est réservé à l'administration. Les co-hôtes doivent utiliser l'espace partenaire.");
