@@ -485,40 +485,88 @@ tr:hover td { background: var(--ivoire); }
         <div><h1>Mes <em>revenus</em></h1><p>Commissions par bien · Détail mensuel</p></div>
       </div>
 
-      <div class="tcard">
-        <div class="tcard-hd">
-          <span class="tcard-title">Saisir les revenus du mois</span>
-          <div style="display:flex;gap:8px">
-            <select id="rev-mois" style="padding:6px 10px;border:1px solid var(--border);border-radius:2px;font-size:12px;background:var(--ivoire)">
-              <option value="1">Janvier</option><option value="2">Février</option><option value="3">Mars</option>
-              <option value="4">Avril</option><option value="5">Mai</option><option value="6">Juin</option>
-              <option value="7">Juillet</option><option value="8">Août</option><option value="9">Septembre</option>
-              <option value="10">Octobre</option><option value="11">Novembre</option><option value="12">Décembre</option>
-            </select>
-            <select id="rev-annee" style="padding:6px 10px;border:1px solid var(--border);border-radius:2px;font-size:12px;background:var(--ivoire)">
-              <option value="2026">2026</option><option value="2027">2027</option>
-            </select>
-          </div>
-        </div>
-        <div id="revenus-form" style="padding:1rem"></div>
+      <div style="display:flex;gap:2px;background:var(--blanc);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:1.5rem">
+        <button class="nav-tab active" id="tab-rev-parbien" onclick="showRevenusTab('parbien',this)" style="flex:1">💶 Revenus par bien</button>
+        <button class="nav-tab" id="tab-rev-apercu" onclick="showRevenusTab('apercu',this)" style="flex:1">📊 Vue d'ensemble</button>
+        <button class="nav-tab" id="tab-rev-objectifs" onclick="showRevenusTab('objectifs',this)" style="flex:1">🎯 Établir ses objectifs</button>
       </div>
 
-      <div class="tcard">
-        <div class="tcard-hd">
-          <span class="tcard-title">Historique des revenus</span>
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-outline btn-sm" onclick="exportRecapCSV()">⬇ Récap CSV</button>
-            <button class="btn btn-or btn-sm" onclick="genererPrefacture()">🧾 Pré-facture PDF</button>
+      <!-- SOUS-ONGLET 1 : PAR BIEN -->
+      <div id="revenus-tab-parbien">
+        <div class="tcard">
+          <div class="tcard-hd">
+            <span class="tcard-title">Saisir les revenus du mois</span>
+            <div style="display:flex;gap:8px">
+              <select id="rev-mois" style="padding:6px 10px;border:1px solid var(--border);border-radius:2px;font-size:12px;background:var(--ivoire)">
+                <option value="1">Janvier</option><option value="2">Février</option><option value="3">Mars</option>
+                <option value="4">Avril</option><option value="5">Mai</option><option value="6">Juin</option>
+                <option value="7">Juillet</option><option value="8">Août</option><option value="9">Septembre</option>
+                <option value="10">Octobre</option><option value="11">Novembre</option><option value="12">Décembre</option>
+              </select>
+              <select id="rev-annee" style="padding:6px 10px;border:1px solid var(--border);border-radius:2px;font-size:12px;background:var(--ivoire)">
+                <option value="2026">2026</option><option value="2027">2027</option>
+              </select>
+            </div>
           </div>
+          <div id="revenus-form" style="padding:1rem"></div>
         </div>
-        <div id="revenus-history" style="padding:1rem"></div>
+
+        <div class="tcard">
+          <div class="tcard-hd">
+            <span class="tcard-title">Historique des revenus</span>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-outline btn-sm" onclick="exportRecapCSV()">⬇ Récap CSV</button>
+              <button class="btn btn-or btn-sm" onclick="genererPrefacture()">🧾 Pré-facture PDF</button>
+            </div>
+          </div>
+          <div id="revenus-history" style="padding:1rem"></div>
+        </div>
+
+        <div style="margin-top:1rem;padding:14px 16px;background:var(--blanc);border:1px solid var(--border);border-radius:4px;font-size:12px;color:var(--noyer);line-height:1.7">
+          <strong style="color:var(--jade)">Comment votre commission est calculée</strong><br>
+          Honoraires Maison Jade = <em>CA net du bien</em> (après frais de plateforme) × <em>taux de l'offre du propriétaire</em> (16 / 22 / 25 %).<br>
+          Votre commission = <em>honoraires Maison Jade</em> × <em>votre part</em> (50 % bien MJ · 70 % bien apporté par vous).<br>
+          Prestations à la carte : <em>85 % vous sont reversés</em>.
+        </div>
       </div>
 
-      <div style="margin-top:1rem;padding:14px 16px;background:var(--blanc);border:1px solid var(--border);border-radius:4px;font-size:12px;color:var(--noyer);line-height:1.7">
-        <strong style="color:var(--jade)">Comment votre commission est calculée</strong><br>
-        Honoraires Maison Jade = <em>CA net du bien</em> (après frais de plateforme) × <em>taux de l'offre du propriétaire</em> (16 / 22 / 25 %).<br>
-        Votre commission = <em>honoraires Maison Jade</em> × <em>votre part</em> (50 % bien MJ · 70 % bien apporté par vous).<br>
-        Prestations à la carte : <em>85 % vous sont reversés</em>.
+      <!-- SOUS-ONGLET 2 : VUE D'ENSEMBLE -->
+      <div id="revenus-tab-apercu" style="display:none">
+        <div id="apercu-content"></div>
+      </div>
+
+      <!-- SOUS-ONGLET 3 : OBJECTIFS -->
+      <div id="revenus-tab-objectifs" style="display:none">
+        <div class="tcard">
+          <div class="tcard-hd"><span class="tcard-title">Établir ses objectifs</span></div>
+          <div style="padding:1.25rem">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:1.25rem">
+              <div class="profil-field"><label>Nombre de biens visé</label><input type="number" min="1" id="obj-nb-biens" oninput="calcObjectifs()"></div>
+              <div class="profil-field"><label>CA net moyen / bien / mois (€)</label><input type="number" min="0" step="10" id="obj-ca" oninput="calcObjectifs()"></div>
+              <div class="profil-field"><label>Taux de l'offre</label>
+                <select id="obj-taux" onchange="calcObjectifs()" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:2px;font-size:13px;background:var(--ivoire)">
+                  <option value="16">Essentielle — 16%</option>
+                  <option value="22">Sérénité — 22%</option>
+                  <option value="25">Signature — 25%</option>
+                </select>
+              </div>
+              <div class="profil-field"><label>Votre part</label>
+                <select id="obj-part" onchange="calcObjectifs()" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:2px;font-size:13px;background:var(--ivoire)">
+                  <option value="50">50% (bien Maison Jade)</option>
+                  <option value="70">70% (bien apporté par vous)</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:flex;gap:2px;background:var(--ivoire);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:1.25rem;max-width:260px">
+              <button class="nav-tab active" id="obj-toggle-mensuel" onclick="setObjPeriode('mensuel')" style="flex:1">Mensuel</button>
+              <button class="nav-tab" id="obj-toggle-annuel" onclick="setObjPeriode('annuel')" style="flex:1">Annuel</button>
+            </div>
+            <div style="padding:24px;background:var(--ivoire);border-radius:6px;text-align:center">
+              <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px">Commission estimée</div>
+              <div id="obj-resultat" style="font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--or)">—</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1217,6 +1265,10 @@ tr:hover td { background: var(--ivoire); }
         <div class="profil-field"><label>Téléphone</label><input type="tel" id="p-tel" placeholder="+33 6 00 00 00 00"></div>
         <div class="profil-field"><label>SIRET (auto-entrepreneur)</label><input type="text" id="p-siret" placeholder="000 000 000 00000"></div>
         <div class="profil-field"><label>Adresse de facturation</label><input type="text" id="p-adresse" placeholder="12 rue des Oliviers, 34110 Vic-la-Gardiole"></div>
+        <div class="profil-field" style="display:flex;align-items:center;gap:8px">
+          <input type="checkbox" id="p-tva" style="width:auto;margin:0">
+          <label for="p-tva" style="margin:0;font-weight:400">Je facture la TVA (dépassement du seuil de franchise en base)</label>
+        </div>
         <div style="margin-bottom:16px;padding:12px 14px;background:var(--ivoire);border-radius:3px;font-size:12px;color:var(--noyer)">
           <strong>Statut :</strong> <span id="p-statut">—</span> &nbsp;·&nbsp; <strong>Abonnement :</strong> <span id="p-abo">—</span>
         </div>
@@ -1286,7 +1338,11 @@ tr:hover td { background: var(--ivoire); }
       </tr>
     </thead>
     <tbody id="f-lignes"></tbody>
-    <tfoot><tr><td colspan="5" class="tot">Total dû au co-hôte</td><td class="num tot" id="f-total"></td></tr></tfoot>
+    <tfoot>
+      <tr><td colspan="5" class="tot" id="f-total-label">Total dû au co-hôte</td><td class="num tot" id="f-total"></td></tr>
+      <tr id="f-tva-row" style="display:none"><td colspan="5">TVA (20%)</td><td class="num" id="f-tva"></td></tr>
+      <tr id="f-ttc-row" style="display:none"><td colspan="5" class="tot">Total TTC dû au co-hôte</td><td class="num tot" id="f-ttc"></td></tr>
+    </tfoot>
   </table>
   <div class="mentions">
     Prestation de co-hébergement réalisée pour le compte de Maison Jade Ltd (Royaume-Uni).<br>
@@ -1318,6 +1374,17 @@ const OFFRES = { 16: 'Essentielle', 22: 'Sérénité', 25: 'Signature' };
 const partCohote = b => b.type_bien === 'apporte' ? 70 : (b.taux_commission || 50);
 const tauxOffre  = b => b.taux_offre || 22;
 const eur = n => (Math.round((n || 0) * 100) / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€';
+
+// Affichage HT/TVA/TTC selon le statut du co-hôte. Les montants restent stockés/calculés en HT partout ; seul l'affichage change.
+function formatMontant(montantHT) {
+  const ht = montantHT || 0;
+  if (!currentProfile?.assujetti_tva) {
+    return `<span title="Non assujetti à la TVA">${eur(ht)}</span>`;
+  }
+  const tva = ht * 0.20;
+  const ttc = ht + tva;
+  return `<span>${eur(ht)} HT<br><small style="color:var(--ink3);font-weight:400">TVA ${eur(tva)} · TTC ${eur(ttc)}</small></span>`;
+}
 
 function calcCommission(caNet, tOffre, part, services) {
   const honoraires   = (caNet || 0) * (tOffre || 0) / 100;
@@ -1450,6 +1517,7 @@ async function initApp(user) {
     document.getElementById('p-tel').value = profile.telephone || '';
     document.getElementById('p-siret').value = profile.siret || '';
     document.getElementById('p-adresse').value = profile.adresse || '';
+    document.getElementById('p-tva').checked = !!profile.assujetti_tva;
     document.getElementById('p-statut').textContent = profile.statut === 'ambassadeur' ? '⭐ Ambassadeur' : '✅ Co-Hôte actif';
     document.getElementById('p-abo').textContent = profile.abonnement_actif ? '✅ Actif — 49€/mois' : '❌ Inactif';
     document.getElementById('profil-avatar-lg').textContent = initiale;
@@ -1632,8 +1700,8 @@ function calcCommAuto(dosId) {
   if (!l) return;
   const hono = document.getElementById('rev-hono-' + dosId);
   const comm = document.getElementById('rev-comm-' + dosId);
-  if (hono) hono.textContent = l.caNet ? eur(l.c.honoraires) : '—';
-  if (comm) comm.textContent = (l.caNet || l.services) ? eur(l.c.total) : '—';
+  if (hono) hono.innerHTML = l.caNet ? formatMontant(l.c.honoraires) : '—';
+  if (comm) comm.innerHTML = (l.caNet || l.services) ? formatMontant(l.c.total) : '—';
 }
 
 async function saveRevenu(dosId) {
@@ -1689,12 +1757,12 @@ async function loadRevenusHistory() {
       return `<tr>
         <td>${MOIS[r.mois-1]} ${r.annee}</td>
         <td>${d.prenom||''} ${d.nom||''}</td>
-        <td>${eur(parseFloat(r.revenu_brut))}</td>
+        <td>${formatMontant(parseFloat(r.revenu_brut))}</td>
         <td>${r.taux_offre ? r.taux_offre + '%' : '—'}</td>
-        <td style="color:var(--ink3)">${eur(parseFloat(r.honoraires_mj))}</td>
+        <td style="color:var(--ink3)">${formatMontant(parseFloat(r.honoraires_mj))}</td>
         <td style="text-align:center">${r.nuits || 0}</td>
-        <td>${eur(parseFloat(r.services_carte))}</td>
-        <td style="font-weight:600;color:var(--or)">${eur(parseFloat(r.commission_cohote))}</td>
+        <td>${formatMontant(parseFloat(r.services_carte))}</td>
+        <td style="font-weight:600;color:var(--or)">${formatMontant(parseFloat(r.commission_cohote))}</td>
       </tr>`;
     }).join('')}</tbody>
   </table>`;
@@ -1785,8 +1853,128 @@ function genererPrefacture() {
     return html;
   }).join('');
 
+  document.getElementById('f-total-label').textContent = currentProfile?.assujetti_tva ? 'Total HT dû au co-hôte' : 'Total dû au co-hôte';
   document.getElementById('f-total').textContent = eur(total);
+  if (currentProfile?.assujetti_tva) {
+    const tva = total * 0.20;
+    document.getElementById('f-tva').textContent = eur(tva);
+    document.getElementById('f-ttc').textContent = eur(total + tva);
+    document.getElementById('f-tva-row').style.display = '';
+    document.getElementById('f-ttc-row').style.display = '';
+  } else {
+    document.getElementById('f-tva-row').style.display = 'none';
+    document.getElementById('f-ttc-row').style.display = 'none';
+  }
   window.print();
+}
+
+// ── SOUS-ONGLETS "MES REVENUS" ──
+function showRevenusTab(tab, btn) {
+  document.getElementById('revenus-tab-parbien').style.display = tab === 'parbien' ? 'block' : 'none';
+  document.getElementById('revenus-tab-apercu').style.display = tab === 'apercu' ? 'block' : 'none';
+  document.getElementById('revenus-tab-objectifs').style.display = tab === 'objectifs' ? 'block' : 'none';
+  document.querySelectorAll('#tab-rev-parbien, #tab-rev-apercu, #tab-rev-objectifs').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (tab === 'apercu') renderApercu();
+  if (tab === 'objectifs') initObjectifsDefaults();
+}
+
+// ── VUE D'ENSEMBLE (aucune requête Supabase : réutilise historique + mesBiens déjà chargés) ──
+function renderApercu() {
+  const el = document.getElementById('apercu-content');
+  if (!historique.length) {
+    el.innerHTML = `<div class="empty-state"><h3>Aucun revenu pour l'instant</h3>
+      <p>Saisissez vos revenus pour voir votre vue d'ensemble.</p>
+      <button class="btn btn-outline btn-sm" onclick="showRevenusTab('parbien', document.getElementById('tab-rev-parbien'))">💶 Aller à « Revenus par bien »</button></div>`;
+    return;
+  }
+  const now = new Date();
+  const moisActuel = now.getMonth() + 1, anneeActuelle = now.getFullYear();
+  const cutoff = new Date(anneeActuelle, now.getMonth() - 11, 1);
+  const dans12Mois = historique.filter(r => new Date(r.annee, r.mois - 1, 1) >= cutoff);
+
+  const commissionMois = historique.filter(r => r.mois === moisActuel && r.annee === anneeActuelle)
+    .reduce((a, r) => a + (parseFloat(r.commission_cohote) || 0), 0);
+  const cumul12 = dans12Mois.reduce((a, r) => a + (parseFloat(r.commission_cohote) || 0), 0);
+  const moisActifs = new Set(dans12Mois.map(r => `${r.annee}-${r.mois}`)).size || 1;
+  const moyenneMensuelle = cumul12 / moisActifs;
+  const projectionAnnuelle = moyenneMensuelle * 12;
+
+  const parBien = mesBiens.map(b => {
+    const lignesBien = dans12Mois.filter(r => r.dossier_id === b.dossier_id);
+    const total = lignesBien.reduce((a, r) => a + (parseFloat(r.commission_cohote) || 0), 0);
+    const moisAvecData = new Set(lignesBien.map(r => `${r.annee}-${r.mois}`)).size || 1;
+    return { b, total, moyenne: lignesBien.length ? total / moisAvecData : 0, nbSaisies: lignesBien.length };
+  }).filter(x => x.nbSaisies > 0).sort((a, b) => b.moyenne - a.moyenne);
+
+  el.innerHTML = `
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-num">${formatMontant(commissionMois)}</div>
+        <div class="kpi-lbl">Commission — ${MOIS_LBL[moisActuel-1]} ${anneeActuelle}</div></div>
+      <div class="kpi-card"><div class="kpi-num gold">${formatMontant(cumul12)}</div>
+        <div class="kpi-lbl">Cumul 12 mois glissants</div></div>
+      <div class="kpi-card"><div class="kpi-num">${formatMontant(moyenneMensuelle)}</div>
+        <div class="kpi-lbl">Moyenne mensuelle</div></div>
+      <div class="kpi-card"><div class="kpi-num gold">${formatMontant(projectionAnnuelle)}</div>
+        <div class="kpi-lbl">Projection annuelle</div></div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-hd"><span class="tcard-title">Répartition par bien actif (12 derniers mois)</span></div>
+      <div style="padding:1rem">
+        ${parBien.length ? `<table>
+          <thead><tr><th>Bien</th><th>Commission moyenne/mois</th><th>Cumul 12 mois</th></tr></thead>
+          <tbody>${parBien.map(x => {
+            const d = x.b.dossier || {};
+            return `<tr>
+              <td>${d.prenom||''} ${d.nom||''}<br><span style="font-size:11px;color:var(--ink3)">${(d.adresse||'').split(',')[0]}</span></td>
+              <td>${formatMontant(x.moyenne)}</td>
+              <td>${formatMontant(x.total)}</td>
+            </tr>`;
+          }).join('')}</tbody>
+        </table>` : '<div style="color:var(--ink3);font-size:13px">Aucune donnée sur les 12 derniers mois.</div>'}
+      </div>
+    </div>`;
+}
+
+// ── ÉTABLIR SES OBJECTIFS (calcul 100% client, aucune écriture Supabase) ──
+let objPeriode = 'mensuel';
+
+function initObjectifsDefaults() {
+  if (!document.getElementById('obj-nb-biens').value) {
+    document.getElementById('obj-nb-biens').value = mesBiens.length || 1;
+  }
+  if (!document.getElementById('obj-ca').value && historique.length) {
+    const totalCA = historique.reduce((a, r) => a + (parseFloat(r.revenu_brut) || 0), 0);
+    const biensAvecData = new Set(historique.map(r => r.dossier_id)).size || 1;
+    const moisAvecData = new Set(historique.map(r => `${r.annee}-${r.mois}`)).size || 1;
+    document.getElementById('obj-ca').value = Math.round(totalCA / biensAvecData / moisAvecData);
+  }
+  if (mesBiens.length) {
+    const compte = arr => arr.reduce((acc, v) => { acc[v] = (acc[v] || 0) + 1; return acc; }, {});
+    const modeOf = obj => Object.entries(obj).sort((a, b) => b[1] - a[1])[0]?.[0];
+    const tauxMode = modeOf(compte(mesBiens.map(tauxOffre)));
+    const partMode = modeOf(compte(mesBiens.map(partCohote)));
+    if (tauxMode) document.getElementById('obj-taux').value = tauxMode;
+    if (partMode) document.getElementById('obj-part').value = partMode;
+  }
+  calcObjectifs();
+}
+
+function setObjPeriode(p) {
+  objPeriode = p;
+  document.getElementById('obj-toggle-mensuel').classList.toggle('active', p === 'mensuel');
+  document.getElementById('obj-toggle-annuel').classList.toggle('active', p === 'annuel');
+  calcObjectifs();
+}
+
+function calcObjectifs() {
+  const nb = parseInt(document.getElementById('obj-nb-biens').value) || 0;
+  const ca = parseFloat(document.getElementById('obj-ca').value) || 0;
+  const taux = parseFloat(document.getElementById('obj-taux').value) || 0;
+  const part = parseFloat(document.getElementById('obj-part').value) || 0;
+  let total = calcCommission(ca, taux, part, 0).commGestion * nb;
+  if (objPeriode === 'annuel') total *= 12;
+  document.getElementById('obj-resultat').innerHTML = (nb && ca) ? formatMontant(total) : '—';
 }
 
 // ── CHECKLISTS ──
@@ -2050,7 +2238,8 @@ async function saveProfil() {
     nom: document.getElementById('p-nom').value,
     telephone: document.getElementById('p-tel').value,
     siret: document.getElementById('p-siret').value,
-    adresse: document.getElementById('p-adresse').value
+    adresse: document.getElementById('p-adresse').value,
+    assujetti_tva: document.getElementById('p-tva').checked
   };
   const { error } = await sb.from('profiles').update(maj).eq('id', currentUser.id);
   if (error) { showToast('❌ ' + error.message); return; }
