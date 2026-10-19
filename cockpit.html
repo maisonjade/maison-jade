@@ -7,6 +7,7 @@
 <title>Maison Jade · Cockpit admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="fin1.js"></script>
 <style>
 :root{
   /* Palette Quiet Luxury — Maison Jade (reprise d'index.html) */
@@ -371,9 +372,10 @@ function renderFinances(){
   const parBien = {};
   mois.forEach(r => { const k=r.dossier_id; const b=(parBien[k]=parBien[k]||{brut:0,commMj:0,honoMj:0,commCoh:0,nuits:0}); b.brut+=num(r.revenu_brut); b.commMj+=num(r.commission_mj); b.honoMj+=num(r.honoraires_mj); b.commCoh+=num(r.commission_cohote); b.nuits+=num(r.nuits); });
   const rowsBien = Object.entries(parBien).sort((a,b)=>b[1].brut-a[1].brut).map(([id,b])=>{
-    const revBase = b.brut - b.commMj;                            // chiffre principal (valeurs stockées)
+    // revenu_brut de cohote_revenus = CA net (après frais plateforme) ; honoraires_mj = commission MJ complète
+    const revBase = b.brut - b.honoMj;                            // chiffre principal (valeurs stockées)
     const comm = num(dossierMap[id] ? dossierMap[id].comm : 0);   // taux du dossier (%)
-    const revProprio = b.brut - b.brut * comm/100;                // recalcul façon proprio.html
+    const revProprio = MJ.calcFin1(b.brut, 0, comm).netProprio ?? b.brut;  // recalcul FIN-1 (fin1.js)
     const ecart = revBase - revProprio;
     let flag = '';
     if(Math.abs(ecart) >= 1){ flag = `<span class="badge badge-amber" title="Écart base vs calcul propriétaire">Δ ${eur0(ecart)}</span>`; ecartsReversement.push({ id, brut:b.brut, revBase, revProprio, ecart, comm }); }
@@ -382,10 +384,10 @@ function renderFinances(){
   const tableBien = `
   <h3 class="sub">Revenus & reversements par bien — ${MOIS_FR[state.mois]} ${state.annee}</h3>
   <div class="twrap"><table>
-    <thead><tr><th>Bien</th><th class="r">Revenu brut</th><th class="r">Comm. co-hôte</th><th class="r">Reversement<br><span class="th-note">base</span></th><th class="r">Reversement<br><span class="th-note">calc. proprio</span></th><th class="r">Écart</th></tr></thead>
+    <thead><tr><th>Bien</th><th class="r">CA net</th><th class="r">Comm. co-hôte</th><th class="r">Reversement<br><span class="th-note">base</span></th><th class="r">Reversement<br><span class="th-note">calc. proprio</span></th><th class="r">Écart</th></tr></thead>
     <tbody>${rowsBien}</tbody>
   </table></div>
-  <div class="th-legend">« base » = revenu brut − commission MJ (valeurs stockées en <code>cohote_revenus</code>). « calc. proprio » = revenu brut − (revenu brut × taux du dossier), formule de <code>proprio.html</code>. Un écart ≥ 1 € est signalé (aucun montant n'est corrigé).</div>`;
+  <div class="th-legend">« base » = CA net − honoraires MJ (valeurs stockées en <code>cohote_revenus</code>). « calc. proprio » = règle FIN-1 (<code>fin1.js</code>) appliquée au CA net avec le taux du dossier. Un écart ≥ 1 € est signalé (aucun montant n'est corrigé).</div>`;
 
   return `<h2 class="section-title">Finances</h2>${kpis}${tableCoh}${tableBien}`;
 }

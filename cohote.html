@@ -7,6 +7,7 @@
 <title>Maison Jade · Espace Co-Hôte</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="fin1.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -662,11 +663,7 @@ tr:hover td { background: var(--ivoire); }
             </select>
           </div>
           <div class="profil-field" style="margin:0"><label>Offre du propriétaire</label>
-            <select id="assign-offre" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:2px;font-size:13px;background:var(--ivoire)">
-              <option value="16">Essentielle — 16 %</option>
-              <option value="22" selected>Sérénité — 22 %</option>
-              <option value="25">Signature — 25 %</option>
-            </select>
+            <div style="padding:10px 0;font-size:12px;color:var(--ink3)">Reprise du dossier du bien (intranet admin)</div>
           </div>
           <button class="btn btn-primary" onclick="assignBien()">Assigner</button>
         </div>
@@ -1366,14 +1363,14 @@ let currentProfile = null;
 let mesBiens = [];
 
 // ── BARÈME MAISON JADE ──
-// Honoraires MJ  = CA net (apres frais plateforme) x taux_offre (16 / 22 / 25 %)
+// Honoraires MJ  = commission FIN-1 (CA net apres frais plateforme x offre du bien) — calcul partagé fin1.js
 // Commission     = honoraires MJ x part co-hote (50 % bien MJ / 70 % bien apporte)
 // Services carte = 85 % reverses au co-hote
-const PART_SERVICES_COHOTE = 0.85;
-const OFFRES = { 16: 'Essentielle', 22: 'Sérénité', 25: 'Signature' };
+const OFFRES = MJ.OFFRES;
 
 const partCohote = b => b.type_bien === 'apporte' ? 70 : (b.taux_commission || 50);
-const tauxOffre  = b => b.taux_offre || 22;
+// Offre = celle du dossier du bien (seule source du taux) ; null tant qu'elle n'est pas choisie
+const tauxOffre  = b => MJ.taux(b.dossier?.comm);
 const eur = n => (Math.round((n || 0) * 100) / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€';
 
 // Affichage HT/TVA/TTC selon le statut du co-hôte. Les montants restent stockés/calculés en HT partout ; seul l'affichage change.
@@ -1387,18 +1384,7 @@ function formatMontant(montantHT) {
   return `<span>${eur(ht)} HT<br><small style="color:var(--ink3);font-weight:400">TVA ${eur(tva)} · TTC ${eur(ttc)}</small></span>`;
 }
 
-function calcCommission(caNet, tOffre, part, services) {
-  const honoraires   = (caNet || 0) * (tOffre || 0) / 100;
-  const commGestion  = honoraires * (part || 0) / 100;
-  const commServices = (services || 0) * PART_SERVICES_COHOTE;
-  return {
-    honoraires,
-    commGestion,
-    commServices,
-    partMJ: honoraires - commGestion + (services || 0) * (1 - PART_SERVICES_COHOTE),
-    total: commGestion + commServices
-  };
-}
+const calcCommission = MJ.calcCohote;
 
 // ── CHECKLISTS ──
 const CL_ITEMS = {
@@ -1604,8 +1590,8 @@ function bienCardHTML(b) {
       </div>
       <div style="margin-top:8px">
         <div class="bien-commission">${comm}%</div>
-        <div class="bien-commission-lbl">de nos honoraires · Offre ${OFFRES[off] || ''} ${off}%<br>
-          <span style="color:var(--ink3)">soit ${(off * comm / 100).toFixed(1)}% du CA net</span></div>
+        <div class="bien-commission-lbl">de nos honoraires · ${off ? `Offre ${OFFRES[off] || ''} ${off}%<br>
+          <span style="color:var(--ink3)">soit ${(off * comm / 100).toFixed(1)}% du CA net</span>` : 'Offre à choisir par Maison Jade'}</div>
       </div>
       ${d.etape ? `<div style="margin-top:10px"><span class="badge badge-online">${d.etape === 'online' ? '🟢 En ligne' : '📋 ' + d.etape}</span></div>` : ''}
       <div class="bien-actions">
@@ -1668,7 +1654,7 @@ function loadRevenusForm() {
       return `<tr>
         <td style="font-weight:500">${d.prenom || ''} ${d.nom || ''}<br>
           <span style="font-size:11px;color:var(--ink3)">${(d.adresse||'').split(',')[0]}</span></td>
-        <td><span class="badge badge-attente">${off}%</span><br>
+        <td><span class="badge badge-attente">${off ? off + '%' : 'Offre à choisir'}</span><br>
           <span style="font-size:10px;color:var(--ink3)">part ${part}%</span></td>
         <td><input type="number" min="0" step="10" id="rev-ca-${b.dossier_id}" placeholder="0"
               style="width:90px;padding:6px 8px;border:1px solid var(--border);border-radius:2px;font-size:12px"
@@ -1709,6 +1695,7 @@ async function saveRevenu(dosId) {
   const l = ligneRevenu(dosId);
   if (!l) return;
   if (!l.caNet && !l.services) { showToast('Saisissez un CA net ou des services'); return; }
+  if (l.caNet && !l.off) { showToast('Offre du bien non définie : contactez Maison Jade'); return; }
 
   const mois  = parseInt(document.getElementById('rev-mois').value);
   const annee = parseInt(document.getElementById('rev-annee').value);
@@ -1953,7 +1940,7 @@ function initObjectifsDefaults() {
   if (mesBiens.length) {
     const compte = arr => arr.reduce((acc, v) => { acc[v] = (acc[v] || 0) + 1; return acc; }, {});
     const modeOf = obj => Object.entries(obj).sort((a, b) => b[1] - a[1])[0]?.[0];
-    const tauxMode = modeOf(compte(mesBiens.map(tauxOffre)));
+    const tauxMode = modeOf(compte(mesBiens.map(tauxOffre).filter(Boolean)));
     const partMode = modeOf(compte(mesBiens.map(partCohote)));
     if (tauxMode) document.getElementById('obj-taux').value = tauxMode;
     if (partMode) document.getElementById('obj-part').value = partMode;
@@ -2136,15 +2123,15 @@ async function loadAdminData() {
     <tbody>${assigns.map(a => {
       const d = dosMap[a.dossier_id] || {};
       const c = cohotes.find(x => x.id === a.cohote_id);
-      const off = a.taux_offre || 22, part = a.type_bien === 'apporte' ? 70 : (a.taux_commission || 50);
+      const off = MJ.taux(d.comm), part = a.type_bien === 'apporte' ? 70 : (a.taux_commission || 50);
       return `<tr>
         <td style="font-weight:500">${d.prenom||''} ${d.nom||''}<br>
           <span style="font-size:11px;color:var(--ink3)">${(d.adresse||'').split(',')[0]}</span></td>
         <td>${c ? `${c.prenom||''} ${c.nom||''}` : '<span style="color:var(--red)">Co-hôte introuvable</span>'}</td>
         <td><span class="badge ${a.type_bien==='mj'?'badge-online':'badge-attente'}">${a.type_bien==='mj'?'🏠 MJ':'✋ Apporté'}</span></td>
-        <td>${OFFRES[off]||''} ${off}%</td>
+        <td>${off ? `${OFFRES[off]||''} ${off}%` : '<span style="color:var(--red)">Offre à choisir</span>'}</td>
         <td>${part}%</td>
-        <td style="font-weight:600;color:var(--or)">${(off * part / 100).toFixed(1)}%</td>
+        <td style="font-weight:600;color:var(--or)">${off ? (off * part / 100).toFixed(1) + '%' : '—'}</td>
         <td><button class="btn btn-outline btn-sm" onclick="retirerAssignation('${a.id}')">Retirer</button></td>
       </tr>`;
     }).join('')}</tbody>
@@ -2187,10 +2174,12 @@ async function assignBien() {
   const cohoteId  = document.getElementById('assign-cohote').value;
   const dossierId = document.getElementById('assign-dossier').value;
   const type      = document.getElementById('assign-type').value;
-  const offre     = parseInt(document.getElementById('assign-offre').value);
   if (!cohoteId || !dossierId) { showToast('Sélectionnez un co-hôte et un bien'); return; }
 
   const dosId = parseInt(dossierId);
+  // Copie de l'offre du dossier (la source reste dossiers.data.comm)
+  const { data: dos } = await sb.from('dossiers').select('data').eq('id', dosId).single();
+  const offre = MJ.taux(dos?.data?.comm);
   const taux = type === 'apporte' ? 70 : 50;
 
   // Réassignation : un bien n'appartient qu'à un seul co-hôte à la fois
@@ -2625,9 +2614,9 @@ function calculerResultats() {
     const ca = Math.round(nuits * prix);
     const tauxPF = (document.getElementById('s-inclure-frais')?.checked ? 15.5 : 0) / 100;
     const commAirbnb = Math.round(ca * tauxPF);
-    const netAirbnb  = ca - commAirbnb;
-    const commMJ     = Math.round(netAirbnb * tauxMJ);
-    const netProprio = netAirbnb - commMJ;
+    const fin1       = MJ.calcFin1(ca, commAirbnb, tauxMJ * 100);
+    const commMJ     = fin1.commission;
+    const netProprio = fin1.netProprio;
     totalCA   += ca;
     totalNet  += netProprio;
     totalNuits+= nuits;

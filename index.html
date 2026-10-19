@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="fin1.js"></script>
 <style>
 :root{
   /* ── Palette Quiet Luxury — Maison Jade ── */
@@ -2399,13 +2400,14 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
     <div class="modal-body">
       <div class="fg fr2" style="margin-bottom:1rem">
         <div><label class="fl">Propriétaire / Bien <span class="req">*</span></label>
-          <select id="f-bien-select"><option value="">— Choisir un dossier —</option></select>
+          <select id="f-bien-select" onchange="factureOffreDuBien()"><option value="">— Choisir un dossier —</option></select>
         </div>
         <div><label class="fl">Offre</label>
-          <select id="f-offre">
-            <option value="essentiel">Essentiel — 16% HT</option>
-            <option value="confort" selected>Confort — 22% HT</option>
-            <option value="premium">Premium — 25% HT</option>
+          <select id="f-offre" onchange="factureTauxOffre()">
+            <option value="">— choisir l'offre —</option>
+            <option value="16">Essentielle — 16% HT</option>
+            <option value="22">Sérénité — 22% HT</option>
+            <option value="25">Signature — 25% HT</option>
             <option value="setup">Pack mise en service — 389€ TTC</option>
             <option value="libre">Montant libre</option>
           </select>
@@ -2428,12 +2430,16 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
         </div>
       </div>
       <div class="fg fr2" style="margin-bottom:1rem">
-        <div><label class="fl">Revenu brut du mois (€ HT)</label>
+        <div><label class="fl">Loyer brut du mois (€)</label>
           <input type="number" id="f-revenu-brut" placeholder="Ex: 1500" oninput="calcFacture()">
-          <div style="font-size:11px;color:var(--ink3);margin-top:4px">Revenus locatifs nets de frais Airbnb</div>
+          <div style="font-size:11px;color:var(--ink3);margin-top:4px">Revenu locatif seul, hors ménage</div>
         </div>
-        <div><label class="fl">Taux commission</label>
-          <input type="number" id="f-taux-comm" value="22" oninput="calcFacture()">
+        <div><label class="fl">Frais plateforme du mois (€)</label>
+          <input type="number" id="f-frais-plateforme" placeholder="Ex: 45" oninput="calcFacture()">
+          <div style="font-size:11px;color:var(--ink3);margin-top:4px">Frais Airbnb / Booking sur le loyer</div>
+        </div>
+        <div><label class="fl">Taux commission (%)</label>
+          <input type="number" id="f-taux-comm" value="" placeholder="Offre à choisir" oninput="calcFacture()">
         </div>
       </div>
       <!-- Résultat calcul -->
@@ -3611,9 +3617,8 @@ function doSimu(tarif, pmin, pmax, emin, emax, taux, comm, cair) {
   if (!prix || !t || !c) return null;
   const nuits = Math.round(365 * t / 100);
   const brut = Math.round(prix * nuits);
-  const apres = Math.round(brut * (1 - a / 100));
-  const maC = Math.round(apres * c / 100);
-  const net = apres - maC;
+  const f = MJ.calcFin1(brut, Math.round(brut * a / 100), c);
+  const apres = f.netPercu, maC = f.commission, net = f.netProprio;
   return { nuits, brut, apres, maC, net, prix, t, c, a, pmin, pmax, emin, emax };
 }
 
@@ -3720,6 +3725,7 @@ function calcSimuFull() {
   const comm = parseFloat(document.getElementById('n-comm')?.value) || 0;
   const cair = parseFloat(document.getElementById('n-cair')?.value) || 3;
   const fraisMenageVoy = parseFloat(document.getElementById('n-frais-menage-voy')?.value) || 0;
+  const coutMenageSej = parseFloat(document.getElementById('n-ch-menage')?.value) || 0;
   // Seuls frais MJ
   const cm = parseFloat(document.getElementById('n-ch-cm')?.value) || 0;
   const autresMJ = parseFloat(document.getElementById('n-ch-autres')?.value) || 0;
@@ -3742,17 +3748,19 @@ function calcSimuFull() {
   const nbSej = Math.round(nuits / 3.5);
   const brutLocatif = Math.round(prix * nuits);
   const brutMenageVoy = Math.round(fraisMenageVoy * nbSej);
-  const fraisAirbnbHote = Math.round(brutLocatif * cair / 100);
-  const apresAirbnb = brutLocatif - fraisAirbnbHote;
-  const maCommBrut = Math.round(apresAirbnb * comm / 100);
+  const fin1 = MJ.calcFin1(brutLocatif, Math.round(brutLocatif * cair / 100), comm);
+  const fraisAirbnbHote = brutLocatif - fin1.netPercu;
+  const maCommBrut = fin1.commission;
   const tvaMJ = Math.round(maCommBrut * 0.2);
-  const proprio = apresAirbnb - maCommBrut;
+  // Ménage : règlement à part (hors commission MJ), compté dans la rentabilité propriétaire
+  const menage = MJ.calcMenage(brutMenageVoy, brutMenageVoy * cair / 100, coutMenageSej * nbSej);
+  const proprio = fin1.netProprio + menage.solde;
   // Frais MJ uniquement
   const chargesMJ = Math.round(cm * 12 + autresMJ);
   const commNette = maCommBrut - chargesMJ;
   // Charges proprio (info)
   const chargesProprio = Math.round((internet + elec + eau + copro) * 12 + assur + tf + cfe + entretien);
-  const rentabilite = brutLocatif ? Math.round(proprio / brutLocatif * 100) : 0;
+  const rentabilite = (brutLocatif + brutMenageVoy) ? Math.round(proprio / (brutLocatif + brutMenageVoy) * 100) : 0;
 
   out.innerHTML = `
   <div class="simu-box" style="background:var(--charbon);border:1px solid rgba(184,146,58,0.2)">
@@ -3766,7 +3774,7 @@ function calcSimuFull() {
       <div style="text-align:center;background:rgba(255,255,255,0.04);border-radius:8px;padding:12px">
         <div style="font-size:9px;color:rgba(255,255,255,0.35);margin-bottom:6px;text-transform:uppercase">Revenu proprio</div>
         <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#78BFFF">${proprio.toLocaleString('fr-FR')}€</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:3px">Rentabilité ${rentabilite}% · Avant charges</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:3px">Rentabilité ${rentabilite}% · Ménage inclus · Avant charges</div>
       </div>
       <div style="text-align:center;background:rgba(184,146,58,0.12);border-radius:8px;padding:12px;border:1px solid rgba(184,146,58,0.2)">
         <div style="font-size:9px;color:rgba(184,146,58,0.6);margin-bottom:6px;text-transform:uppercase">Commission brute MJ</div>
@@ -3781,7 +3789,7 @@ function calcSimuFull() {
     </div>
     <div style="font-size:11px;border-top:1px solid rgba(255,255,255,0.08);padding-top:10px;color:rgba(255,255,255,0.45)">
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px">
-        <div>Frais ménage voyageur<br><span style="color:rgba(255,255,255,0.4)">${brutMenageVoy.toLocaleString('fr-FR')}€ → payé par voyageur</span></div>
+        <div>Ménage (hors commission MJ)<br><span style="color:rgba(255,255,255,0.4)">+${menage.encaisse.toLocaleString('fr-FR')}€ voyageurs − ${menage.frais.toLocaleString('fr-FR')}€ frais − ${menage.cout.toLocaleString('fr-FR')}€ prestataire = ${menage.solde.toLocaleString('fr-FR')}€</span></div>
         <div>Frais Airbnb hôte (${cair}%)<br><span style="color:#FF8C6A">−${fraisAirbnbHote.toLocaleString('fr-FR')}€</span></div>
         <div>Commission MJ ${comm}% HT<br><span style="color:#FF8C6A">−${maCommBrut.toLocaleString('fr-FR')}€</span></div>
       </div>
@@ -3789,7 +3797,7 @@ function calcSimuFull() {
         <div>Frais MJ (channel mgr + autres)<br><span style="color:#FF8C6A">−${chargesMJ.toLocaleString('fr-FR')}€/an</span></div>
         <div>Charges proprio (info)<br><span style="color:rgba(255,255,255,0.35)">−${chargesProprio.toLocaleString('fr-FR')}€/an → à sa charge</span></div>
       </div>
-      <div style="margin-top:6px;font-size:10px;color:rgba(255,255,255,0.3)">~${nbSej} séjours/an · Ménage + consommables = à la charge du voyageur · Comm. TTC proprio : ${(maCommBrut*1.2).toLocaleString('fr-FR')}€</div>
+      <div style="margin-top:6px;font-size:10px;color:rgba(255,255,255,0.3)">~${nbSej} séjours/an · Ménage = règlement à part, payé par le voyageur · Comm. TTC proprio : ${(maCommBrut*1.2).toLocaleString('fr-FR')}€</div>
     </div>
   </div>`;
 }
@@ -3844,16 +3852,18 @@ function doSimuFull(dos, commOverride) {
   const brutMenageVoy = Math.round(fraisVoyMenage * nbSejours);
   const brutTotal = brutLocatif + brutMenageVoy;
 
-  // Frais Airbnb hôte sur le locatif uniquement
-  const fraisAirbnb = Math.round(brutLocatif * cair / 100);
-  const apresAirbnb = brutLocatif - fraisAirbnb;
-
-  // Commission MJ sur le revenu locatif net (hors ménage voyageur)
-  const maComm = Math.round(apresAirbnb * comm / 100);
+  // Commission MJ (FIN-1) sur le loyer net de frais plateforme, hors ménage
+  const fin1 = MJ.calcFin1(brutLocatif, Math.round(brutLocatif * cair / 100), comm);
+  const apresAirbnb = fin1.netPercu;
+  const fraisAirbnb = brutLocatif - apresAirbnb;
+  const maComm = fin1.commission;
   const tvaMJ = Math.round(maComm * 0.2);
 
-  // Revenu propriétaire = net plateforme - commission MJ - ses propres charges
-  const proprioAvantCharges = apresAirbnb - maComm;
+  // Ménage : règlement à part, frais plateforme déduits sur sa ligne, coût prestataire en charge
+  const menage = MJ.calcMenage(brutMenageVoy, brutMenageVoy * cair / 100, (parseFloat(dos.chMenage) || 0) * nbSejours);
+
+  // Revenu propriétaire = net FIN-1 + solde ménage - ses propres charges
+  const proprioAvantCharges = fin1.netProprio + menage.solde;
   const proprioNet = proprioAvantCharges - chargesProprio;
 
   // Commission nette MJ = commission brute - seulement les charges MJ
@@ -3863,7 +3873,7 @@ function doSimuFull(dos, commOverride) {
   return {
     nuits, nbSejours, prix, taux, comm, cair,
     brutLocatif, brutMenageVoy, brutTotal,
-    fraisAirbnb, apresAirbnb,
+    fraisAirbnb, apresAirbnb, menage,
     maComm, tvaMJ, commNette, chargesMJ,
     proprio: proprioAvantCharges, proprioNet, chargesProprio,
     cm, internet, elec, eau, assur, tf, cfe, copro, entretien,
@@ -3929,6 +3939,7 @@ function genRapportVisite() {
     taux: document.getElementById('e-taux')?.value || dos.taux,
     comm: document.getElementById('e-comm')?.value || dos.comm,
     cair: document.getElementById('e-cair')?.value || dos.cair || '3',
+    fraisMenageVoy: document.getElementById('e-frais-menage-voy')?.value || dos.fraisMenageVoy,
     chMenage: document.getElementById('e-ch-menage')?.value || dos.chMenage,
     chBlanc: document.getElementById('e-ch-blanc')?.value || dos.chBlanc,
     chConso: document.getElementById('e-ch-conso')?.value || dos.chConso,
@@ -4092,8 +4103,8 @@ function genRapportVisite() {
           <div style="font-size:10px;color:#8A8278;margin-top:3px">nuits/an</div>
         </div>
         <div style="text-align:center;background:#FAF8F4;border-radius:8px;padding:14px">
-          <div style="font-size:22px;font-weight:700;color:#8B6914">${s.brut.toLocaleString('fr-FR')}€</div>
-          <div style="font-size:10px;color:#8A8278;margin-top:3px">revenu brut</div>
+          <div style="font-size:22px;font-weight:700;color:#8B6914">${s.brutLocatif.toLocaleString('fr-FR')}€</div>
+          <div style="font-size:10px;color:#8A8278;margin-top:3px">revenu locatif brut</div>
         </div>
         <div style="text-align:center;background:#FAF8F4;border-radius:8px;padding:14px">
           <div style="font-size:22px;font-weight:700;color:#1A3A6B">${s.proprio.toLocaleString('fr-FR')}€</div>
@@ -4109,17 +4120,14 @@ function genRapportVisite() {
       <table>
         <thead><tr><th>Poste</th><th>Calcul</th><th style="text-align:right">Montant annuel</th></tr></thead>
         <tbody>
-          <tr><td><strong>Revenu brut</strong></td><td>${s.prix}€ × ${s.nuits} nuits</td><td style="text-align:right;font-weight:600">${s.brut.toLocaleString('fr-FR')}€</td></tr>
+          <tr><td><strong>Revenu locatif brut</strong></td><td>${s.prix}€ × ${s.nuits} nuits</td><td style="text-align:right;font-weight:600">${s.brutLocatif.toLocaleString('fr-FR')}€</td></tr>
           <tr><td style="color:#8B1A1A">− Frais Airbnb (${s.cair}%)</td><td></td><td style="text-align:right;color:#8B1A1A">−${s.fraisAirbnb.toLocaleString('fr-FR')}€</td></tr>
-          <tr style="background:#F8F6F1"><td><strong>Revenu net plateforme</strong></td><td></td><td style="text-align:right;font-weight:600">${s.apresAirbnb.toLocaleString('fr-FR')}€</td></tr>
-          <tr><td style="color:#8B1A1A">− Commission Maison Jade HT (${s.comm}%)</td><td style="font-size:11px;color:#8A8278">+ TVA 20% = ${(s.comm*1.2).toFixed(1)}% TTC</td><td style="text-align:right;color:#8B1A1A">−${s.maComm.toLocaleString('fr-FR')}€ HT</td></tr>
+          <tr style="background:#F8F6F1"><td><strong>Revenu net perçu</strong></td><td></td><td style="text-align:right;font-weight:600">${s.apresAirbnb.toLocaleString('fr-FR')}€</td></tr>
+          <tr><td style="color:#8B1A1A">− Commission Maison Jade HT (${s.comm}%)</td><td style="font-size:11px;color:#8A8278">sur le revenu net perçu · + TVA 20% = ${(s.comm*1.2).toFixed(1)}% TTC</td><td style="text-align:right;color:#8B1A1A">−${s.maComm.toLocaleString('fr-FR')}€ HT</td></tr>
           <tr style="background:#FDF5E0"><td style="color:#8A8278;font-size:11px">↳ dont TVA collectée (20%)</td><td></td><td style="text-align:right;color:#8B6914;font-size:11px">${Math.round(s.maComm*0.2).toLocaleString('fr-FR')}€ reversés à l'État</td></tr>
-          <tr style="background:#EDF3E8"><td><strong>Propriétaire reçoit</strong></td><td></td><td style="text-align:right;font-weight:700;color:#2D5016">${s.proprio.toLocaleString('fr-FR')}€</td></tr>
-          <tr style="background:#FDE8E8"><td style="color:#8A8278">− Ménage (${s.nbSejours} séjours × ${s.menage}€)</td><td></td><td style="text-align:right;color:#8B1A1A">−${Math.round(s.menage * s.nbSejours).toLocaleString('fr-FR')}€</td></tr>
-          <tr style="background:#FDE8E8"><td style="color:#8A8278">− Blanchisserie (${s.nbSejours} × ${s.blanc}€)</td><td></td><td style="text-align:right;color:#8B1A1A">−${Math.round(s.blanc * s.nbSejours).toLocaleString('fr-FR')}€</td></tr>
-          <tr style="background:#FDE8E8"><td style="color:#8A8278">− Consommables (${s.nbSejours} × ${s.conso}€)</td><td></td><td style="text-align:right;color:#8B1A1A">−${Math.round(s.conso * s.nbSejours).toLocaleString('fr-FR')}€</td></tr>
-          <tr style="background:#FDE8E8"><td style="color:#8A8278">− Channel manager (${s.cm}€/mois)</td><td></td><td style="text-align:right;color:#8B1A1A">−${Math.round(s.cm * 12).toLocaleString('fr-FR')}€</td></tr>
-          ${s.autres ? `<tr style="background:#FDE8E8"><td style="color:#8A8278">− Autres charges</td><td></td><td style="text-align:right;color:#8B1A1A">−${s.autres.toLocaleString('fr-FR')}€</td></tr>` : ''}
+          <tr><td style="color:#4A4640">Ménage (règlement à part, hors commission)</td><td style="font-size:11px;color:#8A8278">+${s.menage.encaisse.toLocaleString('fr-FR')}€ voyageurs − ${s.menage.frais.toLocaleString('fr-FR')}€ frais − ${s.menage.cout.toLocaleString('fr-FR')}€ prestataire</td><td style="text-align:right">${s.menage.solde.toLocaleString('fr-FR')}€</td></tr>
+          <tr style="background:#EDF3E8"><td><strong>Propriétaire reçoit</strong></td><td style="font-size:11px;color:#8A8278">ménage inclus, avant ses charges</td><td style="text-align:right;font-weight:700;color:#2D5016">${s.proprio.toLocaleString('fr-FR')}€</td></tr>
+          <tr style="background:#FDE8E8"><td style="color:#8A8278">− Charges Maison Jade (channel manager + autres)</td><td></td><td style="text-align:right;color:#8B1A1A">−${s.chargesMJ.toLocaleString('fr-FR')}€</td></tr>
           <tr style="background:#EDF3E8"><td><strong>Commission nette Maison Jade HT</strong></td><td style="font-size:11px;color:#8A8278">après déduction des charges</td><td style="text-align:right;font-weight:700;font-size:15px;color:#2D5016">${s.commNette.toLocaleString('fr-FR')}€ HT/an</td></tr>
           <tr style="background:#F5F5F0"><td style="font-size:11px;color:#8A8278">Commission brute TTC propriétaire</td><td></td><td style="text-align:right;font-size:12px;color:#8A8278">${Math.round(s.maComm*1.2).toLocaleString('fr-FR')}€ TTC/an</td></tr>
         </tbody>
@@ -4640,6 +4648,7 @@ function updateOffreSimu() {
     taux: document.getElementById('e-taux')?.value || dos.taux,
     comm: commValHT,
     cair: document.getElementById('e-cair')?.value || dos.cair || '3',
+    fraisMenageVoy: document.getElementById('e-frais-menage-voy')?.value || dos.fraisMenageVoy,
     chMenage: document.getElementById('e-ch-menage')?.value || dos.chMenage,
     chBlanc: document.getElementById('e-ch-blanc')?.value || dos.chBlanc,
     chConso: document.getElementById('e-ch-conso')?.value || dos.chConso,
@@ -4654,7 +4663,7 @@ function updateOffreSimu() {
   document.getElementById('offre-simu-label').textContent =
     `Offre ${offreNoms[offre]} · ${commValHT}% HT (${commTTC}% TTC) · TVA collectée : ${tvaMJ.toLocaleString('fr-FR')}€`;
   document.getElementById('os-nuits').textContent = s.nuits;
-  document.getElementById('os-brut').textContent = s.brut.toLocaleString('fr-FR') + '€';
+  document.getElementById('os-brut').textContent = s.brutLocatif.toLocaleString('fr-FR') + '€';
   document.getElementById('os-net').textContent = s.proprio.toLocaleString('fr-FR') + '€';
   document.getElementById('os-vous').textContent = s.maComm.toLocaleString('fr-FR') + '€ HT';
   if (document.getElementById('e-comm')) {
@@ -5544,7 +5553,8 @@ function renderCal() {
         const voyageur = voyageurName(r.summary);
         const uid = encodeURIComponent(r.uid||'');
         const saved = (dos.calMontants||{})[r.uid]||'';
-        const commBrut = saved && dos.comm ? Math.round(parseFloat(saved)*parseFloat(dos.comm)/100) : '';
+        // Estimation FIN-1 : le montant iCal est brut, les frais plateforme sont estimés au taux du dossier
+        const commEst = saved ? (MJ.calcFin1(saved, saved * (parseFloat(dos.cair) || 3) / 100, dos.comm).commission ?? '') : '';
         return `<tr style="cursor:pointer" onmouseover="this.style.background='var(--goldbg)'" onmouseout="this.style.background=''" onclick="openReservModal(${dos.id},'${uid}')">
           <td><div style="display:flex;align-items:center;gap:8px"><div style="width:10px;height:10px;border-radius:50%;background:${color}"></div><div><div style="font-size:12px;font-weight:600">${bienLabel(dos)}</div><div style="font-size:10px;color:var(--ink3)">${dos.type || ''} ${dos.surface ? '· '+dos.surface+'m²' : ''}</div></div></div></td>
           <td>${r.platformIcon} ${r.platformLabel}</td>
@@ -5552,7 +5562,7 @@ function renderCal() {
           <td style="font-size:12px">${new Date(r.start).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'})}</td>
           <td style="font-size:12px">${new Date(r.end).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'})}</td>
           <td style="text-align:center;font-weight:700;color:var(--gold);font-size:16px">${nuits}</td>
-          <td onclick="event.stopPropagation()"><input type="number" value="${saved}" placeholder="—" onchange="saveCalMontant(${dos.id},'${uid}',this.value)" style="width:90px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px">${commBrut?`<div style="font-size:10px;color:var(--golddeep);margin-top:2px">Com: ${commBrut}€ HT</div>`:''}</td>
+          <td onclick="event.stopPropagation()"><input type="number" value="${saved}" placeholder="—" onchange="saveCalMontant(${dos.id},'${uid}',this.value)" style="width:90px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px">${commEst!==''?`<div style="font-size:10px;color:var(--golddeep);margin-top:2px">Com. ≈ ${commEst}€ HT</div>`:''}</td>
           <td><button class="btn btn-gold btn-sm" onclick="event.stopPropagation();openReservModal(${dos.id},'${uid}')">Détails</button></td>
         </tr>`;
       }).join('')}</tbody></table>`;
@@ -5579,7 +5589,8 @@ function openReservModal(dosId, uidEnc) {
   const nuits = Math.round((new Date(r.end) - new Date(r.start)) / 86400000);
   const voyageur = voyageurName(r.summary);
   const montant = (dos.calMontants || {})[uid] || '';
-  const commBrut = montant && dos.comm ? Math.round(parseFloat(montant) * parseFloat(dos.comm) / 100) : '';
+  const cairEst = parseFloat(dos.cair) || 3;
+  const commEst = montant ? (MJ.calcFin1(montant, montant * cairEst / 100, dos.comm).commission ?? '') : '';
 
   // Horaires check-in / check-out depuis la fiche bien
   const heureCI = dos.checkin || '16:00';
@@ -5642,16 +5653,16 @@ function openReservModal(dosId, uidEnc) {
           <!-- Montant -->
           <div style="margin-bottom:12px">
             <label style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px">Montant réservation (€)</label>
-            <input type="number" id="reser-montant" value="${montant}" placeholder="Montant brut voyageur" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:14px;background:var(--surface2);font-family:'Inter',sans-serif">
+            <input type="number" id="reser-montant" value="${montant}" placeholder="Loyer brut voyageur (hors ménage)" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:14px;background:var(--surface2);font-family:'Inter',sans-serif">
             <div style="font-size:11px;color:var(--ink3);margin-top:3px">Saisie manuelle — non disponible via iCal</div>
           </div>
 
-          ${montant && dos.comm ? `
+          ${commEst !== '' ? `
           <div style="background:var(--jade-bg);border:1px solid var(--jade-bd);border-radius:8px;padding:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
-            <div style="font-size:12px;color:var(--jade)">Commission MJ (${dos.comm}% HT)</div>
+            <div style="font-size:12px;color:var(--jade)">Commission MJ estimée (${dos.comm}% HT)<br><span style="font-size:10px;color:var(--ink3)">après frais plateforme ≈ ${cairEst}%, hors ménage</span></div>
             <div>
-              <div style="font-size:18px;font-weight:700;color:var(--jade)">${commBrut.toLocaleString('fr-FR')}€ HT</div>
-              <div style="font-size:10px;color:var(--ink3);text-align:right">TTC : ${Math.round(commBrut*1.2).toLocaleString('fr-FR')}€</div>
+              <div style="font-size:18px;font-weight:700;color:var(--jade)">≈ ${commEst.toLocaleString('fr-FR')}€ HT</div>
+              <div style="font-size:10px;color:var(--ink3);text-align:right">TTC : ${Math.round(commEst*1.2).toLocaleString('fr-FR')}€</div>
             </div>
           </div>` : ''}
 
@@ -5801,17 +5812,34 @@ function openNewFacture() {
   document.getElementById('f-bien-select').innerHTML = '<option value="">— Choisir un dossier —</option>' +
     D.dossiers.filter(d => ['signe','annonce','online'].includes(d.etape))
       .map((d,i) => `<option value="${d.id}">${demoNom(d.prenom,d.nom,i)} — ${demoAdresse((d.adresse||'').split(',')[0],i)}</option>`).join('');
-  ['f-revenu-brut','f-notes'].forEach(id => { const e=document.getElementById(id); if(e) e.value=''; });
-  document.getElementById('f-taux-comm').value = '22';
+  ['f-revenu-brut','f-frais-plateforme','f-notes'].forEach(id => { const e=document.getElementById(id); if(e) e.value=''; });
+  document.getElementById('f-offre').value = '';
+  document.getElementById('f-taux-comm').value = '';
   document.getElementById('fact-calc-result').style.display = 'none';
   openModal('modal-facture');
 }
 
+// Offre pré-remplie depuis le dossier du bien ; le taux suit l'offre (FIN-1, pas de taux par défaut)
+function factureOffreDuBien() {
+  const dos = D.dossiers.find(d => String(d.id) === document.getElementById('f-bien-select').value);
+  const t = MJ.taux(dos?.comm);
+  document.getElementById('f-offre').value = t && MJ.OFFRES[t] ? String(t) : '';
+  factureTauxOffre();
+}
+function factureTauxOffre() {
+  const t = MJ.taux(document.getElementById('f-offre').value);
+  if (t) document.getElementById('f-taux-comm').value = t;
+  calcFacture();
+}
+function commissionFacture() {
+  return MJ.calcFin1(document.getElementById('f-revenu-brut').value, document.getElementById('f-frais-plateforme').value,
+    document.getElementById('f-taux-comm').value);
+}
+
 function calcFacture() {
   const brut = parseFloat(document.getElementById('f-revenu-brut').value) || 0;
-  const taux = parseFloat(document.getElementById('f-taux-comm').value) || 22;
-  if (!brut) { document.getElementById('fact-calc-result').style.display = 'none'; return; }
-  const ht = Math.round(brut * taux / 100 * 100) / 100;
+  const ht = commissionFacture().commission;
+  if (!brut || ht == null) { document.getElementById('fact-calc-result').style.display = 'none'; return; }
   const tva = Math.round(ht * 0.2 * 100) / 100;
   const ttc = Math.round((ht + tva) * 100) / 100;
   document.getElementById('f-res-ht').textContent = ht.toLocaleString('fr-FR') + '€';
@@ -5823,10 +5851,12 @@ function calcFacture() {
 function saveFacture(statut) {
   const bienId = document.getElementById('f-bien-select').value;
   const revBrut = parseFloat(document.getElementById('f-revenu-brut').value) || 0;
-  const taux = parseFloat(document.getElementById('f-taux-comm').value) || 22;
+  const fraisPlateforme = parseFloat(document.getElementById('f-frais-plateforme').value) || 0;
+  const taux = MJ.taux(document.getElementById('f-taux-comm').value);
   const offre = document.getElementById('f-offre').value;
   const dos = D.dossiers.find(d => String(d.id) === String(bienId));
-  let montantHT = offre === 'setup' ? 324.17 : Math.round(revBrut * taux / 100 * 100) / 100; // 389 TTC = 324.17 HT
+  if (offre !== 'setup' && taux == null) { showToast('Choisissez l\'offre (taux de commission)'); return; }
+  let montantHT = offre === 'setup' ? 324.17 : commissionFacture().commission; // 389 TTC = 324.17 HT
   const tva = Math.round(montantHT * 0.2 * 100) / 100;
   const ttc = Math.round((montantHT + tva) * 100) / 100;
   const now = new Date();
@@ -5840,7 +5870,7 @@ function saveFacture(statut) {
     bien: dos ? (dos.adresse||'').split(',')[0] : '—',
     mois: parseInt(document.getElementById('f-mois').value),
     annee: parseInt(document.getElementById('f-annee').value),
-    revenuBrut: revBrut,
+    revenuBrut: revBrut, fraisPlateforme,
     montantHT, tva, ttc,
     dateEmission: document.getElementById('f-date-emission').value,
     dateEcheance: document.getElementById('f-date-echeance').value,
@@ -7957,7 +7987,7 @@ async function renderReservationsAmounts(dossierId) {
   const cont = document.getElementById('reservations-amounts');
   if (!cont || !dossierId) return;
   const dos = D.dossiers.find(x => x.id === dossierId);
-  const taux = (parseFloat(dos?.comm || 22)) / 100;
+  const pct = MJ.taux(dos?.comm);   // pas de taux par défaut : « offre à choisir »
   const { data: revs } = await sb.from('reservations').select('*')
     .eq('dossier_id', dossierId).neq('statut', 'annulee')
     .order('date_debut', { ascending: false });
@@ -7969,7 +7999,7 @@ async function renderReservationsAmounts(dossierId) {
   const inp = 'text-align:right;border:1px solid var(--border);border-radius:5px;padding:4px 6px;font-size:12px;font-family:inherit';
   const rows = revs.map(r => {
     const brut = r.montant_brut || 0, fp = r.frais_plateforme || 0, fm = r.frais_menage || 0;
-    const cm = Math.round((brut - fp) * taux), net = Math.round((brut - fp) - cm);
+    const { commission: cm, netProprio: net } = MJ.calcFin1(brut, fp, pct);
     return `<tr data-id="${r.id}" style="border-bottom:1px solid var(--border)">
       <td style="white-space:nowrap;padding:7px 6px">${fmt(r.date_debut)} → ${fmt(r.date_fin)}</td>
       <td style="color:var(--ink2)">${r.bloque ? '🔒 Bloqué' : esc(r.voyageur || '—')}</td>
@@ -7988,13 +8018,13 @@ async function renderReservationsAmounts(dossierId) {
       <th style="padding:8px 6px">Séjour</th><th>Voyageur</th><th style="text-align:right">Nuits</th>
       <th style="text-align:right">Brut €</th><th style="text-align:right">Frais plat.</th><th style="text-align:right">Ménage</th>
       <th style="text-align:right">Comm. MJ</th><th style="text-align:right">Net proprio</th><th></th>
-    </tr></thead><tbody>${rows}</tbody></table></div>`;
+    </tr></thead><tbody>${rows}</tbody></table></div>
+    <div style="font-size:11px;color:var(--ink3);margin-top:6px">${pct ? `Commission MJ ${pct}% sur (brut − frais plateforme). Le ménage (payé par le voyageur) est un règlement à part, hors commission.` : '⚠️ Offre à choisir : la commission ne peut pas être calculée sans taux.'}</div>`;
   cont.querySelectorAll('tr[data-id]').forEach(tr => {
     const recompute = () => {
       const b = parseFloat(tr.querySelector('.ra-brut').value) || 0;
       const fp = parseFloat(tr.querySelector('.ra-fp').value) || 0;
-      const fm = parseFloat(tr.querySelector('.ra-fm').value) || 0;
-      const cm = Math.round((b - fp) * taux), net = Math.round((b - fp) - cm);
+      const { commission: cm, netProprio: net } = MJ.calcFin1(b, fp, pct);
       tr.querySelector('.ra-comm').textContent = cm ? '-' + cm + '€' : '—';
       tr.querySelector('.ra-net').textContent = net ? net + '€' : '—';
     };
@@ -8004,15 +8034,12 @@ async function renderReservationsAmounts(dossierId) {
 
 async function saveReservationAmount(id, btn) {
   const tr = btn.closest('tr');
-  const dos = D.dossiers.find(x => x.id === currentDosId);
-  const taux = (parseFloat(dos?.comm || 22)) / 100;
   const brut = parseFloat(tr.querySelector('.ra-brut').value) || 0;
   const fp = parseFloat(tr.querySelector('.ra-fp').value) || 0;
   const fm = parseFloat(tr.querySelector('.ra-fm').value) || 0;
-  const cm = Math.round((brut - fp) * taux), net = Math.round((brut - fp) - cm);
+  // commission_mj / net_proprio sont recalculés en base par le trigger FIN-1 (reservations_fin1)
   const { error } = await sb.from('reservations').update({
-    montant_brut: brut, frais_plateforme: fp, frais_menage: fm,
-    commission_mj: cm, net_proprio: net, updated_at: new Date().toISOString()
+    montant_brut: brut, frais_plateforme: fp, frais_menage: fm, updated_at: new Date().toISOString()
   }).eq('id', id);
   if (error) { showToast('❌ ' + error.message); return; }
   showToast('✅ Montant enregistré');
