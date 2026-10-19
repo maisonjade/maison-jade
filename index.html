@@ -5786,9 +5786,55 @@ let currentMissionId = null;
 let factTab = 'proprio';
 
 function saveFactureLocal() {
-  localStorage.setItem('mj_factures', JSON.stringify(factures));
-  localStorage.setItem('mj_prestataires', JSON.stringify(prestataires));
-  localStorage.setItem('mj_missions', JSON.stringify(missions));
+  sauverAdmin('mj_factures', factures);
+  sauverAdmin('mj_prestataires', prestataires);
+  sauverAdmin('mj_missions', missions);
+}
+
+// ══ DONNÉES ADMIN EN BASE (table admin_donnees, admin uniquement) ══
+// Factures, prestataires, missions, références Airbnb, prestataires ménage et assignations.
+// La base fait foi ; le localStorage n'est plus qu'un cache. Pour une liste encore absente de la base,
+// le contenu de ce navigateur y est envoyé au premier chargement (migration, rien n'est effacé).
+const ADMIN_CLES = ['mj_factures', 'mj_prestataires', 'mj_missions', 'mj_refs_airbnb', 'mj_presta_menage', 'mj_assign_biens'];
+let adminDonneesEnBase = false;
+
+async function loadAdminDonnees() {
+  const { data, error } = await sb.from('admin_donnees').select('cle, data');
+  if (error) {
+    console.warn('admin_donnees indisponible — données locales uniquement', error);
+    showToast('⚠️ Factures / prestataires : base indisponible, données de ce navigateur uniquement');
+    return;
+  }
+  adminDonneesEnBase = true;
+  const enBase = Object.fromEntries((data || []).map(r => [r.cle, r.data]));
+  for (const cle of ADMIN_CLES) {
+    if (Array.isArray(enBase[cle])) {
+      // Copie de secours si ce navigateur avait une version différente (jamais de perte silencieuse)
+      const local = localStorage.getItem(cle);
+      const base = JSON.stringify(enBase[cle]);
+      if (local && local !== '[]' && local !== base) localStorage.setItem(cle + '_secours', local);
+      localStorage.setItem(cle, base);
+    } else {
+      const local = JSON.parse(localStorage.getItem(cle) || '[]');
+      if (local.length) await pousserAdminDonnee(cle, local);
+    }
+  }
+  factures           = JSON.parse(localStorage.getItem('mj_factures') || '[]');
+  prestataires       = JSON.parse(localStorage.getItem('mj_prestataires') || '[]');
+  missions           = JSON.parse(localStorage.getItem('mj_missions') || '[]');
+  refsAirbnb         = JSON.parse(localStorage.getItem('mj_refs_airbnb') || '[]');
+  prestatairesMenage = JSON.parse(localStorage.getItem('mj_presta_menage') || '[]');
+  assignationsBiens  = JSON.parse(localStorage.getItem('mj_assign_biens') || '[]');
+}
+
+async function pousserAdminDonnee(cle, valeur) {
+  const { error } = await sb.from('admin_donnees').upsert({ cle, data: valeur, updated_at: new Date().toISOString() });
+  if (error) { console.warn('Échec sauvegarde ' + cle, error); showToast('⚠️ Sauvegarde en base échouée — conservée sur ce navigateur'); }
+}
+
+function sauverAdmin(cle, valeur) {
+  localStorage.setItem(cle, JSON.stringify(valeur));
+  if (adminDonneesEnBase) pousserAdminDonnee(cle, valeur);
 }
 
 function showFactTab(tab) {
@@ -6397,7 +6443,7 @@ function saveRefAirbnb() {
     notes: ''
   };
   refsAirbnb.unshift(ref);
-  localStorage.setItem('mj_refs_airbnb', JSON.stringify(refsAirbnb));
+  sauverAdmin('mj_refs_airbnb', refsAirbnb);
   showToast('✅ Référence enregistrée — ' + (ville || typeBienLabel));
 }
 
@@ -6448,7 +6494,7 @@ function chargerRef(id) {
 
 function supprimerRef(id) {
   refsAirbnb = refsAirbnb.filter(r => r.id !== id);
-  localStorage.setItem('mj_refs_airbnb', JSON.stringify(refsAirbnb));
+  sauverAdmin('mj_refs_airbnb', refsAirbnb);
   renderRefAirbnb();
 }
 
@@ -6925,8 +6971,8 @@ let assignationsBiens  = JSON.parse(localStorage.getItem('mj_assign_biens') || '
 let currentPrId = null;
 
 function savePrestaMenageLocal() {
-  localStorage.setItem('mj_presta_menage', JSON.stringify(prestatairesMenage));
-  localStorage.setItem('mj_assign_biens', JSON.stringify(assignationsBiens));
+  sauverAdmin('mj_presta_menage', prestatairesMenage);
+  sauverAdmin('mj_assign_biens', assignationsBiens);
 }
 
 function openModalPresta(id) {
@@ -7761,6 +7807,7 @@ async function ouvrirApp(user) {
   const tb = document.getElementById('tb-user');
   if (tb) tb.textContent = `${profile.prenom || ''} ${profile.nom || ''}`.trim() || profile.email;
   loadFromSupabase();
+  loadAdminDonnees();
 }
 async function initAuth() {
   const { data: { session } } = await sb.auth.getSession();
