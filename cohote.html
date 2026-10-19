@@ -1356,7 +1356,8 @@ tr:hover td { background: var(--ivoire); }
 // ── CONFIG SUPABASE ──
 const SUPABASE_URL = 'https://lvfncstosaaqgtfozthw.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_UrB6X04fyAOhnN7aHropFQ_mwubBip2';
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { lock: async (name, acquireTimeout, fn) => await fn() } });
+// Session propre à chaque espace (storageKey distinct) : admin, proprio et co-hôte ne se mélangent plus entre onglets
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { storageKey: 'mj-auth-cohote', lock: async (name, acquireTimeout, fn) => await fn() } });
 
 let currentUser = null;
 let currentProfile = null;
@@ -1468,6 +1469,19 @@ async function doLogout() {
   currentUser = null; currentProfile = null; mesBiens = [];
 }
 
+// Échappement HTML de tout texte venant de la base ou d'une API avant insertion dans innerHTML
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+// Erreur réseau : on prévient au lieu d'afficher un faux « vide » (et on ne déconnecte jamais)
+function alerteReseau(error, quoi) {
+  if (!error) return false;
+  console.warn('Échec chargement ' + quoi, error);
+  showToast('⚠️ Problème de connexion — ' + quoi + ' non chargé(s). Réessayez dans un instant.');
+  return true;
+}
+
 // ── INIT APP ──
 async function initApp(user) {
   currentUser = user;
@@ -1475,7 +1489,8 @@ async function initApp(user) {
   document.getElementById('app').style.display = 'block';
 
   // Charger profil
-  const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  const { data: profile, error: eProfil } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  alerteReseau(eProfil && eProfil.code !== 'PGRST116' ? eProfil : null, 'profil');
   currentProfile = profile;
 
   if (profile) {
@@ -1549,7 +1564,11 @@ function sv(id, btn) {
 
 // ── MES BIENS ──
 async function loadMesBiens() {
-  const { data } = await sb.from('cohote_biens').select('*').eq('cohote_id', currentUser.id);
+  const { data, error } = await sb.from('cohote_biens').select('*').eq('cohote_id', currentUser.id);
+  if (alerteReseau(error, 'biens')) {
+    document.getElementById('biens-list').innerHTML = '<div class="empty-state"><h3>⚠️ Problème de connexion</h3><p>Impossible de charger vos biens pour le moment. Réessayez dans un instant.</p></div>';
+    return;
+  }
   mesBiens = data || [];
   document.getElementById('nb-biens').textContent = mesBiens.length;
 
@@ -1581,8 +1600,8 @@ function bienCardHTML(b) {
   const off = tauxOffre(b);
   return `<div class="bien-card">
     <div class="bien-card-header">
-      <div class="bien-card-title">${d.prenom || ''} ${d.nom || ''}</div>
-      <div class="bien-card-adresse">${adresse}</div>
+      <div class="bien-card-title">${esc(d.prenom || '')} ${esc(d.nom || '')}</div>
+      <div class="bien-card-adresse">${esc(adresse)}</div>
     </div>
     <div class="bien-card-body">
       <div class="bien-badge ${b.type_bien === 'mj' ? 'mj' : 'apporte'}">
@@ -1617,8 +1636,9 @@ async function loadDashboard() {
   const mois = now.getMonth() + 1, annee = now.getFullYear();
 
   // Revenus du mois
-  const { data: revs } = await sb.from('cohote_revenus')
+  const { data: revs, error: eRevs } = await sb.from('cohote_revenus')
     .select('*').eq('cohote_id', currentUser.id).eq('mois', mois).eq('annee', annee);
+  alerteReseau(eRevs, 'revenus');
 
   const totalRev = (revs || []).reduce((a, r) => a + (parseFloat(r.commission_cohote) || 0), 0);
   const totalNuits = (revs || []).reduce((a, r) => a + (parseInt(r.nuits) || 0), 0);
@@ -1652,8 +1672,8 @@ function loadRevenusForm() {
       const d = b.dossier || {};
       const part = partCohote(b), off = tauxOffre(b);
       return `<tr>
-        <td style="font-weight:500">${d.prenom || ''} ${d.nom || ''}<br>
-          <span style="font-size:11px;color:var(--ink3)">${(d.adresse||'').split(',')[0]}</span></td>
+        <td style="font-weight:500">${esc(d.prenom || '')} ${esc(d.nom || '')}<br>
+          <span style="font-size:11px;color:var(--ink3)">${esc((d.adresse||'').split(',')[0])}</span></td>
         <td><span class="badge badge-attente">${off ? off + '%' : 'Offre à choisir'}</span><br>
           <span style="font-size:10px;color:var(--ink3)">part ${part}%</span></td>
         <td><input type="number" min="0" step="10" id="rev-ca-${b.dossier_id}" placeholder="0"
@@ -1723,12 +1743,15 @@ let historique = [];
 const MOIS_LBL = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 
 async function loadRevenusHistory() {
-  const { data } = await sb.from('cohote_revenus').select('*')
+  const { data, error } = await sb.from('cohote_revenus').select('*')
     .eq('cohote_id', currentUser.id)
     .order('annee', { ascending: false }).order('mois', { ascending: false });
-  historique = data || [];
-
   const el = document.getElementById('revenus-history');
+  if (alerteReseau(error, 'historique des revenus')) {
+    if (el) el.innerHTML = '<div style="padding:1rem;color:var(--ink3)">⚠️ Problème de connexion — historique non chargé.</div>';
+    return;
+  }
+  historique = data || [];
   const MOIS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'];
   if (!historique.length) {
     el.innerHTML = '<div style="color:var(--ink3);font-size:13px;padding:8px">Aucun revenu enregistré.</div>';
@@ -1744,7 +1767,7 @@ async function loadRevenusHistory() {
       const d = b?.dossier || {};
       return `<tr>
         <td>${MOIS[r.mois-1]} ${r.annee}</td>
-        <td>${d.prenom||''} ${d.nom||''}</td>
+        <td>${esc(d.prenom||'')} ${esc(d.nom||'')}</td>
         <td>${formatMontant(parseFloat(r.revenu_brut))}</td>
         <td>${r.taux_offre ? r.taux_offre + '%' : '—'}</td>
         <td style="color:var(--ink3)">${formatMontant(parseFloat(r.honoraires_mj))}</td>
@@ -1820,8 +1843,8 @@ function genererPrefacture() {
     const commGestion = (parseFloat(r.commission_cohote) || 0) - (parseFloat(r.commission_services) || 0);
 
     let html = `<tr>
-      <td>${`${d.prenom||''} ${d.nom||''}`.trim() || 'Bien ' + r.dossier_id}<br>
-        <span style="font-size:10px;color:#777">${(d.adresse||'').split(',')[0]}</span></td>
+      <td>${`${esc(d.prenom||'')} ${esc(d.nom||'')}`.trim() || 'Bien ' + r.dossier_id}<br>
+        <span style="font-size:10px;color:#777">${esc((d.adresse||'').split(',')[0])}</span></td>
       <td class="num">${eur(parseFloat(r.revenu_brut))}</td>
       <td class="num">${r.taux_offre || '—'}%</td>
       <td class="num">${eur(parseFloat(r.honoraires_mj))}</td>
@@ -1914,7 +1937,7 @@ function renderApercu() {
           <tbody>${parBien.map(x => {
             const d = x.b.dossier || {};
             return `<tr>
-              <td>${d.prenom||''} ${d.nom||''}<br><span style="font-size:11px;color:var(--ink3)">${(d.adresse||'').split(',')[0]}</span></td>
+              <td>${esc(d.prenom||'')} ${esc(d.nom||'')}<br><span style="font-size:11px;color:var(--ink3)">${esc((d.adresse||'').split(',')[0])}</span></td>
               <td>${formatMontant(x.moyenne)}</td>
               <td>${formatMontant(x.total)}</td>
             </tr>`;
@@ -1971,7 +1994,7 @@ function loadChecklistBiens() {
   sel.innerHTML = '<option value="">— Choisir un bien —</option>';
   mesBiens.forEach(b => {
     const d = b.dossier || {};
-    sel.innerHTML += `<option value="${b.dossier_id}">${d.prenom||''} ${d.nom||''} — ${(d.adresse||'').split(',')[0]}</option>`;
+    sel.innerHTML += `<option value="${b.dossier_id}">${esc(d.prenom||'')} ${esc(d.nom||'')} — ${esc((d.adresse||'').split(',')[0])}</option>`;
   });
 }
 
@@ -2036,7 +2059,7 @@ async function loadCalCohote() {
     mesBiens.map(b => {
       const d = b.dossier || {};
       const ical = d.ical_airbnb || '';
-      return `<div style="padding:10px 0;border-bottom:1px solid var(--border)"><strong>${d.prenom||''} ${d.nom||''}</strong> — ${(d.adresse||'').split(',')[0]}<br><span style="font-size:11px;color:${ical?'var(--jade)':'var(--red)'}">${ical?'✅ iCal configuré':'❌ Lien iCal non renseigné'}</span></div>`;
+      return `<div style="padding:10px 0;border-bottom:1px solid var(--border)"><strong>${esc(d.prenom||'')} ${esc(d.nom||'')}</strong> — ${esc((d.adresse||'').split(',')[0])}<br><span style="font-size:11px;color:${ical?'var(--jade)':'var(--red)'}">${ical?'✅ iCal configuré':'❌ Lien iCal non renseigné'}</span></div>`;
     }).join('') + '</div>';
 }
 
@@ -2057,8 +2080,8 @@ async function loadReseau() {
       <div style="display:flex;align-items:center;gap:14px">
         <div class="filleul-avatar">${(f.prenom||f.email||'?')[0]}</div>
         <div>
-          <div class="filleul-name">${f.prenom||''} ${f.nom||''}</div>
-          <div class="filleul-sub">${f.email} · <span class="badge ${f.statut==='ambassadeur'?'badge-attente':'badge-online'}">${f.statut}</span></div>
+          <div class="filleul-name">${esc(f.prenom||'')} ${esc(f.nom||'')}</div>
+          <div class="filleul-sub">${esc(f.email)} · <span class="badge ${f.statut==='ambassadeur'?'badge-attente':'badge-online'}">${f.statut}</span></div>
         </div>
       </div>
       <div class="filleul-comm">
@@ -2078,15 +2101,15 @@ async function loadAdminData() {
   el.innerHTML = `<table>
     <thead><tr><th>Nom</th><th>Email</th><th>Statut</th><th>Inscrit le</th><th>Abonnement</th><th>Actions</th></tr></thead>
     <tbody>${cohotes.map(c => `<tr>
-      <td style="font-weight:500">${c.prenom||''} ${c.nom||''}</td>
-      <td style="font-size:12px">${c.email}</td>
+      <td style="font-weight:500">${esc(c.prenom||'')} ${esc(c.nom||'')}</td>
+      <td style="font-size:12px">${esc(c.email)}</td>
       <td><span class="badge ${c.statut==='ambassadeur'?'badge-attente':'badge-online'}">${c.statut}</span></td>
       <td style="font-size:12px">${new Date(c.created_at).toLocaleDateString('fr-FR')}</td>
       <td>${c.abonnement_actif?'✅':'❌'}</td>
       <td>
         <button class="btn btn-outline btn-sm" onclick="toggleAbonnement('${c.id}',${!c.abonnement_actif})">${c.abonnement_actif?'Désactiver':'Activer'}</button>
         <button class="btn btn-or btn-sm" onclick="setAmbassadeur('${c.id}','${c.statut}')">⭐</button>
-        <button class="btn btn-outline btn-sm" onclick="resetMdpCohote('${c.email}')" title="Envoyer un lien de réinitialisation">🔑</button>
+        <button class="btn btn-outline btn-sm" onclick="resetMdpCohote('${esc(c.email)}')" title="Envoyer un lien de réinitialisation">🔑</button>
       </td>
     </tr>`).join('')}</tbody>
   </table>`;
@@ -2097,12 +2120,12 @@ async function loadAdminData() {
   selD.innerHTML = '<option value="">— Choisir —</option>';
   (dossiers||[]).forEach(d => {
     const dat = d.data || {};
-    selD.innerHTML += `<option value="${d.id}">${dat.prenom||''} ${dat.nom||''} — ${(dat.adresse||'').split(',')[0]}</option>`;
+    selD.innerHTML += `<option value="${d.id}">${esc(dat.prenom||'')} ${esc(dat.nom||'')} — ${esc((dat.adresse||'').split(',')[0])}</option>`;
   });
   const selC = document.getElementById('assign-cohote');
   selC.innerHTML = '<option value="">— Choisir —</option>';
   cohotes.forEach(c => {
-    selC.innerHTML += `<option value="${c.id}">${c.prenom||''} ${c.nom||''} (${c.email})</option>`;
+    selC.innerHTML += `<option value="${c.id}">${esc(c.prenom||'')} ${esc(c.nom||'')} (${esc(c.email)})</option>`;
   });
 
   loadAdminDocuments();
@@ -2125,9 +2148,9 @@ async function loadAdminData() {
       const c = cohotes.find(x => x.id === a.cohote_id);
       const off = MJ.taux(d.comm), part = a.type_bien === 'apporte' ? 70 : (a.taux_commission || 50);
       return `<tr>
-        <td style="font-weight:500">${d.prenom||''} ${d.nom||''}<br>
-          <span style="font-size:11px;color:var(--ink3)">${(d.adresse||'').split(',')[0]}</span></td>
-        <td>${c ? `${c.prenom||''} ${c.nom||''}` : '<span style="color:var(--red)">Co-hôte introuvable</span>'}</td>
+        <td style="font-weight:500">${esc(d.prenom||'')} ${esc(d.nom||'')}<br>
+          <span style="font-size:11px;color:var(--ink3)">${esc((d.adresse||'').split(',')[0])}</span></td>
+        <td>${c ? `${esc(c.prenom||'')} ${esc(c.nom||'')}` : '<span style="color:var(--red)">Co-hôte introuvable</span>'}</td>
         <td><span class="badge ${a.type_bien==='mj'?'badge-online':'badge-attente'}">${a.type_bien==='mj'?'🏠 MJ':'✋ Apporté'}</span></td>
         <td>${off ? `${OFFRES[off]||''} ${off}%` : '<span style="color:var(--red)">Offre à choisir</span>'}</td>
         <td>${part}%</td>
@@ -2178,7 +2201,8 @@ async function assignBien() {
 
   const dosId = parseInt(dossierId);
   // Copie de l'offre du dossier (la source reste dossiers.data.comm)
-  const { data: dos } = await sb.from('dossiers').select('data').eq('id', dosId).single();
+  const { data: dos, error: eDos } = await sb.from('dossiers').select('data').eq('id', dosId).single();
+  if (alerteReseau(eDos, 'dossier')) return;
   const offre = MJ.taux(dos?.data?.comm);
   const taux = type === 'apporte' ? 70 : 50;
 
@@ -2508,7 +2532,7 @@ function renderRefAirbnb() {
     </tr></thead>
     <tbody>${refsAirbnb.map(r => `<tr style="border-bottom:1px solid var(--border)">
       <td style="padding:8px 10px">
-        <div style="font-weight:500">${r.ville || '—'}</div>
+        <div style="font-weight:500">${esc(r.ville || '—')}</div>
         <div style="font-size:11px;color:var(--ink3)">${r.typeBienLabel || ''} · ${r.attrait || ''}</div>
       </td>
       <td style="padding:8px 10px;text-align:center;color:var(--ink3)">${r.prixBasse ? r.prixBasse+'€' : '—'}</td>
@@ -3159,7 +3183,7 @@ function rechercheAdresse(q) {
       sugEl.innerHTML = data.features.map((f, i) => {
         const p = f.properties;
         return `<div onclick="selectAdresseParIndex(${i})" style="padding:10px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);color:var(--ink)" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='none'">
-          <div style="font-weight:500">${p.label}</div>
+          <div style="font-weight:500">${esc(p.label)}</div>
           <div style="font-size:11px;color:var(--ink3)">${p.context || ''}</div>
         </div>`;
       }).join('');
@@ -3220,9 +3244,9 @@ function selectAdresse(fJson) {
     const cb = document.querySelector(`input[name="attrait"][value="${suggestion}"]`);
     if (cb) { cb.checked = true; updateSaisonnalite(); }
     const nomProfil = PROFILS_SAISON[suggestion]?.nom || suggestion;
-    confEl.innerHTML = `📍 <strong>${p.city || p.label}</strong> — profil suggéré : <strong>${nomProfil}</strong> (${distance}). Vous pouvez le modifier ci-contre.`;
+    confEl.innerHTML = `📍 <strong>${esc(p.city || p.label)}</strong> — profil suggéré : <strong>${esc(nomProfil)}</strong> (${distance}). Vous pouvez le modifier ci-contre.`;
   } else {
-    confEl.innerHTML = `📍 <strong>${p.city || p.label}</strong> — sélectionnez le profil le plus adapté ci-contre.`;
+    confEl.innerHTML = `📍 <strong>${esc(p.city || p.label)}</strong> — sélectionnez le profil le plus adapté ci-contre.`;
   }
   confEl.style.display = 'block';
 
@@ -3257,7 +3281,7 @@ function appliquerGeo(lat, lon, postcode, population, altitude) {
   if (bandeau && secteurDetecte) {
     bandeau.innerHTML = `<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--jade-bg);border:1px solid var(--jade-bd);border-radius:8px;font-size:12.5px;color:var(--jade)">
       <span style="font-size:16px">🎯</span>
-      <span><strong>Secteur détecté : ${secteurDetecte.courbe.nom}.</strong> ${secteurDetecte.raison}. Vous pouvez corriger le profil ci-dessous.</span></div>`;
+      <span><strong>Secteur détecté : ${esc(secteurDetecte.courbe.nom)}.</strong> ${esc(secteurDetecte.raison)}. Vous pouvez corriger le profil ci-dessous.</span></div>`;
     bandeau.style.display = 'block';
     // Mémoriser la courbe détectée pour calculerResultats (sauf si l'utilisateur a coché manuellement)
     window._courbeSecteur = secteurDetecte.courbe;
@@ -3361,10 +3385,10 @@ async function loadProspects() {
     </tr></thead><tbody>${mesProspects.map(r => {
       const d = r.data || {};
       return `<tr>
-        <td style="font-weight:500">${d.surnom || '—'}<br>
-          <span style="font-size:11px;color:var(--ink3)">${(d.adresse||'').split(',')[0]}</span></td>
-        <td>${d.prenom || ''} ${d.nom || ''}</td>
-        <td style="font-size:12px">${d.tel || ''}<br><span style="color:var(--ink3)">${d.email || ''}</span></td>
+        <td style="font-weight:500">${esc(d.surnom || '—')}<br>
+          <span style="font-size:11px;color:var(--ink3)">${esc((d.adresse||'').split(',')[0])}</span></td>
+        <td>${esc(d.prenom || '')} ${esc(d.nom || '')}</td>
+        <td style="font-size:12px">${esc(d.tel || '')}<br><span style="color:var(--ink3)">${esc(d.email || '')}</span></td>
         <td><span class="badge badge-attente">${ETAPES[d.etape] || d.etape || '—'}</span></td>
         <td style="font-size:12px;color:var(--ink3)">${d.date || '—'}</td>
       </tr>`;
@@ -3577,7 +3601,7 @@ async function loadDocuments() {
       <th>Type</th><th>Fichier</th><th>Déposé le</th><th>Expire</th><th>Statut</th><th></th>
     </tr></thead><tbody>${mesDocuments.map(d => `<tr>
       <td style="font-weight:500">${DOC_LIB[d.type_doc] || d.type_doc}</td>
-      <td style="font-size:12px">${d.nom_fichier}</td>
+      <td style="font-size:12px">${esc(d.nom_fichier)}</td>
       <td style="font-size:12px">${new Date(d.date_depot).toLocaleDateString('fr-FR')}</td>
       <td style="font-size:12px">${d.date_expiration ? new Date(d.date_expiration).toLocaleDateString('fr-FR') : '—'}</td>
       <td><span class="badge ${BADGE[d.statut]||'badge-attente'}">${LIB[d.statut]||d.statut}</span></td>
@@ -3618,7 +3642,7 @@ function afficherConformite() {
     else { etat = 'En vérification'; couleur = '#A57C52'; ok++; }
 
     return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-      <span style="font-size:13px">${r.libelle}${detail ? '<span style="color:var(--ink3);font-size:11px">'+detail+'</span>' : ''}</span>
+      <span style="font-size:13px">${esc(r.libelle)}${detail ? '<span style="color:var(--ink3);font-size:11px">'+detail+'</span>' : ''}</span>
       <span style="font-size:12px;font-weight:600;color:${couleur}">${etat}</span>
     </div>`;
   }).join('');
@@ -3656,7 +3680,7 @@ async function loadAdminDocuments() {
   el.innerHTML = `<table><thead><tr>
     <th>Co-hôte</th><th>Type</th><th>Déposé le</th><th>Expire</th><th>Statut</th><th>Actions</th>
   </tr></thead><tbody>${tous.map(d => `<tr>
-    <td style="font-weight:500">${nom[d.cohote_id] || '—'}</td>
+    <td style="font-weight:500">${esc(nom[d.cohote_id] || '—')}</td>
     <td style="font-size:12px">${DOC_LIB[d.type_doc] || d.type_doc}</td>
     <td style="font-size:12px">${new Date(d.date_depot).toLocaleDateString('fr-FR')}</td>
     <td style="font-size:12px">${d.date_expiration ? new Date(d.date_expiration).toLocaleDateString('fr-FR') : '—'}</td>

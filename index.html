@@ -3412,7 +3412,8 @@ let photos = {};
 // ══ CONNEXION SUPABASE ══
 const SUPABASE_URL = 'https://lvfncstosaaqgtfozthw.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_UrB6X04fyAOhnN7aHropFQ_mwubBip2';
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { lock: async (name, acquireTimeout, fn) => await fn() } });
+// Session propre à chaque espace (storageKey distinct) : admin, proprio et co-hôte ne se mélangent plus entre onglets
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { storageKey: 'mj-auth-admin', lock: async (name, acquireTimeout, fn) => await fn() } });
 
 // Échappement HTML — à utiliser sur tout texte d'origine externe (voyageurs, co-hôtes, tickets, ménages) avant injection dans innerHTML.
 function esc(s) {
