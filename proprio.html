@@ -369,6 +369,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);co
           <span class="card-title">💰 Historique des revenus</span>
         </div>
         <div class="card-body">
+          <div style="overflow-x:auto">
           <table class="rev-table" id="revenus-table">
             <thead>
               <tr>
@@ -376,13 +377,17 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);co
                 <th>CA brut</th>
                 <th>Commission MJ</th>
                 <th>Votre net</th>
+                <th title="Payé par les voyageurs − frais plateforme − coût du prestataire">Ménage</th>
+                <th>Total</th>
                 <th>Nuits</th>
               </tr>
             </thead>
             <tbody id="revenus-body">
-              <tr><td colspan="5" class="empty">Chargement…</td></tr>
+              <tr><td colspan="7" class="empty">Chargement…</td></tr>
             </tbody>
           </table>
+          </div>
+          <div id="revenus-note" style="display:none;margin-top:10px;font-size:12px;color:var(--ink3)"></div>
         </div>
       </div>
     </div>
@@ -826,48 +831,68 @@ function renderMenagesProprio() {
 }
 
 // ── REVENUS ──
+// Loyer : règle FIN-1 (fin1.js). Ménage : règlement à part, hors commission —
+// payé par le voyageur − frais plateforme sur le ménage − coût du prestataire (menages_proprio.cout).
 function renderRevenusTable(dosData) {
   const pct = MJ.taux(dosData.comm);
   const body = document.getElementById('revenus-body');
+  const note = document.getElementById('revenus-note');
   // On ne compte que les vrais séjours (pas les dates bloquées)
   const revs = (allReservations[selectedDossierId] || []).filter(r => !r.bloque);
+  const menages = allMenages.filter(m => String(m.dossier_id) === String(selectedDossierId) && m.date);
 
-  if (!revs.length) {
-    body.innerHTML = '<tr><td colspan="5" class="empty">Aucun revenu enregistré pour le moment.</td></tr>';
+  if (!revs.length && !menages.length) {
+    body.innerHTML = '<tr><td colspan="7" class="empty">Aucun revenu enregistré pour le moment.</td></tr>';
+    if (note) note.style.display = 'none';
     return;
   }
 
-  // Grouper par mois + totaux (net = brut − frais − commission)
   const byMonth = {};
-  let tBrut = 0, tComm = 0, tNet = 0, tNuits = 0;
-  revs.forEach(r => {
-    const d = new Date(r.date_debut || r.created_at);
+  const mois = d => {
     const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-    if (!byMonth[key]) byMonth[key] = { mois: d, brut: 0, comm: 0, net: 0, nuits: 0 };
-    const brut = parseFloat(r.montant_brut || 0);
+    return byMonth[key] || (byMonth[key] = { mois: d, brut: 0, comm: 0, net: 0, nuits: 0, menVoy: 0, menFrais: 0, menCout: 0 });
+  };
+  revs.forEach(r => {
+    const m = mois(new Date(r.date_debut || r.created_at));
     const { comm, net } = montantsFin1(r, pct);
-    byMonth[key].brut += brut; byMonth[key].comm += comm; byMonth[key].net += net; byMonth[key].nuits += parseInt(r.nuits || 0);
-    tBrut += brut; tComm += comm; tNet += net; tNuits += parseInt(r.nuits || 0);
+    m.brut += parseFloat(r.montant_brut || 0); m.comm += comm; m.net += net; m.nuits += parseInt(r.nuits || 0);
+    m.menVoy += parseFloat(r.frais_menage || 0); m.menFrais += parseFloat(r.frais_plateforme_menage || 0);
   });
+  menages.forEach(x => { mois(new Date(x.date)).menCout += parseFloat(x.cout || 0); });
 
+  const t = { brut: 0, comm: 0, net: 0, nuits: 0, menVoy: 0, menFrais: 0, menCout: 0 };
   const euro = n => Math.round(n).toLocaleString('fr-FR') + '€';
-  const lignes = Object.entries(byMonth).sort(([a],[b]) => b.localeCompare(a)).map(([key, v]) => `
+  const signe = n => (n > 0 ? '+' : '') + euro(n);
+  const lignes = Object.entries(byMonth).sort(([a],[b]) => b.localeCompare(a)).map(([key, v]) => {
+    Object.keys(t).forEach(k => t[k] += v[k]);
+    const men = MJ.calcMenage(v.menVoy, v.menFrais, v.menCout);
+    return `
     <tr>
       <td>${v.mois.toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</td>
       <td>${euro(v.brut)}</td>
       <td class="rev-negative">-${euro(v.comm)}</td>
       <td class="rev-positive">${euro(v.net)}</td>
+      <td title="Payé par les voyageurs ${euro(men.encaisse)} − frais plateforme ${euro(men.frais)} − prestataire ${euro(men.cout)}">${signe(men.solde)}</td>
+      <td style="font-weight:600">${euro(v.net + men.solde)}</td>
       <td>${v.nuits} nuits</td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
 
+  const tm = MJ.calcMenage(t.menVoy, t.menFrais, t.menCout);
   body.innerHTML = lignes + `
     <tr style="font-weight:700;border-top:2px solid var(--jade-bd)">
       <td>Total</td>
-      <td>${euro(tBrut)}</td>
-      <td class="rev-negative">-${euro(tComm)}</td>
-      <td class="rev-positive">${euro(tNet)}</td>
-      <td>${tNuits} nuits</td>
+      <td>${euro(t.brut)}</td>
+      <td class="rev-negative">-${euro(t.comm)}</td>
+      <td class="rev-positive">${euro(t.net)}</td>
+      <td>${signe(tm.solde)}</td>
+      <td>${euro(t.net + tm.solde)}</td>
+      <td>${t.nuits} nuits</td>
     </tr>`;
+  if (note) {
+    note.style.display = 'block';
+    note.textContent = `Ménage (règlement à part, hors commission Maison Jade) : ${euro(tm.encaisse)} payés par les voyageurs − ${euro(tm.frais)} de frais plateforme − ${euro(tm.cout)} de prestataire = ${signe(tm.solde)}.`;
+  }
 }
 
 // ── INCIDENTS ──
