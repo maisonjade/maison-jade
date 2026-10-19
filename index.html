@@ -8000,7 +8000,7 @@ async function renderReservationsAmounts(dossierId) {
   const fmt = d => new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
   const inp = 'text-align:right;border:1px solid var(--border);border-radius:5px;padding:4px 6px;font-size:12px;font-family:inherit';
   const rows = revs.map(r => {
-    const brut = r.montant_brut || 0, fp = r.frais_plateforme || 0, fm = r.frais_menage || 0;
+    const brut = r.montant_brut || 0, fp = r.frais_plateforme || 0, fm = r.frais_menage || 0, fpm = r.frais_plateforme_menage || 0;
     const { commission: cm, netProprio: net } = MJ.calcFin1(brut, fp, pct);
     return `<tr data-id="${r.id}" style="border-bottom:1px solid var(--border)">
       <td style="white-space:nowrap;padding:7px 6px">${fmt(r.date_debut)} → ${fmt(r.date_fin)}</td>
@@ -8009,6 +8009,7 @@ async function renderReservationsAmounts(dossierId) {
       <td><input type="number" class="ra-brut" value="${brut || ''}" placeholder="0" style="width:78px;${inp}"></td>
       <td><input type="number" class="ra-fp" value="${fp || ''}" placeholder="0" style="width:64px;${inp}"></td>
       <td><input type="number" class="ra-fm" value="${fm || ''}" placeholder="0" style="width:64px;${inp}"></td>
+      <td><input type="number" class="ra-fpm" value="${fpm || ''}" placeholder="0" style="width:64px;${inp}"></td>
       <td class="ra-comm" style="text-align:right;color:var(--gold,#A57C52);white-space:nowrap">${cm ? '-' + cm + '€' : '—'}</td>
       <td class="ra-net" style="text-align:right;font-weight:600;white-space:nowrap">${net ? net + '€' : '—'}</td>
       <td style="text-align:center"><button class="btn btn-primary btn-sm" onclick="saveReservationAmount(${r.id}, this)">💾</button></td>
@@ -8018,10 +8019,10 @@ async function renderReservationsAmounts(dossierId) {
     <table style="width:100%;border-collapse:collapse;font-size:12px">
     <thead><tr style="text-align:left;color:var(--ink3);background:var(--surface2,#f5f0e8);border-bottom:1px solid var(--border)">
       <th style="padding:8px 6px">Séjour</th><th>Voyageur</th><th style="text-align:right">Nuits</th>
-      <th style="text-align:right">Brut €</th><th style="text-align:right">Frais plat.</th><th style="text-align:right">Ménage</th>
+      <th style="text-align:right">Brut €</th><th style="text-align:right">Frais plat.</th><th style="text-align:right">Ménage voyageur</th><th style="text-align:right">Frais plat. ménage</th>
       <th style="text-align:right">Comm. MJ</th><th style="text-align:right">Net proprio</th><th></th>
     </tr></thead><tbody>${rows}</tbody></table></div>
-    <div style="font-size:11px;color:var(--ink3);margin-top:6px">${pct ? `Commission MJ ${pct}% sur (brut − frais plateforme). Le ménage (payé par le voyageur) est un règlement à part, hors commission.` : '⚠️ Offre à choisir : la commission ne peut pas être calculée sans taux.'}</div>`;
+    <div style="font-size:11px;color:var(--ink3);margin-top:6px">${pct ? `Commission MJ ${pct}% sur (brut − frais plateforme). Ménage = règlement à part, hors commission : montant payé par le voyageur et frais plateforme prélevés dessus.` : '⚠️ Offre à choisir : la commission ne peut pas être calculée sans taux.'}</div>`;
   cont.querySelectorAll('tr[data-id]').forEach(tr => {
     const recompute = () => {
       const b = parseFloat(tr.querySelector('.ra-brut').value) || 0;
@@ -8039,9 +8040,10 @@ async function saveReservationAmount(id, btn) {
   const brut = parseFloat(tr.querySelector('.ra-brut').value) || 0;
   const fp = parseFloat(tr.querySelector('.ra-fp').value) || 0;
   const fm = parseFloat(tr.querySelector('.ra-fm').value) || 0;
+  const fpm = parseFloat(tr.querySelector('.ra-fpm').value) || 0;
   // commission_mj / net_proprio sont recalculés en base par le trigger FIN-1 (reservations_fin1)
   const { error } = await sb.from('reservations').update({
-    montant_brut: brut, frais_plateforme: fp, frais_menage: fm, updated_at: new Date().toISOString()
+    montant_brut: brut, frais_plateforme: fp, frais_menage: fm, frais_plateforme_menage: fpm, updated_at: new Date().toISOString()
   }).eq('id', id);
   if (error) { showToast('❌ ' + error.message); return; }
   showToast('✅ Montant enregistré');
