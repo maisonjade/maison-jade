@@ -5702,7 +5702,8 @@ sv = function(id, btn) {
     const el = document.getElementById('n-code-display');
     if (el) el.textContent = codeMJ;
   }
-  if (id === 'simulateur') setTimeout(calcSimuRevenus, 100);
+  // calcSimuRevenus n'existe plus : l'appel nu plantait sv() et bloquait le chargement des dossiers après connexion
+  if (id === 'simulateur' && typeof calcSimuRevenus === 'function') setTimeout(calcSimuRevenus, 100);
   if (id === 'kanban') renderKanban();
   if (id === 'cockpit') renderCockpit();
   if (id === 'menages') renderMenages();
@@ -5824,7 +5825,8 @@ function factureOffreDuBien() {
   const dos = D.dossiers.find(d => String(d.id) === document.getElementById('f-bien-select').value);
   const t = MJ.taux(dos?.comm);
   document.getElementById('f-offre').value = t && MJ.OFFRES[t] ? String(t) : '';
-  factureTauxOffre();
+  document.getElementById('f-taux-comm').value = t || '';   // taux du dossier, même hors grille ; vide si aucune offre
+  calcFacture();
 }
 function factureTauxOffre() {
   const t = MJ.taux(document.getElementById('f-offre').value);
