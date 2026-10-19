@@ -182,6 +182,7 @@
   </div>
 </div>
 
+<script src="fin1.js"></script>
 <script>
 let biens = [];
 let seq = 0;
@@ -204,11 +205,10 @@ function maj(id, champ, valeur){
   render();
 }
 
+// Calcul partagé FIN-1 (fin1.js) : le CA saisi est déjà net des frais de plateforme
 function calc(b){
-  const honoraires = b.ca * (b.taux/100);
-  const gestion    = honoraires * (b.part/100);
-  const services   = b.services * 0.85;
-  return {honoraires, gestion, services, total: gestion + services};
+  const c = MJ.calcCohote(b.ca, b.taux, b.part, b.services);
+  return {honoraires: c.honoraires, gestion: c.commGestion, services: c.commServices, total: c.total};
 }
 
 function render(){

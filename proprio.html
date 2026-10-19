@@ -7,6 +7,7 @@
 <title>Maison Jade · Espace Propriétaire</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="fin1.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -638,6 +639,14 @@ async function onBienChange() {
   renderDocuments();
 }
 
+// Montants FIN-1 d'une réservation : valeurs calculées en base (trigger) si présentes, sinon calcul partagé.
+function montantsFin1(r, pct) {
+  const f = MJ.calcFin1(r.montant_brut, r.frais_plateforme, pct);
+  const comm = (r.commission_mj != null) ? parseFloat(r.commission_mj) : (f.commission || 0);
+  const net  = (r.net_proprio  != null) ? parseFloat(r.net_proprio)  : (f.netProprio || 0);
+  return { comm, net };
+}
+
 // ── KPIs ──
 function renderKPIs(dosData) {
   const now = new Date();
@@ -651,21 +660,18 @@ function renderKPIs(dosData) {
     return d.getMonth() === mois && d.getFullYear() === annee;
   });
 
-  const taux = parseFloat(dosData.comm || 22) / 100;
+  const pct = MJ.taux(dosData.comm);
   let totalCA = 0, commMJ = 0, netProprio = 0, totalNuits = 0;
   revsMois.forEach(r => {
-    const brut = parseFloat(r.montant_brut || 0);
-    const fp = parseFloat(r.frais_plateforme || 0), fm = parseFloat(r.frais_menage || 0);
-    const comm = (r.commission_mj != null) ? parseFloat(r.commission_mj) : Math.round((brut - fp) * taux);
-    const net  = (r.net_proprio  != null) ? parseFloat(r.net_proprio)  : Math.round((brut - fp) - comm);
-    totalCA += brut; commMJ += comm; netProprio += net; totalNuits += parseInt(r.nuits || 0);
+    const { comm, net } = montantsFin1(r, pct);
+    totalCA += parseFloat(r.montant_brut || 0); commMJ += comm; netProprio += net; totalNuits += parseInt(r.nuits || 0);
   });
 
   document.getElementById('kpi-resas').textContent = revsMois.length || '—';
   document.getElementById('kpi-nuits').textContent = totalNuits ? totalNuits + ' nuits' : 'Synchronisez le calendrier';
   document.getElementById('kpi-ca').textContent = totalCA ? totalCA.toLocaleString('fr-FR') + '€' : '—';
   document.getElementById('kpi-net').textContent = netProprio ? Math.round(netProprio).toLocaleString('fr-FR') + '€' : '—';
-  document.getElementById('kpi-comm').textContent = `Commission MJ ${Math.round(taux*100)}% = ${Math.round(commMJ).toLocaleString('fr-FR')}€`;
+  document.getElementById('kpi-comm').textContent = pct ? `Commission MJ ${pct}% = ${Math.round(commMJ).toLocaleString('fr-FR')}€` : 'Offre en cours de définition';
 
   // Ménages
   const menagesMois = allMenages.filter(m => {
@@ -821,7 +827,7 @@ function renderMenagesProprio() {
 
 // ── REVENUS ──
 function renderRevenusTable(dosData) {
-  const taux = parseFloat(dosData.comm || 22) / 100;
+  const pct = MJ.taux(dosData.comm);
   const body = document.getElementById('revenus-body');
   // On ne compte que les vrais séjours (pas les dates bloquées)
   const revs = (allReservations[selectedDossierId] || []).filter(r => !r.bloque);
@@ -839,9 +845,7 @@ function renderRevenusTable(dosData) {
     const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
     if (!byMonth[key]) byMonth[key] = { mois: d, brut: 0, comm: 0, net: 0, nuits: 0 };
     const brut = parseFloat(r.montant_brut || 0);
-    const fp = parseFloat(r.frais_plateforme || 0), fm = parseFloat(r.frais_menage || 0);
-    const comm = (r.commission_mj != null) ? parseFloat(r.commission_mj) : Math.round((brut - fp) * taux);
-    const net  = (r.net_proprio  != null) ? parseFloat(r.net_proprio)  : Math.round((brut - fp) - comm);
+    const { comm, net } = montantsFin1(r, pct);
     byMonth[key].brut += brut; byMonth[key].comm += comm; byMonth[key].net += net; byMonth[key].nuits += parseInt(r.nuits || 0);
     tBrut += brut; tComm += comm; tNet += net; tNuits += parseInt(r.nuits || 0);
   });
