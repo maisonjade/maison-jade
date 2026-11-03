@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="fin1.js"></script>
+<script src="avis-commun.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -389,6 +390,7 @@ tr:hover td { background: var(--ivoire); }
       <div class="sb-lbl">Mon espace</div>
       <button class="ni active" onclick="sv('dashboard',this)"><span class="ni-icon">📊</span> Tableau de bord</button>
       <button class="ni" onclick="sv('simulateur',this)"><span class="ni-icon">🧮</span> Simulateur de revenus</button>
+      <button class="ni" onclick="sv('avis',this)"><span class="ni-icon">📊</span> Avis de valeur</button>
       <button class="ni" onclick="sv('prospects',this)"><span class="ni-icon">📋</span> Mes prospects</button>
       <button class="ni" onclick="sv('documents',this)"><span class="ni-icon">📁</span> Mes documents</button>
       <button class="ni" onclick="sv('biens',this)"><span class="ni-icon">🏠</span> Mes biens <span class="sb-badge" id="nb-biens">0</span></button>
@@ -710,6 +712,30 @@ tr:hover td { background: var(--ivoire); }
     </div>
 
     <!-- PROFIL -->
+    <div class="view" id="view-avis">
+      <div class="ph">
+        <div><h1>Avis <em>de valeur</em></h1><p>Estimez les revenus d'un bien en rendez-vous et remettez le PDF au propriétaire</p></div>
+        <div style="display:flex;gap:8px"><button class="btn btn-primary" onclick="cavNouveau()">✦ Nouvel avis</button></div>
+      </div>
+      <div id="cav-creation" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:1rem">
+        <div id="cav-creation-form"></div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px;align-items:center;flex-wrap:wrap"><span id="cav-msg" style="font-size:12px;color:var(--ink3)"></span><button class="btn btn-outline btn-sm" onclick="document.getElementById('cav-creation').style.display='none'">Annuler</button><button class="btn btn-primary" id="cav-btn" onclick="cavCreer()">Lancer l'estimation</button></div>
+      </div>
+      <div id="cav-liste" style="display:grid;gap:8px"><div class="empty-state"><p>Chargement…</p></div></div>
+      <div id="cav-detail" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-top:1rem">
+        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px"><strong id="cav-d-titre" style="color:var(--jade);font-size:16px"></strong>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <select id="cav-d-statut" style="padding:6px 8px;border:1px solid var(--border);border-radius:6px"></select>
+            <button class="btn btn-outline btn-sm" onclick="cavRecalculer()">♻️ Recalculer</button>
+            <button class="btn btn-primary btn-sm" onclick="cavPDF()">📄 PDF propriétaire</button>
+            <button class="btn btn-outline btn-sm" onclick="document.getElementById('cav-detail').style.display='none'">Fermer</button>
+          </div></div>
+        <div id="cav-d-corps"></div>
+        <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;margin-top:14px">Mes notes<textarea id="cav-d-notes" rows="3" maxlength="2000" style="padding:9px 10px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:13px"></textarea></label>
+        <div style="display:flex;justify-content:flex-end;margin-top:8px"><button class="btn btn-primary btn-sm" onclick="cavEnregistrer()">💾 Enregistrer</button></div>
+      </div>
+    </div>
+
     <div class="view" id="view-simulateur">
   <div class="ph">
     <div><h1>Simulateur <em>de revenus</em></h1><p>Estimation locative · Saisonnalité · Commission Maison Jade · Net propriétaire</p></div>
@@ -1300,6 +1326,7 @@ tr:hover td { background: var(--ivoire); }
   <div class="md-sheet">
     <div class="md-grip"></div>
     <button class="md-item" onclick="svMobile('simulateur')"><span class="md-ico">🧮</span> Simulateur de revenus</button>
+    <button class="md-item" onclick="svMobile('avis')"><span class="md-ico">📊</span> Avis de valeur</button>
     <button class="md-item" onclick="svMobile('prospects')"><span class="md-ico">📋</span> Mes prospects</button>
     <button class="md-item" onclick="svMobile('documents')"><span class="md-ico">📁</span> Mes documents</button>
     <button class="md-item" onclick="svMobile('calendrier')"><span class="md-ico">📅</span> Mon calendrier</button>
@@ -1560,6 +1587,7 @@ function sv(id, btn) {
   if (id === 'reseau') loadReseau();
   if (id === 'checklists') loadChecklistBiens();
   if (id === 'calendrier') loadCalCohote();
+  if (id === 'avis') cavCharger();
 }
 
 // ── MES BIENS ──
@@ -3721,5 +3749,59 @@ async function statuerDocument(id, statut) {
   </div>
 </div>
 
+
+<script>
+// ══ AVIS DE VALEUR — espace co-hôte (RLS : il ne voit que ses avis) ══
+let CAV = [], cavCourant = null, cavGeo = null;
+const CAVM = window.AvisMJ;
+async function cavCharger() {
+  const box = document.getElementById('cav-liste');
+  const { data, error } = await sb.from('avis_valeur').select('*').order('created_at', { ascending: false }).limit(200);
+  if (error) { box.innerHTML = `<div class="empty-state"><h3>⚠️ Problème de connexion</h3><p>Impossible de charger vos avis. Réessayez dans un instant.</p></div>`; return; }
+  CAV = data || [];
+  if (!CAV.length) { box.innerHTML = `<div class="empty-state"><h3>Aucun avis pour l'instant</h3><p>Créez votre premier avis de valeur pendant un rendez-vous propriétaire.</p></div>`; return; }
+  box.innerHTML = CAV.map(a => `<button type="button" data-id="${esc(a.id)}" style="display:flex;justify-content:space-between;gap:10px;align-items:center;text-align:left;width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;cursor:pointer;font:inherit">
+    <span><strong>${esc(CAVM.TYPES[a.type_bien] || '')} · ${esc(a.ville || a.code_postal || '')}</strong><br><span style="font-size:12px;color:var(--ink3)">${esc(CAVM.date(a.created_at))}${a.contact_nom ? ' · ' + esc(a.contact_nom) : ''}${a.source === 'public' ? ' · lead du site' : ''}</span></span>
+    <span style="text-align:right"><strong>${CAVM.eur(a.revenu_brut_moyen)}</strong><br>${CAVM.badgeStatut(a.statut)}</span></button>`).join('');
+}
+document.getElementById('cav-liste').addEventListener('click', e => { const b = e.target.closest('[data-id]'); if (b) cavOuvrir(b.dataset.id); });
+function cavOuvrir(id) {
+  const a = CAV.find(x => x.id === id); if (!a) return; cavCourant = a;
+  document.getElementById('cav-d-titre').textContent = `${CAVM.TYPES[a.type_bien] || ''} · ${a.ville || a.code_postal || ''}`;
+  document.getElementById('cav-d-statut').innerHTML = Object.entries(CAVM.STATUTS).filter(([k]) => k !== 'converti' || a.statut === 'converti').map(([k, v]) => `<option value="${k}"${k === a.statut ? ' selected' : ''}>${v}</option>`).join('');
+  document.getElementById('cav-d-notes').value = a.notes_internes || '';
+  document.getElementById('cav-d-corps').innerHTML = CAVM.detailHtml(a);
+  const d = document.getElementById('cav-detail'); d.style.display = 'block'; d.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+async function cavEnregistrer() {
+  if (!cavCourant) return;
+  const { data, error } = await sb.from('avis_valeur').update({ statut: document.getElementById('cav-d-statut').value, notes_internes: document.getElementById('cav-d-notes').value.trim() || null }).eq('id', cavCourant.id).select('*').single();
+  if (error) { showToast('❌ Enregistrement impossible : ' + error.message); return; }
+  Object.assign(cavCourant, data); cavCharger(); showToast('✅ Avis enregistré');
+}
+async function cavRecalculer() {
+  if (!cavCourant) return; showToast('⏳ Recalcul en cours…');
+  try { const { avis } = await CAVM.appeler(sb, 'recalculer', { id: cavCourant.id }); Object.assign(cavCourant, avis); await cavCharger(); cavOuvrir(avis.id); showToast('✅ Avis recalculé'); }
+  catch (e) { showToast('❌ ' + e.message); }
+}
+function cavPDF() {
+  if (!cavCourant) return;
+  try { CAVM.pdf(cavCourant, { confiance: false, auteur: document.getElementById('tb-name')?.textContent || '' }); } catch (e) { showToast('❌ ' + e.message); }
+}
+function cavNouveau() {
+  if (!document.getElementById('cav-f-form')) { document.getElementById('cav-creation-form').innerHTML = CAVM.formulaireHtml('cav-f'); cavGeo = CAVM.brancherAdresse('cav-f'); }
+  const z = document.getElementById('cav-creation'); z.style.display = 'block'; z.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+async function cavCreer() {
+  const btn = document.getElementById('cav-btn'), msg = document.getElementById('cav-msg');
+  let corps; try { corps = CAVM.lireFormulaire('cav-f', cavGeo); } catch (e) { msg.textContent = e.message; return; }
+  btn.disabled = true; msg.textContent = 'Analyse du marché en cours (10 à 20 s)…';
+  try {
+    const { avis } = await CAVM.appeler(sb, 'estimer_interne', corps);
+    document.getElementById('cav-creation').style.display = 'none'; document.getElementById('cav-creation-form').innerHTML = ''; msg.textContent = '';
+    await cavCharger(); cavOuvrir(avis.id); showToast('✅ Avis créé');
+  } catch (e) { msg.textContent = e.message; } finally { btn.disabled = false; }
+}
+</script>
 </body>
 </html>

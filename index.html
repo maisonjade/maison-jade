@@ -9,6 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="fin1.js"></script>
+<script src="avis-commun.js"></script>
 <style>
 :root{
   /* ── Palette Quiet Luxury — Maison Jade ── */
@@ -690,6 +691,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
   <div class="sb-sect">
     <div class="sb-lbl">🚀 Commercial</div>
     <button class="ni active" id="nav-simulateur" onclick="sv('simulateur',this)"><span class="ni-icon">🧮</span> Simulateur revenus</button>
+    <button class="ni" id="nav-avis" onclick="sv('avis',this)"><span class="ni-icon">📊</span> Avis de valeur <span class="nb nb-g" id="b-avis" style="display:none">0</span></button>
     <button class="ni" onclick="sv('kanban',this)"><span class="ni-icon">📋</span> Kanban prospects <span class="nb nb-g" id="b-kanban">0</span></button>
     <button class="ni" onclick="sv('nouveau',this)"><span class="ni-icon">✦</span> Nouveau dossier</button>
   </div>
@@ -1845,6 +1847,58 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
         <tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--ink3)">Aucun ticket — cliquez sur "+ Nouveau ticket"</td></tr>
       </tbody>
     </table>
+  </div>
+</div>
+
+<!-- ══ AVIS DE VALEUR (leads + historique, table avis_valeur) ══ -->
+<div class="view" id="view-avis">
+  <div class="ph">
+    <div><h1>Avis <em>de valeur</em></h1><p>Estimations de revenus locatifs · leads du site · historique</p></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <a class="btn btn-ghost btn-sm" href="avis-valeur.html" target="_blank" rel="noopener">🌐 Page publique</a>
+      <button class="btn btn-primary" onclick="avisNouveau()">✦ Nouvel avis</button>
+    </div>
+  </div>
+  <div id="avis-creation" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:1rem">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><strong style="color:var(--jade)">Nouvel avis</strong><button class="btn btn-ghost btn-sm" onclick="avisFermerCreation()">Fermer</button></div>
+    <div id="avis-creation-form"></div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px;align-items:center"><span id="avis-creation-msg" style="font-size:12px;color:var(--ink3)"></span><button class="btn btn-primary" id="avis-creation-btn" onclick="avisCreer()">Lancer l'estimation</button></div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center">
+    <select id="avis-f-statut" onchange="avisRendreListe()" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px">
+      <option value="">Tous les statuts</option><option value="nouveau">Nouveaux</option><option value="en_cours">En cours</option><option value="envoye">Envoyés</option><option value="converti">Convertis</option><option value="archive">Archivés</option>
+    </select>
+    <select id="avis-f-source" onchange="avisRendreListe()" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px">
+      <option value="">Toutes les sources</option><option value="public">Site</option><option value="intranet">Interne</option><option value="cohote">Co-hôte</option>
+    </select>
+    <button class="btn btn-ghost btn-sm" onclick="avisCharger()">🔄 Actualiser</button>
+    <span id="avis-etat" style="font-size:12px;color:var(--ink3)"></span>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      <thead><tr style="text-align:left;color:var(--ink3);font-size:11px;text-transform:uppercase;letter-spacing:.06em">
+        <th style="padding:10px 12px">Date</th><th style="padding:10px 12px">Source</th><th style="padding:10px 12px">Contact</th><th style="padding:10px 12px">Bien</th><th style="padding:10px 12px;text-align:right">Brut / an</th><th style="padding:10px 12px">Confiance</th><th style="padding:10px 12px">Statut</th>
+      </tr></thead>
+      <tbody id="avis-liste"><tr><td colspan="7" style="padding:2rem;text-align:center;color:var(--ink3)">Chargement…</td></tr></tbody>
+    </table>
+  </div>
+  <div id="avis-detail" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-top:1rem">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+      <div><div id="avis-d-titre" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--jade)"></div><div id="avis-d-sous" style="font-size:12px;color:var(--ink3)"></div></div>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('avis-detail').style.display='none'">Fermer</button>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)">
+      <label style="font-size:12px">Statut <select id="avis-d-statut" style="padding:6px 8px;border:1px solid var(--border);border-radius:6px"></select></label>
+      <label style="font-size:12px">Co-hôte <select id="avis-d-cohote" style="padding:6px 8px;border:1px solid var(--border);border-radius:6px"></select></label>
+      <button class="btn btn-ghost btn-sm" onclick="avisRecalculer(false)">♻️ Recalculer</button>
+      <button class="btn btn-ghost btn-sm" onclick="avisRecalculer(true)" title="Relance une recherche de marché (payante)">🔎 Nouvelle recherche marché</button>
+      <label style="font-size:12px;display:flex;gap:4px;align-items:center"><input type="checkbox" id="avis-d-conf"> Confiance sur le PDF</label>
+      <button class="btn btn-primary btn-sm" onclick="avisPDF()">📄 PDF propriétaire</button>
+      <button class="btn btn-ghost btn-sm" id="avis-d-convertir" onclick="avisConvertir()">➜ Convertir en dossier</button>
+    </div>
+    <div id="avis-d-corps"></div>
+    <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;margin-top:14px">Notes internes<textarea id="avis-d-notes" rows="3" maxlength="2000" style="padding:9px 10px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:13px"></textarea></label>
+    <div style="display:flex;justify-content:flex-end;margin-top:8px"><button class="btn btn-primary btn-sm" onclick="avisEnregistrer()">💾 Enregistrer statut, co-hôte et notes</button></div>
   </div>
 </div>
 
@@ -3591,6 +3645,7 @@ function sv(id, btn) {
   if (btn) btn.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if (id === 'previsionnel') { pinUnlocked ? showPrev() : showPin(); }
+  if (id === 'avis') avisCharger();
 }
 
 // ══ DATE ══
@@ -7808,6 +7863,7 @@ async function ouvrirApp(user) {
   if (tb) tb.textContent = `${profile.prenom || ''} ${profile.nom || ''}`.trim() || profile.email;
   loadFromSupabase();
   loadAdminDonnees();
+  avisCompterNouveaux();
 }
 async function initAuth() {
   const { data: { session } } = await sb.auth.getSession();
@@ -8493,5 +8549,175 @@ async function validerNouveauMdp() {
   </div>
 </div>
 
+
+<script>
+// ══ AVIS DE VALEUR — onglet admin ══
+let AVIS = [], AVIS_COHOTES = [], avisCourant = null, avisGeo = null;
+const AV = window.AvisMJ;
+
+async function avisCompterNouveaux() {
+  try {
+    const { count } = await sb.from('avis_valeur').select('id', { count: 'exact', head: true }).eq('statut', 'nouveau');
+    const b = document.getElementById('b-avis');
+    if (b) { b.textContent = count || 0; b.style.display = count ? 'inline-block' : 'none'; }
+  } catch (_) {}
+}
+
+async function avisCharger() {
+  const etat = document.getElementById('avis-etat');
+  etat.textContent = 'Chargement…';
+  const [{ data, error }, co] = await Promise.all([
+    sb.from('avis_valeur').select('*').order('created_at', { ascending: false }).limit(500),
+    sb.from('profiles').select('id, prenom, nom, email').eq('role', 'cohote'),
+  ]);
+  if (error) {
+    etat.textContent = '';
+    document.getElementById('avis-liste').innerHTML = `<tr><td colspan="7" style="padding:2rem;text-align:center;color:#9B2F2F">Impossible de charger les avis : ${esc(error.message)}. Rechargez la page.</td></tr>`;
+    return;
+  }
+  AVIS = data || []; AVIS_COHOTES = co.data || [];
+  etat.textContent = AVIS.length + ' avis';
+  avisRendreListe(); avisCompterNouveaux();
+}
+
+function avisNomCohote(id) {
+  const c = AVIS_COHOTES.find(x => x.id === id);
+  return c ? (`${c.prenom || ''} ${c.nom || ''}`.trim() || c.email) : '';
+}
+
+function avisRendreListe() {
+  const fs = document.getElementById('avis-f-statut').value, fo = document.getElementById('avis-f-source').value;
+  const l = AVIS.filter(a => (!fs || a.statut === fs) && (!fo || a.source === fo));
+  const tb = document.getElementById('avis-liste');
+  if (!l.length) { tb.innerHTML = `<tr><td colspan="7" style="padding:2rem;text-align:center;color:var(--ink3)">${AVIS.length ? 'Aucun avis avec ces filtres.' : 'Aucun avis pour l\'instant. Les demandes du site apparaîtront ici.'}</td></tr>`; return; }
+  tb.innerHTML = l.map(a => `<tr data-id="${esc(a.id)}" style="border-top:1px solid var(--border);cursor:pointer;${a.statut === 'nouveau' ? 'background:#FBF6EC' : ''}">
+    <td style="padding:10px 12px;white-space:nowrap">${esc(AV.date(a.created_at))}</td>
+    <td style="padding:10px 12px">${esc(AV.SOURCES[a.source] || a.source)}${a.cohote_id ? `<div style="font-size:11px;color:var(--ink3)">${esc(avisNomCohote(a.cohote_id))}</div>` : ''}</td>
+    <td style="padding:10px 12px">${esc(a.contact_nom || '—')}<div style="font-size:11px;color:var(--ink3)">${esc(a.contact_tel || '')}</div></td>
+    <td style="padding:10px 12px">${esc(AV.TYPES[a.type_bien] || a.type_bien || '')} · ${esc(a.ville || a.code_postal || '')}</td>
+    <td style="padding:10px 12px;text-align:right;font-weight:600;white-space:nowrap">${AV.eur(a.revenu_brut_moyen)}</td>
+    <td style="padding:10px 12px">${AV.badgeConfiance(a.indice_confiance)}</td>
+    <td style="padding:10px 12px">${AV.badgeStatut(a.statut)}</td></tr>`).join('');
+}
+document.getElementById('avis-liste').addEventListener('click', e => {
+  const tr = e.target.closest('tr[data-id]'); if (tr) avisOuvrir(tr.dataset.id);
+});
+
+function avisOuvrir(id) {
+  const a = AVIS.find(x => x.id === id); if (!a) return;
+  avisCourant = a;
+  document.getElementById('avis-d-titre').textContent = `${AV.TYPES[a.type_bien] || ''} · ${a.ville || a.code_postal || ''}`;
+  document.getElementById('avis-d-sous').textContent = `${AV.SOURCES[a.source] || a.source} · créé le ${AV.date(a.created_at)}${a.dossier_id ? ' · rattaché au dossier ' + a.dossier_id : ''}`;
+  document.getElementById('avis-d-statut').innerHTML = Object.entries(AV.STATUTS).map(([k, v]) => `<option value="${k}"${k === a.statut ? ' selected' : ''}>${v}</option>`).join('');
+  document.getElementById('avis-d-cohote').innerHTML = `<option value="">— Aucun —</option>` + AVIS_COHOTES.map(c => `<option value="${esc(c.id)}"${c.id === a.cohote_id ? ' selected' : ''}>${esc(avisNomCohote(c.id))}</option>`).join('');
+  document.getElementById('avis-d-notes').value = a.notes_internes || '';
+  document.getElementById('avis-d-corps').innerHTML = AV.detailHtml(a);
+  document.getElementById('avis-d-convertir').style.display = a.dossier_id ? 'none' : '';
+  const d = document.getElementById('avis-detail'); d.style.display = 'block';
+  d.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function avisEnregistrer() {
+  if (!avisCourant) return;
+  const maj = {
+    statut: document.getElementById('avis-d-statut').value,
+    cohote_id: document.getElementById('avis-d-cohote').value || null,
+    notes_internes: document.getElementById('avis-d-notes').value.trim() || null,
+  };
+  const { data, error } = await sb.from('avis_valeur').update(maj).eq('id', avisCourant.id).select('*').single();
+  if (error) { showToast('❌ Enregistrement impossible : ' + error.message); return; }
+  Object.assign(avisCourant, data); avisRendreListe(); avisOuvrir(avisCourant.id); avisCompterNouveaux();
+  showToast('✅ Avis enregistré');
+}
+
+async function avisRecalculer(forcer) {
+  if (!avisCourant) return;
+  if (forcer && !confirm('Relancer une recherche de marché ? Elle coûte quelques centimes d\'IA.')) return;
+  showToast('⏳ Recalcul en cours…');
+  try {
+    const { avis } = await AV.appeler(sb, 'recalculer', { id: avisCourant.id, forcer_marche: !!forcer });
+    Object.assign(avisCourant, avis); avisRendreListe(); avisOuvrir(avis.id);
+    showToast('✅ Avis recalculé');
+  } catch (e) { showToast('❌ ' + e.message); }
+}
+
+function avisPDF() {
+  if (!avisCourant) return;
+  try { AV.pdf(avisCourant, { confiance: document.getElementById('avis-d-conf').checked, auteur: document.getElementById('tb-user')?.textContent || '' }); }
+  catch (e) { showToast('❌ ' + e.message); }
+}
+
+async function avisConvertir() {
+  const a = avisCourant; if (!a || a.dossier_id) return;
+  const parts = (a.contact_nom || 'Prospect').trim().split(/\s+/);
+  const check = await checkDuplicate(a.contact_tel, a.contact_email, a.adresse);
+  if (check.is_duplicate && !check.is_own) { alertDoublonModal(check); return; }
+  const typeMap = { studio: 'Studio', t2: 'T2', t3: 'T3', t4: 'T4', maison: 'Maison', villa: 'Villa' };
+  const s22 = a.resultat_formules?.['22']?.moyen;
+  const dos = {
+    id: Date.now(), date: new Date().toLocaleDateString('fr-FR'),
+    codeMJ: 'MJ-' + String(D.dossiers.length + 1).padStart(3, '0'),
+    surnom: (typeMap[a.type_bien] || 'Bien') + ' ' + (a.ville || ''),
+    prenom: parts[0], nom: parts.slice(1).join(' '),
+    email: a.contact_email || '', tel: a.contact_tel || '',
+    source: a.source === 'public' ? 'Avis de valeur (site)' : 'Avis de valeur',
+    notesPros: `Avis de valeur du ${AV.date(a.created_at)} · CA estimé ${AV.eur(a.revenu_brut_moyen)}/an · net Sérénité ${AV.eur(s22?.net_proprio)}/an · confiance ${a.indice_confiance}/100` + (a.notes_internes ? '\n' + a.notes_internes : ''),
+    etape: 'prospect',
+    adresse: a.adresse || '', rue: '', complement: '', cp: a.code_postal || '', ville: a.ville || '', pays: 'France', region: '',
+    type: typeMap[a.type_bien] || 'T2', surface: a.surface_m2 ? String(a.surface_m2) : '', deco: '', tarif: '',
+    fortsEmpl: [], fortsBien: [], fortsExt: [], fortsPrem: [], fortComment: '', transport: {}, transportNotes: '',
+    pmin: '', pmax: '', emin: String(a.revenu_brut_moyen || ''), emax: '', taux: '', comm: '',
+    cair: String(a.frais_plateforme_pct ?? 3), tarisBrut: '', fraisMenageVoy: '',
+    chMenage:'',chBlanc:'',chConso:'',chCheckin:'',chInternet:'',chElec:'',chEau:'',chCm:'',chAssur:'',chTf:'',chCfe:'',chCopro:'',chEntretien:'',chAutres:'',
+    pno:'', assureur:'', assurExp:'', assurCouvre:'', assurNotes:'',
+    voy: String(a.couchages || ''), ch: String(a.chambres ?? ''), dbl: '', sdb: String(a.salles_de_bain || ''),
+    equip: [], cible: [], cibleComment: '', reglesComment: '', caution: '',
+    checkin: '16:00', checkout: '11:00', duree: '', lang: 'fr', extra: '',
+    recos: [], recoCustom: '', services: [], svcNotes: '',
+    visite: { date:'', heure:'', collab:'', resultat:'', cr:'', travaux:'' }, lien: '', noteAnn: '',
+    simCA: a.revenu_brut_moyen, simNet: s22?.net_proprio, simDate: AV.date(a.created_at), simProfil: a.donnees_marche?.geo?.courbe || '',
+    avisId: a.id,
+  };
+  D.dossiers.unshift(dos);
+  persist();
+  renderKanban();
+  // Le lien avis → dossier est posé dès que le dossier est enregistré en base (persist() sauvegarde en différé)
+  let essais = 0;
+  const lier = async () => {
+    const { data } = await sb.from('dossiers').select('id').eq('id', dos.id).maybeSingle();
+    if (!data && ++essais < 10) return setTimeout(lier, 1500);
+    const { error } = await sb.from('avis_valeur').update({ statut: 'converti', dossier_id: data ? dos.id : null }).eq('id', a.id);
+    if (error) showToast('⚠️ Dossier créé, mais le lien avec l\'avis n\'a pas pu être enregistré');
+    avisCharger();
+  };
+  setTimeout(lier, 1500);
+  showToast('✅ Dossier prospect créé — ' + dos.codeMJ);
+}
+
+function avisNouveau() {
+  const zone = document.getElementById('avis-creation');
+  if (!document.getElementById('av-admin-form')) {
+    document.getElementById('avis-creation-form').innerHTML = AV.formulaireHtml('av-admin');
+    avisGeo = AV.brancherAdresse('av-admin');
+  }
+  zone.style.display = 'block';
+  zone.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function avisFermerCreation() { document.getElementById('avis-creation').style.display = 'none'; }
+
+async function avisCreer() {
+  const btn = document.getElementById('avis-creation-btn'), msg = document.getElementById('avis-creation-msg');
+  let corps;
+  try { corps = AV.lireFormulaire('av-admin', avisGeo); } catch (e) { msg.textContent = e.message; return; }
+  btn.disabled = true; msg.textContent = 'Analyse du marché en cours (10 à 20 s)…';
+  try {
+    const { avis } = await AV.appeler(sb, 'estimer_interne', corps);
+    AVIS.unshift(avis); avisRendreListe(); avisFermerCreation(); avisOuvrir(avis.id);
+    document.getElementById('avis-creation-form').innerHTML = ''; msg.textContent = '';
+    showToast('✅ Avis créé');
+  } catch (e) { msg.textContent = e.message; }
+  finally { btn.disabled = false; }
+}
+</script>
 </body>
 </html>
