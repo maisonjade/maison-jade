@@ -15,3 +15,6 @@
 *.local
 *.draft
 NOTES*.txt
+
+# Sources Supabase (SQL, Edge Functions) : sauvegardées dans les documents du projet Claude, jamais dans le dépôt public
+supabase/
