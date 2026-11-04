@@ -4,20 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://lvfncstosaaqgtfozthw.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self';">
-<title>Maison Jade · Cockpit admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Maison Jayla · Cockpit admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="fin1.js"></script>
 <style>
 :root{
-  /* Palette Quiet Luxury — Maison Jade (reprise d'index.html) */
-  --bg:#F5F0E8; --surface:#FDFAF6; --surface2:#EDE8DF; --surface3:#DDD0BF;
-  --travertin:#CDBCA7; --noyer:#5B4335;
-  --bronze:#A57C52; --bronze-bg:#F4EDE3; --bronze-bd:#D4B898;
-  --jade:#31483F; --jade-mid:#3D5A50; --jade-bg:#E8EDEA; --jade-bd:#9AAFA8;
-  --border:#D8CFBF;
-  --ink:#2A1F15; --ink2:#5B4335; --ink3:#9A8878; --ink4:#B8AAA0;
-  --gold:#A57C52; --goldbg:#F4EDE3; --goldbd:#D4B898;
+  /* Palette Quiet Luxury — Maison Jayla (reprise d'index.html) */
+  --bg:#F5EFE7; --surface:#FBF8F3; --surface2:#EDE8DF; --surface3:#E0D4C8;
+  --travertin:#B9A99A; --noyer:#5A4A4E;
+  --bronze:#9A7A4C; --bronze-bg:#F4EDE3; --bronze-bd:#DCC6A6;
+  --jade:#542C35; --jade-mid:#6B3A45; --jade-bg:#F3E8E6; --jade-bd:#C9AEB2;
+  --border:#E3D9CE;
+  --ink:#30282A; --ink2:#5A4A4E; --ink3:#8A7B7E; --ink4:#B8AAA0;
+  --gold:#9A7A4C; --goldbg:#F4EDE3; --goldbd:#DCC6A6;
   /* Couleurs sémantiques (badges / statuts) */
   --green:#2D6A4F; --green-bg:#E8F5EE;
   --red:#8B2020;   --red-bg:#FDF0F0;
@@ -26,7 +26,7 @@
   --radius:8px;
 }
 *{box-sizing:border-box;}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Manrope',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;}
 a{color:var(--bronze);}
 
 /* ══ ÉCRAN DE CONNEXION (repris d'index.html) ══ */
@@ -52,7 +52,7 @@ a{color:var(--bronze);}
 /* ══ TOPBAR ══ */
 .topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;background:var(--jade);color:var(--bg);}
 .brand-name{font-family:'Cormorant Garamond',serif;font-size:22px;letter-spacing:0.02em;}
-.brand-name em{font-style:italic;color:var(--goldlight,#C09870);}
+.brand-name em{font-style:italic;color:var(--goldlight,#C5A477);}
 .topbar-sub{font-size:9.5px;letter-spacing:0.18em;text-transform:uppercase;opacity:0.7;margin-left:2px;}
 .topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
 .tb-user{font-size:11px;opacity:0.85;}
@@ -90,7 +90,7 @@ a{color:var(--bronze);}
 .filter-grp select:focus{outline:2px solid var(--bronze);outline-offset:1px;}
 
 /* Sous-titres & tableaux */
-.sub{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink2);margin:22px 0 8px;}
+.sub{font-family:'Manrope',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink2);margin:22px 0 8px;}
 .twrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);}
 table{width:100%;border-collapse:collapse;font-size:13px;min-width:520px;}
 thead th{text-align:left;padding:10px 12px;background:var(--jade-bg);color:var(--jade);font-size:10.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;border-bottom:1px solid var(--border);vertical-align:bottom;}
@@ -118,13 +118,13 @@ code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--su
 <!-- ══ CONNEXION (accès réservé admin) ══ -->
 <div id="login-screen">
   <div class="login-card">
-    <div class="login-logo">Maison <em>Jade</em></div>
+    <div class="login-logo">Maison <em>Jayla</em></div>
     <div class="login-sub">Cockpit administration</div>
     <h2 class="login-title">Connexion</h2>
     <p class="login-desc">Accès réservé à l'administration</p>
     <div id="login-error" class="login-error"></div>
     <div class="login-group"><label>Adresse email</label>
-      <input type="email" id="login-email" placeholder="contact@maisonjade.com" autocomplete="email"></div>
+      <input type="email" id="login-email" placeholder="contact@maisonjayla.com" autocomplete="email"></div>
     <div class="login-group"><label>Mot de passe</label>
       <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
     <button class="btn-login" id="btn-login" onclick="doLogin()">Se connecter →</button>
@@ -138,7 +138,7 @@ code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--su
 <div id="app-body" style="display:none">
   <div class="topbar">
     <div>
-      <span class="brand-name">Maison <em>Jade</em></span>
+      <span class="brand-name">Maison <em>Jayla</em></span>
       <span class="topbar-sub">Cockpit</span>
     </div>
     <div class="topbar-right">
@@ -163,7 +163,7 @@ code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--su
 
 <script>
 // ══════════════════════════════════════════════════════════════
-//  Maison Jade — Cockpit admin (lecture seule)
+//  Maison Jayla — Cockpit admin (lecture seule)
 //  Étape 1 : connexion admin + chargement des données autorisées.
 //  Config Supabase identique aux autres espaces (clé publique/anon).
 // ══════════════════════════════════════════════════════════════

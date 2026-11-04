@@ -4,24 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://lvfncstosaaqgtfozthw.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self';">
-<title>Maison Jade · Espace Propriétaire</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Maison Jayla · Espace Propriétaire</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="fin1.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --jade:#31483F;--jade-mid:#3D5A50;--jade-bg:#EAF0EE;--jade-bd:#C2D4CD;
-  --or:#A57C52;--or-bg:#F5EDE3;--or-bd:#D4B896;
-  --ivoire:#F5F0E8;--blanc:#FDFAF6;--border:#D8CFBF;
-  --ink:#2A1F15;--ink2:#5B4335;--ink3:#9A8878;--noyer:#5B4335;
-  --surface:#FDFAF6;--surface2:#F5F0E8;
+  --jade:#542C35;--jade-mid:#6B3A45;--jade-bg:#F3E8E6;--jade-bd:#DCC8CA;
+  --or:#9A7A4C;--or-bg:#F5EDE3;--or-bd:#DCC6A6;
+  --ivoire:#F5EFE7;--blanc:#FBF8F3;--border:#E3D9CE;
+  --ink:#30282A;--ink2:#5A4A4E;--ink3:#8A7B7E;--noyer:#5A4A4E;
+  --surface:#FBF8F3;--surface2:#F5EFE7;
   --green:#2D6A4F;--green-bg:#E8F5EE;
   --red:#8B2020;--red-bg:#FDF0F0;
   --blue:#185FA5;--blue-bg:#E6F1FB;
   --radius:8px;
 }
-html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);color:var(--ink);-webkit-font-smoothing:antialiased}
+html,body{height:100%;font-family:'Manrope',sans-serif;background:var(--ivoire);color:var(--ink);-webkit-font-smoothing:antialiased}
 
 /* ── LOGIN ── */
 #login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;background:var(--jade)}
@@ -30,9 +30,9 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);co
 .login-logo em{color:var(--or);font-style:italic}
 .login-sub{text-align:center;font-size:12px;color:var(--ink3);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:2rem}
 .login-label{font-size:12px;font-weight:500;color:var(--ink2);margin-bottom:6px;display:block}
-.login-input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:'Inter',sans-serif;background:var(--ivoire);color:var(--ink);outline:none;margin-bottom:1rem;transition:border-color 0.2s}
+.login-input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:'Manrope',sans-serif;background:var(--ivoire);color:var(--ink);outline:none;margin-bottom:1rem;transition:border-color 0.2s}
 .login-input:focus{border-color:var(--jade)}
-.login-btn{width:100%;padding:12px;background:var(--jade);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s;margin-top:0.5rem}
+.login-btn{width:100%;padding:12px;background:var(--jade);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:500;cursor:pointer;font-family:'Manrope',sans-serif;transition:background 0.2s;margin-top:0.5rem}
 .login-btn:hover{background:var(--jade-mid)}
 .login-err{font-size:12px;color:var(--red);text-align:center;margin-top:8px;min-height:18px}
 .login-footer{text-align:center;font-size:11px;color:rgba(255,255,255,0.4);margin-top:1.5rem}
@@ -47,7 +47,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);co
 .topbar-right{display:flex;align-items:center;gap:12px}
 .topbar-user{font-size:12px;color:rgba(255,255,255,0.6)}
 .topbar-user strong{color:white;font-weight:500}
-.logout-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s}
+.logout-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Manrope',sans-serif;transition:all 0.2s}
 .logout-btn:hover{background:rgba(255,255,255,0.2)}
 
 /* MAIN */
@@ -56,7 +56,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);co
 /* BIEN SELECTOR */
 .bien-selector{background:var(--blanc);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:1.5rem;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .bien-selector label{font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);white-space:nowrap}
-.bien-select{flex:1;min-width:200px;padding:9px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:'Inter',sans-serif;background:var(--ivoire);color:var(--ink);outline:none;cursor:pointer}
+.bien-select{flex:1;min-width:200px;padding:9px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:'Manrope',sans-serif;background:var(--ivoire);color:var(--ink);outline:none;cursor:pointer}
 .bien-badge{background:var(--jade-bg);color:var(--jade);border:1px solid var(--jade-bd);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600}
 
 /* KPI GRID */
@@ -127,12 +127,12 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);co
 .report-card{background:var(--jade);border-radius:10px;padding:18px 20px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
 .report-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:white;font-weight:300}
 .report-meta{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px}
-.report-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:white;padding:8px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s}
+.report-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:white;padding:8px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Manrope',sans-serif;transition:all 0.2s}
 .report-btn:hover{background:rgba(255,255,255,0.25)}
 
 /* NAV TABS */
 .nav-tabs{display:flex;gap:4px;margin-bottom:1.5rem;background:var(--blanc);border:1px solid var(--border);border-radius:10px;padding:4px}
-.nav-tab{flex:1;padding:9px;text-align:center;font-size:12px;font-weight:500;color:var(--ink3);cursor:pointer;border-radius:7px;border:none;background:none;font-family:'Inter',sans-serif;transition:all 0.15s;white-space:nowrap}
+.nav-tab{flex:1;padding:9px;text-align:center;font-size:12px;font-weight:500;color:var(--ink3);cursor:pointer;border-radius:7px;border:none;background:none;font-family:'Manrope',sans-serif;transition:all 0.15s;white-space:nowrap}
 .nav-tab.active{background:var(--jade);color:white}
 .nav-tab:hover:not(.active){background:var(--surface2);color:var(--ink)}
 
@@ -173,7 +173,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);co
 <!-- LOGIN -->
 <div id="login-screen">
   <div class="login-card">
-    <div class="login-logo">Maison <em>Jade</em></div>
+    <div class="login-logo">Maison <em>Jayla</em></div>
     <div class="login-sub">Espace Propriétaire</div>
     <label class="login-label">Email</label>
     <input type="email" class="login-input" id="login-email" placeholder="votre@email.fr" autocomplete="email">
@@ -183,13 +183,13 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);co
     <button class="login-btn" onclick="doLogin()">Accéder à mon espace</button>
     <div class="login-err" id="login-err"></div>
   </div>
-  <div class="login-footer">Maison Jade Ltd · contact@maisonjade.com</div>
+  <div class="login-footer">MAISON J LTD · Maison Jayla · contact@maisonjayla.com</div>
 </div>
 
 <!-- SET PASSWORD (arrivée par lien d'invitation) -->
 <div id="setpw-screen" style="display:none">
   <div class="login-card">
-    <div class="login-logo">Maison <em>Jade</em></div>
+    <div class="login-logo">Maison <em>Jayla</em></div>
     <div class="login-sub">Bienvenue — choisissez votre mot de passe</div>
     <label class="login-label">Nouveau mot de passe</label>
     <input type="password" class="login-input" id="setpw-pass" placeholder="••••••••" autocomplete="new-password">
@@ -199,20 +199,20 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);co
     <button class="login-btn" onclick="doSetPassword()">Valider et accéder à mon espace</button>
     <div class="login-err" id="setpw-err"></div>
   </div>
-  <div class="login-footer">Maison Jade Ltd · contact@maisonjade.com</div>
+  <div class="login-footer">MAISON J LTD · Maison Jayla · contact@maisonjayla.com</div>
 </div>
 
 <!-- ERREUR RÉSEAU (jamais de déconnexion sur simple souci de connexion) -->
 <div id="network-error-screen" style="display:none">
   <div class="login-card">
-    <div class="login-logo">Maison <em>Jade</em></div>
+    <div class="login-logo">Maison <em>Jayla</em></div>
     <div class="login-sub">Problème de connexion</div>
     <p style="text-align:center;color:var(--noyer);font-size:13px;margin:12px 0">
       Impossible de contacter le serveur pour le moment. Vérifiez votre connexion internet et réessayez — vous restez connecté.
     </p>
     <button class="login-btn" onclick="loadApp()">Réessayer</button>
   </div>
-  <div class="login-footer">Maison Jade Ltd · contact@maisonjade.com</div>
+  <div class="login-footer">MAISON J LTD · Maison Jayla · contact@maisonjayla.com</div>
 </div>
 
 <!-- APP -->
@@ -220,7 +220,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);co
 
   <!-- TOPBAR -->
   <div class="topbar">
-    <div class="topbar-logo">Maison <em>Jade</em></div>
+    <div class="topbar-logo">Maison <em>Jayla</em></div>
     <div class="topbar-right">
       <div class="topbar-user">Bienvenue, <strong id="user-name">—</strong></div>
       <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
@@ -421,7 +421,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--ivoire);co
   </div><!-- /main -->
 
   <div class="proprio-footer">
-    Maison Jade Ltd · contact@maisonjade.com · Espace propriétaire sécurisé
+    MAISON J LTD · Maison Jayla · contact@maisonjayla.com · Espace propriétaire sécurisé
   </div>
 </div><!-- /app -->
 
@@ -527,7 +527,7 @@ async function loadApp() {
     document.getElementById('app').style.display = 'none';
     document.getElementById('login-screen').style.display = 'flex';
     const errEl = document.getElementById('login-err');
-    if (errEl) errEl.textContent = "Cet espace est réservé aux propriétaires. Contactez Maison Jade si besoin.";
+    if (errEl) errEl.textContent = "Cet espace est réservé aux propriétaires. Contactez Maison Jayla si besoin.";
     return;
   }
 
@@ -582,7 +582,7 @@ async function loadBiensProprio() {
   if (!biensDossiers.length) {
     sel.innerHTML = (e1 || e2)
       ? '<option value="">⚠️ Erreur de connexion — rechargez la page</option>'
-      : '<option value="">Aucun bien trouvé — contactez Maison Jade</option>';
+      : '<option value="">Aucun bien trouvé — contactez Maison Jayla</option>';
     return;
   }
   biensDossiers.forEach(d => {
@@ -892,7 +892,7 @@ function renderRevenusTable(dosData) {
     </tr>`;
   if (note) {
     note.style.display = 'block';
-    note.textContent = `Ménage (règlement à part, hors commission Maison Jade) : ${euro(tm.encaisse)} payés par les voyageurs − ${euro(tm.frais)} de frais plateforme − ${euro(tm.cout)} de prestataire = ${signe(tm.solde)}.`;
+    note.textContent = `Ménage (règlement à part, hors commission Maison Jayla) : ${euro(tm.encaisse)} payés par les voyageurs − ${euro(tm.frais)} de frais plateforme − ${euro(tm.cout)} de prestataire = ${signe(tm.solde)}.`;
   }
 }
 
@@ -945,7 +945,7 @@ async function renderDocuments() {
     return `<div class="report-card">
       <div>
         <div class="report-title">Reporting ${label}</div>
-        <div class="report-meta">Généré automatiquement · Maison Jade</div>
+        <div class="report-meta">Généré automatiquement · Maison Jayla</div>
       </div>
       <button class="report-btn" onclick="toast('📄 Fonctionnalité disponible prochainement')">⬇ Télécharger</button>
     </div>`;

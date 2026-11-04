@@ -4,77 +4,77 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://chart.googleapis.com; connect-src 'self' https://lvfncstosaaqgtfozthw.supabase.co https://data.geopf.fr https://geo.api.gouv.fr https://api.emailjs.com; object-src 'none'; base-uri 'self'; form-action 'self';">
-<title>Maison Jade · Espace professionnel</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Maison Jayla · Espace professionnel</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="fin1.js"></script>
 <script src="avis-commun.js"></script>
 <style>
 :root{
-  /* ── Palette Quiet Luxury — Maison Jade ── */
+  /* ── Palette Quiet Luxury — Maison Jayla ── */
   /* Fonds */
-  --bg:        #F5F0E8;
-  --surface:   #FDFAF6;
+  --bg:        #F5EFE7;
+  --surface:   #FBF8F3;
   --surface2:  #EDE8DF;
-  --surface3:  #DDD0BF;
+  --surface3:  #E0D4C8;
 
   /* Matières */
-  --travertin: #CDBCA7;
-  --noyer:     #5B4335;
-  --bronze:    #A57C52;
+  --travertin: #B9A99A;
+  --noyer:     #5A4A4E;
+  --bronze:    #9A7A4C;
   --bronze-bg: #F4EDE3;
-  --bronze-bd: #D4B898;
+  --bronze-bd: #DCC6A6;
 
   /* Jade — signature, utilisé avec parcimonie */
-  --jade:      #31483F;
-  --jade-mid:  #3D5A50;
-  --jade-bg:   #E8EDEA;
-  --jade-bd:   #9AAFA8;
+  --jade:      #542C35;
+  --jade-mid:  #6B3A45;
+  --jade-bg:   #F3E8E6;
+  --jade-bd:   #C9AEB2;
 
   /* Bordures & séparateurs */
-  --border:    #D8CFBF;
+  --border:    #E3D9CE;
   --border2:   #C8BC08;
 
   /* Textes */
-  --ink:       #2A1F15;
-  --ink2:      #5B4335;
-  --ink3:      #9A8878;
+  --ink:       #30282A;
+  --ink2:      #5A4A4E;
+  --ink3:      #8A7B7E;
   --ink4:      #B8AAA0;
 
   /* Accents */
-  --gold:      #A57C52;
+  --gold:      #9A7A4C;
   --goldbg:    #F4EDE3;
-  --goldbd:    #D4B898;
-  --goldlight: #C09870;
-  --golddeep:  #7A5530;
+  --goldbd:    #DCC6A6;
+  --goldlight: #C5A477;
+  --golddeep:  #6E5434;
 
   /* Compatibilité tokens legacy */
-  --blanc:     #FDFAF6;
-  --ivoire:    #F5F0E8;
-  --or:        #A57C52;
-  --sauge:     #9AAFA8;
-  --beige:     #DDD0BF;
-  --taupe:     #CDBCA7;
-  --g:         #31483F;
-  --g2:        #3D5A50;
-  --gbg:       #E8EDEA;
-  --gbd:       #9AAFA8;
-  --charbon:   #31483F;
-  --charbon2:  #253830;
-  --sable:     #DDD0BF;
+  --blanc:     #FBF8F3;
+  --ivoire:    #F5EFE7;
+  --or:        #9A7A4C;
+  --sauge:     #C9AEB2;
+  --beige:     #E0D4C8;
+  --taupe:     #B9A99A;
+  --g:         #542C35;
+  --g2:        #6B3A45;
+  --gbg:       #F3E8E6;
+  --gbd:       #C9AEB2;
+  --charbon:   #542C35;
+  --charbon2:  #3E1F27;
+  --sable:     #E0D4C8;
 
   /* Statuts */
   --red:    #8B2020;--redbg:#FAEAEA;--redbd:#E8B8B8;
   --blue:   #1A3A6A;--bluebg:#EAF0FA;--bluebd:#A8C0E0;
   --pur:    #4A1A6A;--purbg:#F0EAF8;--purbd:#C0A0D8;
   --ora:    #8A4010;--orabg:#FAF0E0;--orabd:#E0C090;
-  --green:  #31483F;--greenbg:#E8EDEA;--greenbd:#9AAFA8;
+  --green:  #542C35;--greenbg:#F3E8E6;--greenbd:#C9AEB2;
 
   --sw:248px;--th:60px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;}
+body{background:var(--bg);color:var(--ink);font-family:'Manrope',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;}
 
 /* TOPBAR */
 .topbar{position:fixed;top:0;left:0;right:0;z-index:300;height:var(--th);background:var(--surface);display:flex;align-items:center;gap:14px;padding:0 1.5rem;border-bottom:1px solid var(--border);box-shadow:0 1px 0 rgba(0,0,0,0.04);}
@@ -89,9 +89,9 @@ body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-s
 .sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);background:var(--surface2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:200;overflow-y:auto;}
 .sb-sect{padding:1rem 0 0.25rem;}
 .sb-lbl{font-size:9px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--travertin);padding:0 1.25rem;margin-bottom:4px;}
-.ni{display:flex;align-items:center;gap:9px;padding:8px 1.25rem;font-size:12px;color:var(--ink2);cursor:pointer;border:none;background:none;width:100%;text-align:left;border-left:2px solid transparent;border-radius:0;transition:all 0.15s;font-family:'Inter',sans-serif;letter-spacing:0.01em;}
-.ni:hover{background:rgba(49,72,63,0.06);color:var(--jade);}
-.ni.active{color:var(--jade);background:rgba(49,72,63,0.08);border-left-color:var(--jade);font-weight:600;}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 1.25rem;font-size:12px;color:var(--ink2);cursor:pointer;border:none;background:none;width:100%;text-align:left;border-left:2px solid transparent;border-radius:0;transition:all 0.15s;font-family:'Manrope',sans-serif;letter-spacing:0.01em;}
+.ni:hover{background:rgba(84,44,53,0.06);color:var(--jade);}
+.ni.active{color:var(--jade);background:rgba(84,44,53,0.08);border-left-color:var(--jade);font-weight:600;}
 .ni-icon{font-size:15px;flex-shrink:0;}
 .nb{margin-left:auto;font-size:10px;font-weight:500;padding:1px 7px;border-radius:20px;min-width:20px;text-align:center;}
 .nb-g{background:var(--jade-bg);color:var(--jade);}
@@ -164,8 +164,8 @@ tr:hover td{background:var(--jade-bg);cursor:pointer;}
 .b-warn{background:var(--goldbg);color:#8B6F3A;}.b-warn::before{background:var(--or);}
 
 /* BUTTONS */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:6px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all 0.15s;letter-spacing:0.01em;}
-.btn-primary{background:var(--jade);color:#fff;border:none;box-shadow:0 1px 3px rgba(49,72,63,0.2);}.btn-primary:hover{background:var(--jade-mid);box-shadow:0 2px 6px rgba(49,72,63,0.25);}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:6px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all 0.15s;letter-spacing:0.01em;}
+.btn-primary{background:var(--jade);color:#fff;border:none;box-shadow:0 1px 3px rgba(84,44,53,0.2);}.btn-primary:hover{background:var(--jade-mid);box-shadow:0 2px 6px rgba(84,44,53,0.25);}
 .btn-ghost{background:var(--surface);border:1px solid var(--border);color:var(--ink2);}.btn-ghost:hover{border-color:var(--jade-bd);color:var(--jade);background:var(--jade-bg);}
 .btn-blue{background:var(--bluebg);border:1px solid var(--bluebd);color:var(--blue);}
 .btn-red{background:var(--redbg);border:1px solid var(--redbd);color:var(--red);}
@@ -179,8 +179,8 @@ tr:hover td{background:var(--jade-bg);cursor:pointer;}
 .fr4{grid-template-columns:1fr 1fr 1fr 1fr;}
 .fl{display:block;font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:5px;}
 .fl .req{color:var(--g2);}
-input[type=text],input[type=email],input[type=tel],input[type=number],input[type=date],input[type=password],select,textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--ink);font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;appearance:none;}
-input:focus,select:focus,textarea:focus{border-color:var(--jade);box-shadow:0 0 0 3px rgba(49,72,63,0.08);}
+input[type=text],input[type=email],input[type=tel],input[type=number],input[type=date],input[type=password],select,textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--ink);font-family:'Manrope',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--jade);box-shadow:0 0 0 3px rgba(84,44,53,0.08);}
 textarea{resize:vertical;min-height:75px;line-height:1.6;}
 select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238A8278' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:2rem;cursor:pointer;}
 
@@ -222,7 +222,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .pbox{background:var(--ink);border-radius:10px;overflow:hidden;margin-top:1rem;}
 .pb-hd{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.08);}
 .pb-title{font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:0.1em;text-transform:uppercase;}
-.pb-copy{font-size:11px;font-weight:500;padding:4px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:none;color:rgba(255,255,255,0.6);cursor:pointer;font-family:'Montserrat',sans-serif;transition:all 0.15s;}
+.pb-copy{font-size:11px;font-weight:500;padding:4px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:none;color:rgba(255,255,255,0.6);cursor:pointer;font-family:'Manrope',sans-serif;transition:all 0.15s;}
 .pb-copy:hover{background:rgba(255,255,255,0.1);color:#fff;}
 .pb-copy.done{border-color:var(--gold);color:var(--goldlight);}
 .pb-text{font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(255,255,255,0.75);padding:1rem 1.25rem;line-height:1.75;white-space:pre-wrap;max-height:380px;overflow-y:auto;}
@@ -240,7 +240,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .pc{background:var(--surface2);border-radius:10px;padding:8px;min-height:260px;}
 .pc-title{font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);padding:4px 6px 8px;border-bottom:1px solid var(--border);margin-bottom:6px;}
 .pi{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 11px;margin-bottom:7px;font-size:12px;cursor:pointer;transition:all 0.15s;}
-.pi:hover{border-color:var(--jade-bd);box-shadow:0 2px 8px rgba(49,72,63,0.08);}
+.pi:hover{border-color:var(--jade-bd);box-shadow:0 2px 8px rgba(84,44,53,0.08);}
 .pi-name{font-weight:500;margin-bottom:2px;color:var(--ink);}
 .pi-sub{color:var(--ink3);font-size:11px;}
 
@@ -274,7 +274,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 
 /* DOSSIER FICHE */
 .fiche-tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:1.5rem;overflow-x:auto;}
-.ft{padding:8px 16px;font-size:12px;font-weight:500;color:var(--ink3);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;font-family:'Montserrat',sans-serif;transition:all 0.15s;}
+.ft{padding:8px 16px;font-size:12px;font-weight:500;color:var(--ink3);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;font-family:'Manrope',sans-serif;transition:all 0.15s;}
 .ft:hover{color:var(--ink);}
 .ft.active{color:var(--jade);border-bottom-color:var(--or);}
 .ftab{display:none;}
@@ -355,7 +355,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .mt-col-hd{padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;}
 .mt-col-body{padding:8px;min-height:140px;}
 .mt-ticket{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:7px;cursor:pointer;transition:all 0.15s;}
-.mt-ticket:hover{border-color:var(--jade-bd);box-shadow:0 2px 8px rgba(49,72,63,0.08);}
+.mt-ticket:hover{border-color:var(--jade-bd);box-shadow:0 2px 8px rgba(84,44,53,0.08);}
 .mt-ticket-title{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:4px;}
 .mt-ticket-sub{font-size:11px;color:var(--ink3);margin-bottom:6px;}
 .mt-ticket-empty{font-size:12px;color:var(--ink4);text-align:center;padding:1.5rem 0.5rem;}
@@ -369,8 +369,8 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .topbar .topbar-date{color:var(--ink3) !important;}
 .topbar .user-dot-label{color:var(--ink2) !important;}
 h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
-.tcard-title{font-family:'Inter',sans-serif !important;}
-.fl{font-family:'Inter',sans-serif !important;}
+.tcard-title{font-family:'Manrope',sans-serif !important;}
+.fl{font-family:'Manrope',sans-serif !important;}
 
 /* Spin */
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -378,7 +378,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
 /* Messages IA */
 .msg-template-btn {
   padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface);
-  font-size:11px;color:var(--ink2);cursor:pointer;font-family:'Inter',sans-serif;
+  font-size:11px;color:var(--ink2);cursor:pointer;font-family:'Manrope',sans-serif;
   transition:all 0.15s;white-space:nowrap;
 }
 .msg-template-btn:hover { border-color:var(--jade);color:var(--jade);background:var(--jade-bg); }
@@ -449,7 +449,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
 .kb-col-count { font-size: 11px; font-weight: 600; background: var(--border); color: var(--ink2); padding: 2px 8px; border-radius: 10px; }
 .kb-col-body { padding: 10px; display: flex; flex-direction: column; gap: 8px; min-height: 120px; }
 .kb-card { background: var(--blanc); border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.15s; position: relative; }
-.kb-card:hover { border-color: var(--jade); box-shadow: 0 2px 8px rgba(49,72,63,0.1); transform: translateY(-1px); }
+.kb-card:hover { border-color: var(--jade); box-shadow: 0 2px 8px rgba(84,44,53,0.1); transform: translateY(-1px); }
 .kb-card-code { font-size: 10px; font-weight: 600; color: var(--jade); letter-spacing: 0.1em; margin-bottom: 4px; }
 .kb-card-name { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .kb-card-sub { font-size: 11px; color: var(--ink3); margin-bottom: 6px; }
@@ -459,13 +459,13 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
 .kb-add { width: 100%; padding: 8px; border: 1.5px dashed var(--border); border-radius: 8px; background: none; color: var(--ink3); font-size: 12px; cursor: pointer; transition: all 0.15s; margin-top: 4px; }
 .kb-add:hover { border-color: var(--jade); color: var(--jade); background: var(--jade-bg); }
 /* Couleurs colonnes */
-.kb-prospect .kb-col-hd { background: #F5F0E8; } .kb-prospect .kb-col-title { color: #5B4335; }
+.kb-prospect .kb-col-hd { background: #F5EFE7; } .kb-prospect .kb-col-title { color: #5A4A4E; }
 .kb-rdv     .kb-col-hd { background: #E6F1FB; } .kb-rdv     .kb-col-title { color: #185FA5; }
 .kb-offre   .kb-col-hd { background: #FFF3CD; } .kb-offre   .kb-col-title { color: #856404; }
-.kb-signe   .kb-col-hd { background: #EAF0EE; } .kb-signe   .kb-col-title { color: #31483F; }
-.kb-online  .kb-col-hd { background: var(--goldbg); } .kb-online  .kb-col-title { color: #7A5530; }
+.kb-signe   .kb-col-hd { background: #F3E8E6; } .kb-signe   .kb-col-title { color: #542C35; }
+.kb-online  .kb-col-hd { background: var(--goldbg); } .kb-online  .kb-col-title { color: #6E5434; }
 /* Bouton simulateur rapide dans fiche */
-.btn-sim-rapide { background: var(--jade-bg); border: 1px solid var(--jade-bd); color: var(--jade); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; font-family: 'Inter', sans-serif; }
+.btn-sim-rapide { background: var(--jade-bg); border: 1px solid var(--jade-bd); color: var(--jade); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; font-family: 'Manrope', sans-serif; }
 .btn-sim-rapide:hover { background: var(--jade); color: white; }
 
 
@@ -494,12 +494,12 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
   padding: 4px 2px;
   border: none;
   background: none;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Manrope', sans-serif;
   position: relative;
   -webkit-tap-highlight-color: transparent;
 }
 .m-tab-icon { font-size: 20px; line-height: 1; }
-.m-tab-label { font-size: 9px; color: #9A8878; font-weight: 400; }
+.m-tab-label { font-size: 9px; color: #8A7B7E; font-weight: 400; }
 .m-tab.active .m-tab-label { color: var(--jade); font-weight: 600; }
 .m-tab-dot {
   width: 4px; height: 4px; border-radius: 50%;
@@ -558,7 +558,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
   border-radius: 10px;
   cursor: pointer;
   border: none; background: none;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Manrope', sans-serif;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.1s;
 }
@@ -650,14 +650,14 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
 
 <div id="login-screen">
   <div class="login-card">
-    <div class="login-logo">Maison <em>Jade</em></div>
+    <div class="login-logo">Maison <em>Jayla</em></div>
     <div class="login-sub">Espace professionnel</div>
     <h2 class="login-title">Connexion</h2>
     <p class="login-desc">Accès réservé à l'administration</p>
     <div id="login-error" class="login-error"></div>
     <button class="btn-login" id="btn-retry-auth" style="display:none;margin-bottom:12px" onclick="initAuth()">↻ Réessayer</button>
     <div class="login-group"><label>Adresse email</label>
-      <input type="email" id="login-email" placeholder="contact@maisonjade.com" autocomplete="email"></div>
+      <input type="email" id="login-email" placeholder="contact@maisonjayla.com" autocomplete="email"></div>
     <div class="login-group"><label>Mot de passe</label>
       <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
     <button class="btn-login" id="btn-login" onclick="doLogin()">Se connecter →</button>
@@ -669,17 +669,17 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
 
 <div id="app-body" style="display:none">
 <div class="topbar">
-  <span class="brand-name">Maison <em>Jade</em></span>
+  <span class="brand-name">Maison <em>Jayla</em></span>
   <div class="topbar-right">
-    <button id="demo-btn" onclick="toggleDemo()" style="display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--ink2);font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;letter-spacing:0.04em">
+    <button id="demo-btn" onclick="toggleDemo()" style="display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--ink2);font-size:11px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif;transition:all 0.2s;letter-spacing:0.04em">
       <span id="demo-icon">👁</span> <span id="demo-label">Mode démo</span>
     </button>
     <span id="save-status" style="font-size:10.5px;font-weight:500;letter-spacing:0.03em;transition:color 0.3s;color:var(--ink3)">⏳ Chargement…</span>
     <span id="tb-user" style="font-size:11px;color:var(--ink3);margin-left:12px"></span>
     <button onclick="doLogout()" title="Déconnexion" style="margin-left:10px;padding:5px 10px;background:none;border:1px solid var(--surface3);border-radius:3px;color:var(--ink3);font-family:inherit;font-size:10.5px;cursor:pointer">Déconnexion</button>
     <span class="topbar-date" id="today-date"></span>
-    <div class="user-dot">J</div>
-    <span style="font-size:12px;color:var(--ink2);font-family:'Inter',sans-serif;font-weight:500">Jade</span>
+    <div class="user-dot">M</div>
+    <span style="font-size:12px;color:var(--ink2);font-family:'Manrope',sans-serif;font-weight:500">Mélanie</span>
   </div>
 </div>
 
@@ -721,10 +721,10 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
   </div>
   <div class="sb-foot">
     <div style="display:flex;gap:8px;margin-bottom:8px">
-      <button onclick="exportData()" style="flex:1;padding:5px 8px;border-radius:6px;border:1px solid rgba(184,146,58,0.3);background:none;color:rgba(184,146,58,0.6);font-size:10px;cursor:pointer;font-family:'Montserrat',sans-serif;" title="Exporter les données">💾 Exporter</button>
+      <button onclick="exportData()" style="flex:1;padding:5px 8px;border-radius:6px;border:1px solid rgba(184,146,58,0.3);background:none;color:rgba(184,146,58,0.6);font-size:10px;cursor:pointer;font-family:'Manrope',sans-serif;" title="Exporter les données">💾 Exporter</button>
       <label style="flex:1;padding:5px 8px;border-radius:6px;border:1px solid rgba(184,146,58,0.3);background:none;color:rgba(184,146,58,0.6);font-size:10px;cursor:pointer;text-align:center;" title="Importer des données">📂 Importer<input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>
     </div>
-    v4.1 · Maison Jade
+    v4.1 · Maison Jayla
   </div>
 </nav>
 
@@ -816,11 +816,11 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
   </div>
 </div>
 
-<!-- ══ COCKPIT MAISON JADE ══ -->
+<!-- ══ COCKPIT MAISON JAYLA ══ -->
 <div class="view" id="view-cockpit">
   <div class="ph">
     <div>
-      <h1>🎯 Cockpit <em>Maison Jade</em></h1>
+      <h1>🎯 Cockpit <em>Maison Jayla</em></h1>
       <p>Centre de contrôle du réseau — tous les liens et statuts en un endroit</p>
     </div>
     <button class="btn btn-ghost btn-sm" onclick="renderCockpit()">🔄 Actualiser</button>
@@ -886,7 +886,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
       <div style="padding:1rem;display:flex;flex-direction:column;gap:10px">
         <div style="background:var(--jade-bg);border:1px solid var(--jade-bd);border-radius:8px;padding:12px">
           <div style="font-size:11px;color:var(--jade);font-weight:600;margin-bottom:4px">📧 EMAIL OFFICIEL</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--jade)">contact@maisonjade.com</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--jade)">contact@maisonjayla.com</div>
         </div>
         <div style="background:var(--surface2);border-radius:8px;padding:12px">
           <div style="font-size:11px;color:var(--ink3);font-weight:600;margin-bottom:4px">⚖️ AVOCAT</div>
@@ -976,13 +976,13 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
         <div>
           <div style="font-size:11px;color:var(--ink3);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Domaine officiel</div>
           <div style="background:var(--surface2);border-radius:6px;padding:8px 12px;font-family:'Courier New',monospace;font-size:12px;color:var(--ink)">
-            contact@maisonjade.com
+            contact@maisonjayla.com
           </div>
         </div>
         <div>
           <div style="font-size:11px;color:var(--ink3);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Société</div>
           <div style="background:var(--surface2);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--ink);line-height:1.6">
-            Maison Jade Ltd (UK)<br>
+            MAISON J LTD (UK) · Maison Jayla<br>
             Facture sans TVA — art. 259-1 CGI
           </div>
         </div>
@@ -1016,7 +1016,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
       </div>
       <div style="background:var(--surface2);border-radius:8px;padding:12px">
         <div style="font-size:16px;margin-bottom:4px">📜</div>
-        <div style="font-size:12px;font-weight:600;color:var(--ink3);margin-bottom:2px">CGV Maison Jade</div>
+        <div style="font-size:12px;font-weight:600;color:var(--ink3);margin-bottom:2px">CGV Maison Jayla</div>
         <div style="font-size:10px;color:var(--ink3);font-style:italic">À rédiger</div>
       </div>
       <div style="background:var(--surface2);border-radius:8px;padding:12px">
@@ -1069,7 +1069,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
   <!-- Barre de filtres -->
   <div style="display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center">
     <input type="text" id="kanban-search" placeholder="🔍 Rechercher un prospect..." oninput="renderKanban()"
-      style="padding:8px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--blanc);flex:1;min-width:200px;font-family:'Inter',sans-serif">
+      style="padding:8px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--blanc);flex:1;min-width:200px;font-family:'Manrope',sans-serif">
     <select id="kanban-filter-offre" onchange="renderKanban()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:12px;background:var(--blanc)">
       <option value="">Toutes les offres</option>
       <option value="16">Essentiel 16%</option>
@@ -1089,7 +1089,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
 
 <div class="view active" id="view-dashboard">
   <div class="ph">
-    <div><h1>Bonjour <em>Jade</em> 👋</h1><p>Vue d'ensemble · Maison Jade</p></div>
+    <div><h1>Bonjour <em>Mélanie</em> 👋</h1><p>Vue d'ensemble · Maison Jayla</p></div>
     <button class="btn btn-primary" onclick="sv('nouveau',document.querySelector('[onclick*=nouveau]'))">+ Nouveau dossier</button>
   </div>
 
@@ -1498,7 +1498,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
   <!-- Contenu prévisionnel -->
   <div id="prev-content" style="display:none">
     <div class="ph">
-      <div><h1>Prévisionnel <em>financier</em></h1><p>Pilotage des revenus · Maison Jade</p></div>
+      <div><h1>Prévisionnel <em>financier</em></h1><p>Pilotage des revenus · Maison Jayla</p></div>
       <button class="btn btn-ghost btn-sm" onclick="lockPrev()">🔒 Verrouiller</button>
     </div>
 
@@ -1715,7 +1715,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
       <button class="btn btn-primary btn-sm" onclick="syncCalMenages()">🔄 Synchroniser maintenant</button>
     </div>
     <div style="padding:1rem">
-      <div class="callout ct-tip" style="margin-bottom:1rem"><span>💡</span><div>Maison Jade détecte automatiquement les check-outs dans le calendrier iCal et crée les ménages correspondants avec envoi d'email au prestataire assigné.</div></div>
+      <div class="callout ct-tip" style="margin-bottom:1rem"><span>💡</span><div>Maison Jayla détecte automatiquement les check-outs dans le calendrier iCal et crée les ménages correspondants avec envoi d'email au prestataire assigné.</div></div>
       <div id="sync-result" style="font-size:13px;color:var(--ink3)">Cliquez sur "Synchroniser" pour détecter les nouvelles réservations et planifier les ménages.</div>
     </div>
   </div>
@@ -1905,7 +1905,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
 <!-- ══ SIMULATEUR REVENUS ══ -->
 <div class="view" id="view-simulateur">
   <div class="ph">
-    <div><h1>Simulateur <em>de revenus</em></h1><p>Estimation locative · Saisonnalité · Commission Maison Jade · Net propriétaire</p></div>
+    <div><h1>Simulateur <em>de revenus</em></h1><p>Estimation locative · Saisonnalité · Commission Maison Jayla · Net propriétaire</p></div>
     <div style="display:flex;gap:8px">
       <button class="btn btn-ghost btn-sm" onclick="resetSimulateur()">🔄 Réinitialiser</button>
       <button class="btn btn-primary" onclick="genererPDFSimulation()" id="btn-pdf-sim" style="display:none">📄 Générer le PDF</button>
@@ -1983,7 +1983,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
             </div>
           </div>
           <div>
-            <label class="fl">Offre Maison Jade</label>
+            <label class="fl">Offre Maison Jayla</label>
             <select id="s-offre" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:var(--ivoire)">
               <option value="16">Essentiel — 16% HT</option>
               <option value="22" selected>Confort — 22% HT</option>
@@ -2327,7 +2327,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
     <!-- Note légale -->
     <div class="callout ct-tip">
       <span>⚠️</span>
-      <div style="font-size:11px">Ces projections sont des estimations basées sur les données de marché observées. Les revenus réels dépendent de la qualité du bien, de sa notation, de la concurrence locale et de la stratégie tarifaire. Maison Jade optimise en continu pour maximiser votre taux d'occupation.</div>
+      <div style="font-size:11px">Ces projections sont des estimations basées sur les données de marché observées. Les revenus réels dépendent de la qualité du bien, de sa notation, de la concurrence locale et de la stratégie tarifaire. Maison Jayla optimise en continu pour maximiser votre taux d'occupation.</div>
     </div>
 
     <div style="display:flex;justify-content:space-between;margin-top:1rem">
@@ -2394,8 +2394,8 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
   <div id="fact-presta" style="display:none">
     <div class="callout ct-tip" style="margin-bottom:1.5rem">
       <span>💡</span>
-      <div><strong>Modèle de mise en relation Maison Jade</strong><br>
-      Le prestataire facture directement le propriétaire. Maison Jade perçoit une commission de <strong>10% HT</strong> sur chaque mission comme frais de mise en relation. Ce modèle est transparent et inscrit dans le contrat de mise en relation signé par le prestataire.</div>
+      <div><strong>Modèle de mise en relation Maison Jayla</strong><br>
+      Le prestataire facture directement le propriétaire. Maison Jayla perçoit une commission de <strong>10% HT</strong> sur chaque mission comme frais de mise en relation. Ce modèle est transparent et inscrit dans le contrat de mise en relation signé par le prestataire.</div>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem">
@@ -2555,7 +2555,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
       </div>
       <div class="fg fr2" style="margin-bottom:1rem">
         <div><label class="fl">Tarif horaire (€ HT)</label><input type="number" id="pr-tarif" placeholder="25"></div>
-        <div><label class="fl">Commission Maison Jade (%)</label><input type="number" id="pr-comm" value="10"><div style="font-size:11px;color:var(--ink3);margin-top:3px">10% recommandé — ajustable</div></div>
+        <div><label class="fl">Commission Maison Jayla (%)</label><input type="number" id="pr-comm" value="10"><div style="font-size:11px;color:var(--ink3);margin-top:3px">10% recommandé — ajustable</div></div>
       </div>
       <div><label class="fl">Notes</label><textarea id="pr-notes" placeholder="Zone d'intervention, disponibilités, notes..." style="min-height:60px"></textarea></div>
     </div>
@@ -2622,7 +2622,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
         <button class="modal-close" onclick="closeModal('modal-facture-pdf')">✕</button>
       </div>
     </div>
-    <div class="modal-body" id="fact-pdf-content" style="font-family:'Montserrat',sans-serif"></div>
+    <div class="modal-body" id="fact-pdf-content" style="font-family:'Manrope',sans-serif"></div>
   </div>
 </div>
 <div class="modal-ov" id="modal-menage">
@@ -2953,7 +2953,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
         <!-- Montants par réservation (récap financier propriétaire) -->
         <div style="margin-bottom:1.5rem">
           <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:10px">
-            <span style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold,#A57C52)">💰 Montants par réservation</span>
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold,#9A7A4C)">💰 Montants par réservation</span>
             <label style="font-size:12px;color:var(--ink2)">Offre du bien
               <select id="e-comm" style="padding:4px 8px;margin-left:4px;font-family:inherit" onchange="updateComm(); renderReservationsAmounts(currentDosId)">
                 <option value="">— choisir l'offre —</option>
@@ -2995,7 +2995,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
             <span style="font-size:20px">💬</span>
             <div>
-              <div style="font-size:13px;font-weight:600;color:var(--jade)">Chatbot voyageur Maison Jade</div>
+              <div style="font-size:13px;font-weight:600;color:var(--jade)">Chatbot voyageur Maison Jayla</div>
               <div style="font-size:11px;color:var(--ink3);margin-top:1px">Assistant IA 24h/24 — répondez aux voyageurs automatiquement</div>
             </div>
           </div>
@@ -3046,9 +3046,9 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
         <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--red);margin-bottom:8px">📤 Frais facturés au voyageur (info uniquement)</div>
         <div class="fg fr2" style="margin-bottom:1.25rem">
           <div><label class="fl">Frais ménage voyageur (€/séjour)</label><input type="number" id="e-frais-menage-voy" placeholder="40" oninput="calcSimuEdit()"><div style="font-size:10px;color:var(--ink3);margin-top:2px">Payé par le voyageur en sus — ne réduit pas votre commission</div></div>
-          <div style="padding-top:18px;font-size:12px;color:var(--ink3)">Consommables, eau, électricité = à la charge du propriétaire — non imputés à Maison Jade.</div>
+          <div style="padding-top:18px;font-size:12px;color:var(--ink3)">Consommables, eau, électricité = à la charge du propriétaire — non imputés à Maison Jayla.</div>
         </div>
-        <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--red);margin-bottom:8px">📤 Frais Maison Jade uniquement (réduisent votre commission nette)</div>
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--red);margin-bottom:8px">📤 Frais Maison Jayla uniquement (réduisent votre commission nette)</div>
         <div class="fg fr2" style="margin-bottom:1.25rem">
           <div><label class="fl">Channel manager (€/mois)</label><input type="number" id="e-ch-cm" placeholder="15" oninput="calcSimuEdit()"></div>
           <div><label class="fl">Autres frais MJ (€/an)</label><input type="number" id="e-ch-autres" placeholder="0" oninput="calcSimuEdit()"><div style="font-size:10px;color:var(--ink3);margin-top:2px">Déplacements, abonnements outils...</div></div>
@@ -3076,7 +3076,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
         <div class="fg fr3" style="margin-bottom:1rem">
           <div><label class="fl">Date de visite</label><input type="date" id="e-vis-date"></div>
           <div><label class="fl">Heure</label><input type="text" id="e-vis-heure" placeholder="14h30"></div>
-          <div><label class="fl">Collaborateur</label><input type="text" id="e-vis-collab" placeholder="Jade"></div>
+          <div><label class="fl">Collaborateur</label><input type="text" id="e-vis-collab" placeholder="Mélanie"></div>
         </div>
         <div style="margin-bottom:1rem"><label class="fl">Résultat visite</label>
           <select id="e-vis-res"><option value="">—</option><option value="planif">📅 Planifiée</option><option value="ok">✅ Réalisée</option><option value="annulee">❌ Annulée</option><option value="relance">🔄 À relancer</option></select></div>
@@ -3095,7 +3095,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
         </div>
 
         <!-- Devis travaux -->
-        <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Devis prestations Maison Jade</div>
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Devis prestations Maison Jayla</div>
         <div class="fg fr3" style="margin-bottom:1rem">
           <div><label class="fl">Déco / Home staging (€)</label><input type="number" id="e-devis-deco" placeholder="0"></div>
           <div><label class="fl">Rénovation estimée (€)</label><input type="number" id="e-devis-renov" placeholder="0"></div>
@@ -3168,7 +3168,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
                 <div>✓ Gestion des demandes voyageurs</div>
                 <div>✓ Coordination des prestataires client</div>
                 <div>✓ Check-in & check-out</div>
-                <div style="color:var(--ink3)">✗ Réseau prestataires Maison Jade</div>
+                <div style="color:var(--ink3)">✗ Réseau prestataires Maison Jayla</div>
                 <div style="color:var(--ink3)">✗ Déco / rénovation</div>
                 <div style="color:var(--ink3)">✗ Reporting mensuel détaillé</div>
               </div>
@@ -3192,14 +3192,14 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
               </div>
               <div class="offre-check" id="chk-confort" style="width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all 0.2s"></div>
             </div>
-            <div style="font-size:12px;color:var(--ink3);margin-bottom:12px;line-height:1.5">Vous apportez <strong>votre réseau Maison Jade</strong> — prestataires qualifiés, gestion complète, zéro souci pour le propriétaire.</div>
+            <div style="font-size:12px;color:var(--ink3);margin-bottom:12px;line-height:1.5">Vous apportez <strong>votre réseau Maison Jayla</strong> — prestataires qualifiés, gestion complète, zéro souci pour le propriétaire.</div>
             <div style="margin-bottom:10px">
               <div style="font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px">Inclus</div>
               <div style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink2)">
                 <div>✓ Création / optimisation annonce</div>
                 <div>✓ Stratégie de prix & calendrier</div>
                 <div>✓ Gestion des demandes voyageurs</div>
-                <div>✓ <strong>Réseau prestataires Maison Jade</strong></div>
+                <div>✓ <strong>Réseau prestataires Maison Jayla</strong></div>
                 <div>✓ Blanchisserie & ménage inclus</div>
                 <div>✓ Check-in & check-out</div>
                 <div>✓ Reporting mensuel</div>
@@ -3225,7 +3225,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
               </div>
               <div class="offre-check" id="chk-premium" style="width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all 0.2s"></div>
             </div>
-            <div style="font-size:12px;color:var(--ink3);margin-bottom:12px;line-height:1.5">L'offre <strong>tout inclus</strong> — réseau Maison Jade, valorisation du bien, multi-plateformes, reporting avancé. Votre meilleur positionnement.</div>
+            <div style="font-size:12px;color:var(--ink3);margin-bottom:12px;line-height:1.5">L'offre <strong>tout inclus</strong> — réseau Maison Jayla, valorisation du bien, multi-plateformes, reporting avancé. Votre meilleur positionnement.</div>
             <div style="margin-bottom:10px">
               <div style="font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px">Inclus</div>
               <div style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink2)">
@@ -3256,7 +3256,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
           <div id="offre-simu-content" class="simu-box" style="background:var(--charbon);border:1px solid rgba(184,146,58,0.2);">
             <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:1rem" id="offre-simu-label">—</div>
             <div class="simu-grid">
-              <div><div class="simu-num" style="color:#9DC46A" id="os-nuits">—</div><div class="simu-lbl">nuits/an</div></div>
+              <div><div class="simu-num" style="color:#C5A477" id="os-nuits">—</div><div class="simu-lbl">nuits/an</div></div>
               <div><div class="simu-num" style="color:#F0C87A" id="os-brut">—</div><div class="simu-lbl">revenu brut</div></div>
               <div><div class="simu-num" style="color:#78BFFF" id="os-net">—</div><div class="simu-lbl">propriétaire net</div></div>
               <div><div class="simu-num" style="color:#FF8C6A" id="os-vous">—</div><div class="simu-lbl">votre commission</div></div>
@@ -3325,7 +3325,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
         <div id="travaux-plan" style="margin-bottom:1rem"></div>
         <button class="btn btn-ghost btn-sm" onclick="addTravail('plan')" style="margin-bottom:1rem">+ Ajouter un travail planifié</button>
 
-        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="integrerDevis()">💾 Intégrer le budget au devis Maison Jade</button>
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="integrerDevis()">💾 Intégrer le budget au devis Maison Jayla</button>
       </div>
 
       <!-- Tab: Actions terrain -->
@@ -3480,7 +3480,7 @@ function showToast(msg) {
   if (!el) {
     el = document.createElement('div');
     el.id = '_mj_toast';
-    el.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#2A3B2E;color:#fff;padding:12px 20px;border-radius:8px;font-size:13px;z-index:99999;box-shadow:0 4px 16px rgba(0,0,0,.25);opacity:0;transition:opacity .2s;max-width:90vw;text-align:center;pointer-events:none';
+    el.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#3E1F27;color:#fff;padding:12px 20px;border-radius:8px;font-size:13px;z-index:99999;box-shadow:0 4px 16px rgba(0,0,0,.25);opacity:0;transition:opacity .2s;max-width:90vw;text-align:center;pointer-events:none';
     document.body.appendChild(el);
   }
   el.textContent = msg;
@@ -3497,7 +3497,7 @@ function setSaveStatus(status) {
   if (!el) return;
   const states = {
     saving:  { txt: '💾 Sauvegarde…',      color: 'rgba(165,124,82,0.7)' },
-    saved:   { txt: '✅ Sauvegardé',        color: 'rgba(49,72,63,0.8)' },
+    saved:   { txt: '✅ Sauvegardé',        color: 'rgba(84,44,53,0.8)' },
     error:   { txt: '⚠️ Hors-ligne — local', color: 'rgba(255,107,107,0.8)' },
     loading: { txt: '⏳ Chargement…',       color: 'rgba(184,146,58,0.6)' }
   };
@@ -3820,7 +3820,7 @@ function calcSimuFull() {
 
   out.innerHTML = `
   <div class="simu-box" style="background:var(--charbon);border:1px solid rgba(184,146,58,0.2)">
-    <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(184,146,58,0.5);margin-bottom:1rem">Simulation — Modèle Maison Jade · SASU · HT</div>
+    <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(184,146,58,0.5);margin-bottom:1rem">Simulation — Modèle Maison Jayla · SASU · HT</div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1rem">
       <div style="text-align:center;background:rgba(255,255,255,0.04);border-radius:8px;padding:12px">
         <div style="font-size:9px;color:rgba(255,255,255,0.35);margin-bottom:6px;text-transform:uppercase">Revenu brut</div>
@@ -3839,7 +3839,7 @@ function calcSimuFull() {
       </div>
       <div style="text-align:center;background:rgba(184,146,58,0.12);border-radius:8px;padding:12px;border:1px solid rgba(184,146,58,0.2)">
         <div style="font-size:9px;color:rgba(184,146,58,0.6);margin-bottom:6px;text-transform:uppercase">Commission nette MJ</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:${commNette>=0?'#9DC46A':'#FF6B6B'}">${commNette.toLocaleString('fr-FR')}€ HT</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:${commNette>=0?'#C5A477':'#FF6B6B'}">${commNette.toLocaleString('fr-FR')}€ HT</div>
         <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:3px">Après frais MJ</div>
       </div>
     </div>
@@ -3894,7 +3894,7 @@ function doSimuFull(dos, commOverride) {
   const entretien = parseFloat(dos.chEntretien) || 0;
   const chargesProprio = Math.round((internet + elec + eau + copro) * 12 + assur + tf + cfe + entretien);
 
-  // Charges de MAISON JADE uniquement (réduisent la commission nette MJ)
+  // Charges de MAISON JAYLA uniquement (réduisent la commission nette MJ)
   const cm = parseFloat(dos.chCm) || 0;       // channel manager = charge MJ
   const deplacements = parseFloat(dos.chAutres) || 0; // autres frais MJ
 
@@ -3972,7 +3972,7 @@ function genRapportVisite() {
   const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   const visDate = document.getElementById('e-vis-date')?.value || '';
   const visHeure = document.getElementById('e-vis-heure')?.value || '';
-  const visCollab = document.getElementById('e-vis-collab')?.value || 'Jade';
+  const visCollab = document.getElementById('e-vis-collab')?.value || 'Mélanie';
   const visCr = document.getElementById('e-vis-cr')?.value || '';
   const visTravaux = document.getElementById('e-vis-travaux')?.value || '';
   const noteEmpla = document.getElementById('e-note-empla')?.value || '';
@@ -4024,19 +4024,19 @@ function genRapportVisite() {
   const noteMoy = notes.length ? (notes.reduce((a, n) => a + n.val, 0) / notes.length).toFixed(1) : null;
 
   const doc = `<style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap');
     *{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'Montserrat',sans-serif;color:#1C1A16;background:white;font-size:13px;line-height:1.65;}
+    body{font-family:'Manrope',sans-serif;color:#542C35;background:white;font-size:13px;line-height:1.65;}
     .page{padding:44px 52px;min-height:297mm;position:relative;}
     h1{font-family:'Cormorant Garamond',serif;font-weight:400;}
-    h2{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #1C1A16;}
+    h2{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #542C35;}
     h3{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#8A8278;margin-bottom:8px;}
     .section{margin-bottom:24px;}
     .divider{height:1px;background:#E8E2D8;margin:20px 0;}
     .stars{color:#C89820;font-size:14px;}
     .tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;}
     table{width:100%;border-collapse:collapse;}
-    th{text-align:left;padding:7px 10px;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#8A8278;background:#FAF8F4;border-bottom:1px solid #E8E2D8;}
+    th{text-align:left;padding:7px 10px;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#8A8278;background:#FBF8F3;border-bottom:1px solid #E8E2D8;}
     td{padding:8px 10px;border-bottom:1px solid #F0EDE6;font-size:12px;color:#4A4640;vertical-align:top;}
     tr:last-child td{border-bottom:none;}
     .sign-box{border:1px solid #E8E2D8;border-radius:8px;padding:16px;height:80px;display:flex;align-items:flex-end;}
@@ -4046,13 +4046,13 @@ function genRapportVisite() {
   <!-- PAGE 1 : En-tête + infos bien -->
   <div class="page">
     <!-- Header -->
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:20px;border-bottom:2px solid #1C1A16">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:20px;border-bottom:2px solid #542C35">
       <div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;margin-bottom:2px">Maison <em style="font-style:italic;color:#4A7C28">Jade</em></div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;margin-bottom:2px">Maison <em style="font-style:italic;color:#6B3A45">Jayla</em></div>
         <div style="font-size:11px;color:#8A8278">Conciergerie premium · Location courte durée · France & International</div>
       </div>
       <div style="text-align:right">
-        <div style="font-size:18px;font-weight:500;color:#1C1A16;font-family:'Cormorant Garamond',serif">Rapport de visite</div>
+        <div style="font-size:18px;font-weight:500;color:#542C35;font-family:'Cormorant Garamond',serif">Rapport de visite</div>
         <div style="font-size:11px;color:#8A8278;margin-top:3px">${today}</div>
         <div style="font-size:11px;color:#8A8278">Rédigé par : <strong>${visCollab}</strong></div>
       </div>
@@ -4062,18 +4062,18 @@ function genRapportVisite() {
     <div class="section">
       <h2>Bien visité</h2>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
-        <div style="background:#FAF8F4;border-radius:8px;padding:14px">
+        <div style="background:#FBF8F3;border-radius:8px;padding:14px">
           <div style="font-size:10px;color:#8A8278;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px">Propriétaire</div>
           <div style="font-weight:500">${dos.prenom} ${dos.nom}</div>
           <div style="font-size:11px;color:#8A8278">${dos.email || ''}</div>
           <div style="font-size:11px;color:#8A8278">${dos.tel || ''}</div>
         </div>
-        <div style="background:#FAF8F4;border-radius:8px;padding:14px">
+        <div style="background:#FBF8F3;border-radius:8px;padding:14px">
           <div style="font-size:10px;color:#8A8278;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px">Adresse</div>
           <div style="font-weight:500">${dos.adresse || '—'}</div>
           <div style="font-size:11px;color:#8A8278">${dos.type || ''}${dos.surface ? ' · ' + dos.surface + ' m²' : ''}</div>
         </div>
-        <div style="background:#FAF8F4;border-radius:8px;padding:14px">
+        <div style="background:#FBF8F3;border-radius:8px;padding:14px">
           <div style="font-size:10px;color:#8A8278;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px">Visite réalisée</div>
           <div style="font-weight:500">${visDate ? new Date(visDate).toLocaleDateString('fr-FR') : '—'} ${visHeure ? 'à ' + visHeure : ''}</div>
           <div style="font-size:11px;color:#8A8278">Par : ${visCollab}</div>
@@ -4087,15 +4087,15 @@ function genRapportVisite() {
       <h2>Évaluation du potentiel</h2>
       <div style="display:grid;grid-template-columns:repeat(${notes.length},1fr);gap:10px;margin-bottom:12px">
         ${notes.map(n => `
-          <div style="text-align:center;background:#FAF8F4;border-radius:8px;padding:14px">
-            <div style="font-size:22px;font-weight:700;color:${n.val >= 4 ? '#4A7C28' : n.val >= 3 ? '#8B6914' : '#8B1A1A'}">${n.val}/5</div>
+          <div style="text-align:center;background:#FBF8F3;border-radius:8px;padding:14px">
+            <div style="font-size:22px;font-weight:700;color:${n.val >= 4 ? '#6B3A45' : n.val >= 3 ? '#8B6914' : '#8B1A1A'}">${n.val}/5</div>
             <div style="font-size:10px;color:#8A8278;margin-top:4px">${n.label}</div>
             <div class="stars" style="margin-top:4px">${'★'.repeat(n.val)}${'☆'.repeat(5 - n.val)}</div>
           </div>`).join('')}
       </div>
-      ${noteMoy ? `<div style="background:${parseFloat(noteMoy) >= 4 ? '#EDF3E8' : parseFloat(noteMoy) >= 3 ? '#FDF5E0' : '#FDE8E8'};border-radius:8px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
+      ${noteMoy ? `<div style="background:${parseFloat(noteMoy) >= 4 ? '#F3E8E6' : parseFloat(noteMoy) >= 3 ? '#FDF5E0' : '#FDE8E8'};border-radius:8px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
         <span style="font-weight:500">Note moyenne de potentiel</span>
-        <span style="font-size:22px;font-weight:700;color:${parseFloat(noteMoy) >= 4 ? '#2D5016' : parseFloat(noteMoy) >= 3 ? '#8B6914' : '#8B1A1A'}">${noteMoy} / 5</span>
+        <span style="font-size:22px;font-weight:700;color:${parseFloat(noteMoy) >= 4 ? '#542C35' : parseFloat(noteMoy) >= 3 ? '#8B6914' : '#8B1A1A'}">${noteMoy} / 5</span>
       </div>` : ''}
     </div>` : ''}
 
@@ -4104,7 +4104,7 @@ function genRapportVisite() {
     <div class="section">
       <h2>Équipements du bien</h2>
       <div style="display:flex;flex-wrap:wrap;gap:6px">
-        ${equipList.map(e => `<span style="padding:4px 10px;background:#F5EDD6;border-radius:20px;font-size:11px;color:#1A1710;border:1px solid #DDD0B0">${e}</span>`).join('')}
+        ${equipList.map(e => `<span style="padding:4px 10px;background:#F5EDD6;border-radius:20px;font-size:11px;color:#241D1F;border:1px solid #DDD0B0">${e}</span>`).join('')}
       </div>
     </div>` : ''}
 
@@ -4113,7 +4113,7 @@ function genRapportVisite() {
     <div class="section">
       <h2>Points forts identifiés</h2>
       <div style="display:flex;flex-wrap:wrap;gap:6px">
-        ${fortsAll.map(f => `<span style="padding:4px 10px;background:#EDF3E8;border-radius:20px;font-size:11px;color:#2D5016;border:1px solid #C2D9B0">✓ ${f}</span>`).join('')}
+        ${fortsAll.map(f => `<span style="padding:4px 10px;background:#F3E8E6;border-radius:20px;font-size:11px;color:#542C35;border:1px solid #DCC8CA">✓ ${f}</span>`).join('')}
       </div>
       ${dos.fortComment ? `<div style="margin-top:10px;font-size:12px;color:#4A4640;white-space:pre-wrap">${dos.fortComment}</div>` : ''}
     </div>` : ''}
@@ -4122,7 +4122,7 @@ function genRapportVisite() {
     ${visCr ? `
     <div class="section">
       <h2>Compte-rendu de visite</h2>
-      <div style="background:#FAF8F4;border-radius:8px;padding:16px;white-space:pre-wrap;font-size:13px;line-height:1.7">${visCr}</div>
+      <div style="background:#FBF8F3;border-radius:8px;padding:16px;white-space:pre-wrap;font-size:13px;line-height:1.7">${visCr}</div>
     </div>` : ''}
 
     ${visTravaux ? `
@@ -4136,7 +4136,7 @@ function genRapportVisite() {
     <div class="section">
       <h2>Nos recommandations</h2>
       <p style="color:#4A4640;margin-bottom:12px;font-size:13px">Sur la base de notre visite, voici les actions que nous recommandons avant la mise en location :</p>
-      ${recos.map((r, i) => `<div style="display:flex;align-items:flex-start;gap:10px;padding:9px 14px;background:#FAF8F4;border-radius:8px;margin-bottom:6px;border-left:3px solid #B8923A">
+      ${recos.map((r, i) => `<div style="display:flex;align-items:flex-start;gap:10px;padding:9px 14px;background:#FBF8F3;border-radius:8px;margin-bottom:6px;border-left:3px solid #B8923A">
         <span style="background:#B8923A;color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">${i + 1}</span>
         <span style="font-size:13px">${r}</span>
       </div>`).join('')}
@@ -4154,21 +4154,21 @@ function genRapportVisite() {
 
       <!-- KPIs -->
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
-        <div style="text-align:center;background:#FAF8F4;border-radius:8px;padding:14px">
-          <div style="font-size:22px;font-weight:700;color:#1C1A16">${s.nuits}</div>
+        <div style="text-align:center;background:#FBF8F3;border-radius:8px;padding:14px">
+          <div style="font-size:22px;font-weight:700;color:#542C35">${s.nuits}</div>
           <div style="font-size:10px;color:#8A8278;margin-top:3px">nuits/an</div>
         </div>
-        <div style="text-align:center;background:#FAF8F4;border-radius:8px;padding:14px">
+        <div style="text-align:center;background:#FBF8F3;border-radius:8px;padding:14px">
           <div style="font-size:22px;font-weight:700;color:#8B6914">${s.brutLocatif.toLocaleString('fr-FR')}€</div>
           <div style="font-size:10px;color:#8A8278;margin-top:3px">revenu locatif brut</div>
         </div>
-        <div style="text-align:center;background:#FAF8F4;border-radius:8px;padding:14px">
+        <div style="text-align:center;background:#FBF8F3;border-radius:8px;padding:14px">
           <div style="font-size:22px;font-weight:700;color:#1A3A6B">${s.proprio.toLocaleString('fr-FR')}€</div>
           <div style="font-size:10px;color:#8A8278;margin-top:3px">propriétaire net</div>
         </div>
-        <div style="text-align:center;background:#EDF3E8;border-radius:8px;padding:14px">
-          <div style="font-size:22px;font-weight:700;color:#2D5016">${s.commNette.toLocaleString('fr-FR')}€</div>
-          <div style="font-size:10px;color:#4A7C28;margin-top:3px">commission nette MJ</div>
+        <div style="text-align:center;background:#F3E8E6;border-radius:8px;padding:14px">
+          <div style="font-size:22px;font-weight:700;color:#542C35">${s.commNette.toLocaleString('fr-FR')}€</div>
+          <div style="font-size:10px;color:#6B3A45;margin-top:3px">commission nette MJ</div>
         </div>
       </div>
 
@@ -4179,16 +4179,16 @@ function genRapportVisite() {
           <tr><td><strong>Revenu locatif brut</strong></td><td>${s.prix}€ × ${s.nuits} nuits</td><td style="text-align:right;font-weight:600">${s.brutLocatif.toLocaleString('fr-FR')}€</td></tr>
           <tr><td style="color:#8B1A1A">− Frais Airbnb (${s.cair}%)</td><td></td><td style="text-align:right;color:#8B1A1A">−${s.fraisAirbnb.toLocaleString('fr-FR')}€</td></tr>
           <tr style="background:#F8F6F1"><td><strong>Revenu net perçu</strong></td><td></td><td style="text-align:right;font-weight:600">${s.apresAirbnb.toLocaleString('fr-FR')}€</td></tr>
-          <tr><td style="color:#8B1A1A">− Commission Maison Jade HT (${s.comm}%)</td><td style="font-size:11px;color:#8A8278">sur le revenu net perçu · + TVA 20% = ${(s.comm*1.2).toFixed(1)}% TTC</td><td style="text-align:right;color:#8B1A1A">−${s.maComm.toLocaleString('fr-FR')}€ HT</td></tr>
+          <tr><td style="color:#8B1A1A">− Commission Maison Jayla HT (${s.comm}%)</td><td style="font-size:11px;color:#8A8278">sur le revenu net perçu · + TVA 20% = ${(s.comm*1.2).toFixed(1)}% TTC</td><td style="text-align:right;color:#8B1A1A">−${s.maComm.toLocaleString('fr-FR')}€ HT</td></tr>
           <tr style="background:#FDF5E0"><td style="color:#8A8278;font-size:11px">↳ dont TVA collectée (20%)</td><td></td><td style="text-align:right;color:#8B6914;font-size:11px">${Math.round(s.maComm*0.2).toLocaleString('fr-FR')}€ reversés à l'État</td></tr>
           <tr><td style="color:#4A4640">Ménage (règlement à part, hors commission)</td><td style="font-size:11px;color:#8A8278">+${s.menage.encaisse.toLocaleString('fr-FR')}€ voyageurs − ${s.menage.frais.toLocaleString('fr-FR')}€ frais − ${s.menage.cout.toLocaleString('fr-FR')}€ prestataire</td><td style="text-align:right">${s.menage.solde.toLocaleString('fr-FR')}€</td></tr>
-          <tr style="background:#EDF3E8"><td><strong>Propriétaire reçoit</strong></td><td style="font-size:11px;color:#8A8278">ménage inclus, avant ses charges</td><td style="text-align:right;font-weight:700;color:#2D5016">${s.proprio.toLocaleString('fr-FR')}€</td></tr>
-          <tr style="background:#FDE8E8"><td style="color:#8A8278">− Charges Maison Jade (channel manager + autres)</td><td></td><td style="text-align:right;color:#8B1A1A">−${s.chargesMJ.toLocaleString('fr-FR')}€</td></tr>
-          <tr style="background:#EDF3E8"><td><strong>Commission nette Maison Jade HT</strong></td><td style="font-size:11px;color:#8A8278">après déduction des charges</td><td style="text-align:right;font-weight:700;font-size:15px;color:#2D5016">${s.commNette.toLocaleString('fr-FR')}€ HT/an</td></tr>
+          <tr style="background:#F3E8E6"><td><strong>Propriétaire reçoit</strong></td><td style="font-size:11px;color:#8A8278">ménage inclus, avant ses charges</td><td style="text-align:right;font-weight:700;color:#542C35">${s.proprio.toLocaleString('fr-FR')}€</td></tr>
+          <tr style="background:#FDE8E8"><td style="color:#8A8278">− Charges Maison Jayla (channel manager + autres)</td><td></td><td style="text-align:right;color:#8B1A1A">−${s.chargesMJ.toLocaleString('fr-FR')}€</td></tr>
+          <tr style="background:#F3E8E6"><td><strong>Commission nette Maison Jayla HT</strong></td><td style="font-size:11px;color:#8A8278">après déduction des charges</td><td style="text-align:right;font-weight:700;font-size:15px;color:#542C35">${s.commNette.toLocaleString('fr-FR')}€ HT/an</td></tr>
           <tr style="background:#F5F5F0"><td style="font-size:11px;color:#8A8278">Commission brute TTC propriétaire</td><td></td><td style="text-align:right;font-size:12px;color:#8A8278">${Math.round(s.maComm*1.2).toLocaleString('fr-FR')}€ TTC/an</td></tr>
         </tbody>
       </table>
-      <div style="font-size:11px;color:#8A8278;margin-top:8px;padding:8px;background:#FAF8F4;border-radius:6px">Estimation indicative. Commissions exprimées en HT — TVA 20% applicable en sus (SASU). Basée sur ${s.nuits} nuits/an (${s.taux}% d'occupation · ~${s.nbSejours} séjours). Les charges réelles peuvent varier.</div>
+      <div style="font-size:11px;color:#8A8278;margin-top:8px;padding:8px;background:#FBF8F3;border-radius:6px">Estimation indicative. Commissions exprimées en HT — TVA 20% applicable en sus (SASU). Basée sur ${s.nuits} nuits/an (${s.taux}% d'occupation · ~${s.nbSejours} séjours). Les charges réelles peuvent varier.</div>
     </div>` : ''}
   </div>
 
@@ -4197,7 +4197,7 @@ function genRapportVisite() {
     <!-- Devis -->
     ${totalDevis > 0 ? `
     <div class="section">
-      <h2>Devis des prestations Maison Jade</h2>
+      <h2>Devis des prestations Maison Jayla</h2>
       <p style="color:#4A4640;margin-bottom:14px;font-size:13px">Prestations recommandées avant mise en location, établies sur la base de notre visite :</p>
       <table>
         <thead><tr><th>Prestation</th><th style="text-align:right">Montant estimé HT</th></tr></thead>
@@ -4207,15 +4207,15 @@ function genRapportVisite() {
           ${devisPhoto ? `<tr><td>📸 Shooting photo professionnel</td><td style="text-align:right;font-weight:500">${devisPhoto.toLocaleString('fr-FR')}€</td></tr>` : ''}
           ${devisOnboard ? `<tr><td>⚙️ Mise en service & onboarding</td><td style="text-align:right;font-weight:500">${devisOnboard.toLocaleString('fr-FR')}€</td></tr>` : ''}
           ${devisAutres ? `<tr><td>📦 Autres prestations</td><td style="text-align:right;font-weight:500">${devisAutres.toLocaleString('fr-FR')}€</td></tr>` : ''}
-          <tr style="background:#EDF3E8"><td><strong>Total estimé HT</strong></td><td style="text-align:right;font-weight:700;font-size:16px;color:#2D5016">${totalDevis.toLocaleString('fr-FR')}€</td></tr>
+          <tr style="background:#F3E8E6"><td><strong>Total estimé HT</strong></td><td style="text-align:right;font-weight:700;font-size:16px;color:#542C35">${totalDevis.toLocaleString('fr-FR')}€</td></tr>
         </tbody>
       </table>
       <div style="font-size:11px;color:#8A8278;margin-top:8px">Ce devis est indicatif et sera confirmé après étude détaillée. TVA applicable selon régime fiscal. Valable 30 jours.</div>
     </div>` : ''}
 
     <!-- Mention légale -->
-    <div style="background:#FAF8F4;border-radius:8px;padding:16px;margin-bottom:24px;font-size:12px;color:#4A4640;line-height:1.6">
-      <strong>Maison Jade</strong> — Conciergerie & services en location courte durée. Ce document constitue un rapport de visite indicatif et non un engagement contractuel. Toute prestation fera l'objet d'un contrat de mandat ou devis signé séparément.
+    <div style="background:#FBF8F3;border-radius:8px;padding:16px;margin-bottom:24px;font-size:12px;color:#4A4640;line-height:1.6">
+      <strong>Maison Jayla</strong> — Conciergerie & services en location courte durée. Ce document constitue un rapport de visite indicatif et non un engagement contractuel. Toute prestation fera l'objet d'un contrat de mandat ou devis signé séparément.
     </div>
 
     <!-- Signatures -->
@@ -4232,8 +4232,8 @@ function genRapportVisite() {
           <div style="margin-top:10px;font-size:12px;color:#4A4640">Lu et approuvé — Bon pour accord</div>
         </div>
         <div>
-          <div style="font-size:11px;color:#8A8278;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em">Maison Jade</div>
-          <div style="font-size:12px;color:#4A4640;margin-bottom:12px">${visCollab} · Représentant(e) Maison Jade</div>
+          <div style="font-size:11px;color:#8A8278;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em">Maison Jayla</div>
+          <div style="font-size:12px;color:#4A4640;margin-bottom:12px">${visCollab} · Représentant(e) Maison Jayla</div>
           <div class="sign-box">
             <span style="font-size:10px;color:#C0B8AC">Signature</span>
           </div>
@@ -4244,7 +4244,7 @@ function genRapportVisite() {
 
     <!-- Footer -->
     <div style="position:absolute;bottom:32px;left:52px;right:52px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #E8E2D8;padding-top:12px">
-      <div style="font-size:10px;color:#8A8278">Maison Jade · contact@maisonjade.com · www.maisonjade.fr</div>
+      <div style="font-size:10px;color:#8A8278">Maison Jayla · contact@maisonjayla.com · www.maisonjayla.com</div>
       <div style="font-size:10px;color:#8A8278">Rapport de visite · ${dos.prenom} ${dos.nom} · ${visDate ? new Date(visDate).toLocaleDateString('fr-FR') : today}</div>
     </div>
   </div>`;
@@ -4396,9 +4396,9 @@ function openDos(id) {
   if (badgeEl) {
     if (dos.offreChoisie) {
       const OFFRE_CFG = {
-        essentiel: { label: 'Essentiel', color: '#5B4335', bg: '#F5F0E8', border: '#CDBCA7', comm: dos['comm-essentiel'] || dos.comm || '16' },
-        confort:   { label: 'Confort ⭐', color: '#31483F', bg: '#E8EDEA', border: '#9AAFA8', comm: dos['comm-confort'] || dos.comm || '22' },
-        premium:   { label: 'Premium ✨', color: '#7A5530', bg: '#F4EDE3', border: '#D4B898', comm: dos['comm-premium'] || dos.comm || '25' }
+        essentiel: { label: 'Essentiel', color: '#5A4A4E', bg: '#F5EFE7', border: '#B9A99A', comm: dos['comm-essentiel'] || dos.comm || '16' },
+        confort:   { label: 'Confort ⭐', color: '#542C35', bg: '#F3E8E6', border: '#C9AEB2', comm: dos['comm-confort'] || dos.comm || '22' },
+        premium:   { label: 'Premium ✨', color: '#6E5434', bg: '#F4EDE3', border: '#DCC6A6', comm: dos['comm-premium'] || dos.comm || '25' }
       };
       const cfg = OFFRE_CFG[dos.offreChoisie];
       if (cfg) {
@@ -4737,7 +4737,7 @@ function genPromptFromDos() {
   if (dos.recos) {
     if ((dos.equip || '').includes('Non-fumeur')) rules.push('Non-fumeur');
   }
-  const prompt = `Tu es un expert en rédaction d'annonces Airbnb haut de gamme pour Maison Jade, conciergerie premium.
+  const prompt = `Tu es un expert en rédaction d'annonces Airbnb haut de gamme pour Maison Jayla, conciergerie premium.
 ${lm[editLang]}
 
 DONNÉES DU BIEN :
@@ -4791,34 +4791,34 @@ function genProposition() {
   const offreNom = offre ? offreNoms[offre] : null;
   const offreInclus = {
     essentiel: ['Création / optimisation annonce Airbnb','Stratégie de prix & gestion du calendrier','Gestion des demandes voyageurs','Coordination des prestataires du client','Check-in & check-out','Rapport de performance'],
-    confort: ['Tout de l\'offre Essentiel','Réseau prestataires Maison Jade','Blanchisserie & ménage inclus','Check-in personnalisé','Reporting mensuel'],
+    confort: ['Tout de l\'offre Essentiel','Réseau prestataires Maison Jayla','Blanchisserie & ménage inclus','Check-in personnalisé','Reporting mensuel'],
     premium: ['Tout de l\'offre Confort','Diffusion multi-plateformes','Conseil déco & home staging','Rénovation légère sur devis','Reporting mensuel détaillé','Accompagnement administratif','Support prioritaire 7j/7']
   };
 
   const simHTML = s ? `
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0;text-align:center">
-      <div style="background:#F5F5F0;border-radius:8px;padding:14px 10px"><div style="font-size:22px;font-weight:700;color:#1C1A16">${s.nuits}</div><div style="font-size:11px;color:#8A8278;margin-top:3px">nuits/an</div></div>
+      <div style="background:#F5F5F0;border-radius:8px;padding:14px 10px"><div style="font-size:22px;font-weight:700;color:#542C35">${s.nuits}</div><div style="font-size:11px;color:#8A8278;margin-top:3px">nuits/an</div></div>
       <div style="background:#F5F5F0;border-radius:8px;padding:14px 10px"><div style="font-size:22px;font-weight:700;color:#8B6914">${s.brut.toLocaleString('fr-FR')}€</div><div style="font-size:11px;color:#8A8278;margin-top:3px">revenu brut</div></div>
       <div style="background:#F5F5F0;border-radius:8px;padding:14px 10px"><div style="font-size:22px;font-weight:700;color:#1A3A6B">${s.net.toLocaleString('fr-FR')}€</div><div style="font-size:11px;color:#8A8278;margin-top:3px">vous recevez</div></div>
-      <div style="background:#EDF3E8;border-radius:8px;padding:14px 10px"><div style="font-size:22px;font-weight:700;color:#2D5016">${s.maC.toLocaleString('fr-FR')}€</div><div style="font-size:11px;color:#4A7C28;margin-top:3px">commission MJ</div></div>
+      <div style="background:#F3E8E6;border-radius:8px;padding:14px 10px"><div style="font-size:22px;font-weight:700;color:#542C35">${s.maC.toLocaleString('fr-FR')}€</div><div style="font-size:11px;color:#6B3A45;margin-top:3px">commission MJ</div></div>
     </div>
-    <div style="font-size:11px;color:#8A8278;padding:8px;background:#FAF8F4;border-radius:6px">Basé sur ${s.emin || s.pmin}–${s.emax || s.pmax}€/nuit · ${s.t}% occupation · Commission Maison Jade ${s.c}%</div>` : '<p style="color:#8A8278;font-style:italic">Estimation à compléter.</p>';
+    <div style="font-size:11px;color:#8A8278;padding:8px;background:#FBF8F3;border-radius:6px">Basé sur ${s.emin || s.pmin}–${s.emax || s.pmax}€/nuit · ${s.t}% occupation · Commission Maison Jayla ${s.c}%</div>` : '<p style="color:#8A8278;font-style:italic">Estimation à compléter.</p>';
 
   const doc = `<style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap');
     *{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'Montserrat',sans-serif;color:#1C1A16;background:white;font-size:13px;line-height:1.6;}
+    body{font-family:'Manrope',sans-serif;color:#542C35;background:white;font-size:13px;line-height:1.6;}
     .pp{padding:48px 56px;min-height:100vh;position:relative;}
     h1{font-family:'Cormorant Garamond',serif;font-weight:400;}
     h2{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #E8E2D8;}
     .div{height:1px;background:#E8E2D8;margin:20px 0;}
     ul{padding-left:18px;}ul li{margin-bottom:4px;}
   </style>
-  <div class="pp" style="background:#1C1A16;color:#F5F2EC;display:flex;flex-direction:column;justify-content:space-between;">
+  <div class="pp" style="background:#542C35;color:#F5F2EC;display:flex;flex-direction:column;justify-content:space-between;">
     <div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:3rem">Maison Jade</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:3rem">Maison Jayla</div>
       <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:0.5rem">PROPOSITION COMMERCIALE</div>
-      <h1 style="font-size:42px;line-height:1.15;margin-bottom:1rem">Votre bien,<br><em style="color:#9DC46A">notre expertise.</em></h1>
+      <h1 style="font-size:42px;line-height:1.15;margin-bottom:1rem">Votre bien,<br><em style="color:#C5A477">notre expertise.</em></h1>
       <div style="font-size:15px;color:rgba(255,255,255,0.5);font-style:italic;margin-bottom:3rem">Conciergerie premium · Location courte durée · France & International</div>
       <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:20px 24px;display:inline-block">
         <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:8px">Préparée pour</div>
@@ -4827,28 +4827,28 @@ function genProposition() {
       </div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:flex-end;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.1)">
-      <div><div style="font-size:13px;font-weight:500;color:#9DC46A">Jade · Maison Jade</div></div>
+      <div><div style="font-size:13px;font-weight:500;color:#C5A477">Mélanie · Maison Jayla</div></div>
       <div style="font-size:11px;color:rgba(255,255,255,0.3)">${today}</div>
     </div>
   </div>
   <div class="pp" style="page-break-before:always">
     <h2>Qui sommes-nous ?</h2>
-    <p style="font-size:14px;color:#4A4640;margin-bottom:1.5rem;max-width:560px">Maison Jade est une conciergerie premium spécialisée dans la location courte durée, fondée sur une expertise terrain, une approche personnalisée et une dimension internationale. Notre mission : maximiser vos revenus tout en vous libérant de toutes les contraintes opérationnelles.</p>
+    <p style="font-size:14px;color:#4A4640;margin-bottom:1.5rem;max-width:560px">Maison Jayla est une conciergerie premium spécialisée dans la location courte durée, fondée sur une expertise terrain, une approche personnalisée et une dimension internationale. Notre mission : maximiser vos revenus tout en vous libérant de toutes les contraintes opérationnelles.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:1.5rem">
-      <div style="background:#EDF3E8;border-radius:10px;padding:18px"><div style="font-size:24px;margin-bottom:8px">🎯</div><div style="font-weight:500;margin-bottom:4px">Expertise locale</div><div style="font-size:12px;color:#4A4640">Connaissance approfondie du marché et des spécificités Airbnb</div></div>
+      <div style="background:#F3E8E6;border-radius:10px;padding:18px"><div style="font-size:24px;margin-bottom:8px">🎯</div><div style="font-weight:500;margin-bottom:4px">Expertise locale</div><div style="font-size:12px;color:#4A4640">Connaissance approfondie du marché et des spécificités Airbnb</div></div>
       <div style="background:#E8EFF9;border-radius:10px;padding:18px"><div style="font-size:24px;margin-bottom:8px">⭐</div><div style="font-weight:500;margin-bottom:4px">Service premium</div><div style="font-size:12px;color:#4A4640">De la photo à la gestion voyageur, un suivi complet et personnalisé</div></div>
       <div style="background:#FDF5E0;border-radius:10px;padding:18px"><div style="font-size:24px;margin-bottom:8px">🌍</div><div style="font-weight:500;margin-bottom:4px">Dimension internationale</div><div style="font-size:12px;color:#4A4640">Présence en France et à l'international — Dubaï et au-delà</div></div>
     </div>
     <h2>Nos engagements</h2>
-    ${['Transparence totale — Accès en temps réel à vos revenus et réservations','Réactivité — Réponse aux voyageurs sous 1h, gestion des imprévus 7j/7','Qualité constante — Chaque séjour préparé avec le même niveau d\'exigence','Votre bien protégé — Sélection rigoureuse des voyageurs, état des lieux systématique','Commission au résultat — Nous ne gagnons que si vous gagnez. Aucun frais fixe.'].map(e => `<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:#FAF8F4;border-radius:8px;border-left:3px solid #4A7C28;margin-bottom:8px"><span>✅</span><span><strong>${e.split(' — ')[0]}</strong> — ${e.split(' — ')[1]}</span></div>`).join('')}
+    ${['Transparence totale — Accès en temps réel à vos revenus et réservations','Réactivité — Réponse aux voyageurs sous 1h, gestion des imprévus 7j/7','Qualité constante — Chaque séjour préparé avec le même niveau d\'exigence','Votre bien protégé — Sélection rigoureuse des voyageurs, état des lieux systématique','Commission au résultat — Nous ne gagnons que si vous gagnez. Aucun frais fixe.'].map(e => `<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:#FBF8F3;border-radius:8px;border-left:3px solid #6B3A45;margin-bottom:8px"><span>✅</span><span><strong>${e.split(' — ')[0]}</strong> — ${e.split(' — ')[1]}</span></div>`).join('')}
   </div>
   <div class="pp" style="page-break-before:always">
     <h2>Récapitulatif de visite — ${dos.adresse || '—'}</h2>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem">
-      <div style="background:#FAF8F4;border-radius:10px;padding:16px"><div style="font-size:11px;color:#8A8278;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Type de bien</div><div style="font-weight:500">${dos.type || '—'}${dos.surface ? ' · ' + dos.surface + ' m²' : ''}</div></div>
-      <div style="background:#FAF8F4;border-radius:10px;padding:16px"><div style="font-size:11px;color:#8A8278;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Date de visite</div><div style="font-weight:500">${dos.visite?.date || '—'}</div></div>
+      <div style="background:#FBF8F3;border-radius:10px;padding:16px"><div style="font-size:11px;color:#8A8278;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Type de bien</div><div style="font-weight:500">${dos.type || '—'}${dos.surface ? ' · ' + dos.surface + ' m²' : ''}</div></div>
+      <div style="background:#FBF8F3;border-radius:10px;padding:16px"><div style="font-size:11px;color:#8A8278;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Date de visite</div><div style="font-weight:500">${dos.visite?.date || '—'}</div></div>
     </div>
-    ${dos.visite?.cr ? `<div style="background:#FAF8F4;border-radius:8px;padding:14px;border-left:3px solid #4A7C28;margin-bottom:1.5rem"><div style="font-size:11px;font-weight:500;color:#2D5016;margin-bottom:6px">COMPTE-RENDU DE VISITE</div><div style="white-space:pre-wrap">${dos.visite.cr}</div></div>` : ''}
+    ${dos.visite?.cr ? `<div style="background:#FBF8F3;border-radius:8px;padding:14px;border-left:3px solid #6B3A45;margin-bottom:1.5rem"><div style="font-size:11px;font-weight:500;color:#542C35;margin-bottom:6px">COMPTE-RENDU DE VISITE</div><div style="white-space:pre-wrap">${dos.visite.cr}</div></div>` : ''}
     <h2>Estimation de revenus</h2>
     ${simHTML}
   </div>
@@ -4856,53 +4856,53 @@ function genProposition() {
   <div class="pp" style="page-break-before:always">
     <h2>Nos recommandations</h2>
     <p style="color:#4A4640;margin-bottom:1.5rem">Suite à notre visite du ${today}, voici nos recommandations pour optimiser votre bien :</p>
-    ${(dos.recos || []).map(r => `<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:#FAF8F4;border-radius:8px;border:1px solid #E8E2D8;margin-bottom:8px"><span>→</span><span>${r}</span></div>`).join('')}
-    ${dos.recoCustom ? `<div style="background:#EDF3E8;border-radius:8px;padding:14px;border-left:3px solid #4A7C28;margin-top:8px"><div style="font-size:11px;font-weight:500;color:#2D5016;margin-bottom:6px">PERSONNALISÉES</div>${dos.recoCustom.split('\n').filter(l => l.trim()).map(l => `<div style="margin-bottom:4px">→ ${l}</div>`).join('')}</div>` : ''}
+    ${(dos.recos || []).map(r => `<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:#FBF8F3;border-radius:8px;border:1px solid #E8E2D8;margin-bottom:8px"><span>→</span><span>${r}</span></div>`).join('')}
+    ${dos.recoCustom ? `<div style="background:#F3E8E6;border-radius:8px;padding:14px;border-left:3px solid #6B3A45;margin-top:8px"><div style="font-size:11px;font-weight:500;color:#542C35;margin-bottom:6px">PERSONNALISÉES</div>${dos.recoCustom.split('\n').filter(l => l.trim()).map(l => `<div style="margin-bottom:4px">→ ${l}</div>`).join('')}</div>` : ''}
   </div>` : ''}
   <div class="pp" style="page-break-before:always">
     <h2>Offre retenue & tarifs</h2>
     ${offreNom ? `
-    <div style="background:${offre==='premium'?'#FDF5E0':offre==='confort'?'#EDF3E8':'#E8EFF9'};border:2px solid ${offre==='premium'?'#C89820':offre==='confort'?'#4A7C28':'#3A6BC4'};border-radius:12px;padding:20px 24px;margin-bottom:1.5rem">
+    <div style="background:${offre==='premium'?'#FDF5E0':offre==='confort'?'#F3E8E6':'#E8EFF9'};border:2px solid ${offre==='premium'?'#C89820':offre==='confort'?'#6B3A45':'#3A6BC4'};border-radius:12px;padding:20px 24px;margin-bottom:1.5rem">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
         <div>
-          <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:${offre==='premium'?'#8B6914':offre==='confort'?'#2D5016':'#1A3A6B'};margin-bottom:3px">Offre sélectionnée</div>
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:${offre==='premium'?'#8B6914':offre==='confort'?'#542C35':'#1A3A6B'};margin-bottom:3px">Offre sélectionnée</div>
           <div style="font-family:'Cormorant Garamond',serif;font-size:26px">${offreNom}</div>
         </div>
         <div style="text-align:right">
-          <div style="font-size:11px;color:#8A8278;margin-bottom:3px">Commission Maison Jade</div>
-          <div style="font-size:32px;font-weight:700;color:${offre==='premium'?'#8B6914':offre==='confort'?'#2D5016':'#1A3A6B'}">${offreComm}% HT</div>
+          <div style="font-size:11px;color:#8A8278;margin-bottom:3px">Commission Maison Jayla</div>
+          <div style="font-size:32px;font-weight:700;color:${offre==='premium'?'#8B6914':offre==='confort'?'#542C35':'#1A3A6B'}">${offreComm}% HT</div>
           <div style="font-size:11px;color:#8A8278;margin-top:2px">soit ${(parseFloat(offreComm)*1.2).toFixed(1)}% TTC · TVA 20%</div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        ${(offreInclus[offre]||[]).map(item => `<div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1C1A16"><span style="color:${offre==='premium'?'#8B6914':offre==='confort'?'#4A7C28':'#3A6BC4'};font-weight:700">✓</span>${item}</div>`).join('')}
+        ${(offreInclus[offre]||[]).map(item => `<div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#542C35"><span style="color:${offre==='premium'?'#8B6914':offre==='confort'?'#6B3A45':'#3A6BC4'};font-weight:700">✓</span>${item}</div>`).join('')}
       </div>
     </div>
-    <div style="font-size:11px;color:#8A8278;padding:8px;background:#FAF8F4;border-radius:6px;margin-bottom:1rem">Tarifs exprimés en HT (hors taxes). TVA au taux normal de 20% applicable en sus, conformément à la réglementation SASU. Aucun frais fixe — la commission est prélevée uniquement sur les revenus générés, après déduction des frais Airbnb (3%). Vous ne payez que si votre bien génère des revenus.</div>
-    ${dos.offreNotes ? `<div style="background:#FAF8F4;border-radius:8px;padding:12px 16px;border-left:3px solid #4A7C28"><div style="font-size:11px;font-weight:600;color:#2D5016;margin-bottom:4px">CONDITIONS PARTICULIÈRES</div><div style="font-size:12px;white-space:pre-wrap">${dos.offreNotes}</div></div>` : ''}
+    <div style="font-size:11px;color:#8A8278;padding:8px;background:#FBF8F3;border-radius:6px;margin-bottom:1rem">Tarifs exprimés en HT (hors taxes). TVA au taux normal de 20% applicable en sus, conformément à la réglementation SASU. Aucun frais fixe — la commission est prélevée uniquement sur les revenus générés, après déduction des frais Airbnb (3%). Vous ne payez que si votre bien génère des revenus.</div>
+    ${dos.offreNotes ? `<div style="background:#FBF8F3;border-radius:8px;padding:12px 16px;border-left:3px solid #6B3A45"><div style="font-size:11px;font-weight:600;color:#542C35;margin-bottom:4px">CONDITIONS PARTICULIÈRES</div><div style="font-size:12px;white-space:pre-wrap">${dos.offreNotes}</div></div>` : ''}
     ` : `
-    ${svcsG.length ? `<div style="margin-bottom:1.5rem"><div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#4A7C28;margin-bottom:10px">Gestion locative complète</div>${svcsG.map(s => `<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;background:#FAF8F4;border-radius:8px;border:1px solid #E8E2D8;margin-bottom:6px"><span style="color:#4A7C28">✓</span><span>${s}</span></div>`).join('')}<div style="margin-top:12px;background:#EDF3E8;border-radius:8px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><span style="font-weight:500">Commission Maison Jade</span><span style="font-size:20px;font-weight:700;color:#2D5016">${dos.comm || '—'}%</span></div></div>` : ''}
+    ${svcsG.length ? `<div style="margin-bottom:1.5rem"><div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#6B3A45;margin-bottom:10px">Gestion locative complète</div>${svcsG.map(s => `<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;background:#FBF8F3;border-radius:8px;border:1px solid #E8E2D8;margin-bottom:6px"><span style="color:#6B3A45">✓</span><span>${s}</span></div>`).join('')}<div style="margin-top:12px;background:#F3E8E6;border-radius:8px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><span style="font-weight:500">Commission Maison Jayla</span><span style="font-size:20px;font-weight:700;color:#542C35">${dos.comm || '—'}%</span></div></div>` : ''}
     `}
     ${svcsA.length ? `<div><div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#4A1A6B;margin-bottom:10px">Prestations avant commercialisation</div>${svcsA.map(s => `<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;background:#F0E8F9;border-radius:8px;border:1px solid #C8A8F0;margin-bottom:6px"><span style="color:#7C28A0">✓</span><span>${s}</span></div>`).join('')}<div style="font-size:11px;color:#8A8278;margin-top:8px">Ces prestations font l'objet d'un devis personnalisé.</div></div>` : ''}
   </div>
   <div class="pp" style="page-break-before:always;display:flex;flex-direction:column;justify-content:space-between;">
     <div>
       <h2>Prochaines étapes</h2>
-      ${[['Validation de la proposition','Vous confirmez votre accord sur les services et les conditions'],['Signature du mandat de gestion','Formalisation par un contrat de mandat clair et protecteur'],[svcsA.length ? 'Prestations avant mise en location' : 'Préparation du bien',svcsA.length ? 'Réalisation des prestations de décoration / rénovation' : 'Photos, équipements, création de l\'annonce'],['🚀 Mise en ligne & premières réservations','Votre bien est en ligne — nous gérons tout, vous encaissez.']].map((step, i) => `<div style="display:flex;gap:16px;padding-bottom:20px"><div style="width:36px;height:36px;border-radius:50%;background:${i === 3 ? '#1C1A16' : '#4A7C28'};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">${i + 1}</div><div><div style="font-weight:500;margin-bottom:4px">${step[0]}</div><div style="font-size:12px;color:#8A8278">${step[1]}</div></div></div>`).join('')}
+      ${[['Validation de la proposition','Vous confirmez votre accord sur les services et les conditions'],['Signature du mandat de gestion','Formalisation par un contrat de mandat clair et protecteur'],[svcsA.length ? 'Prestations avant mise en location' : 'Préparation du bien',svcsA.length ? 'Réalisation des prestations de décoration / rénovation' : 'Photos, équipements, création de l\'annonce'],['🚀 Mise en ligne & premières réservations','Votre bien est en ligne — nous gérons tout, vous encaissez.']].map((step, i) => `<div style="display:flex;gap:16px;padding-bottom:20px"><div style="width:36px;height:36px;border-radius:50%;background:${i === 3 ? '#542C35' : '#6B3A45'};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">${i + 1}</div><div><div style="font-weight:500;margin-bottom:4px">${step[0]}</div><div style="font-size:12px;color:#8A8278">${step[1]}</div></div></div>`).join('')}
     </div>
-    <div style="background:#1C1A16;border-radius:14px;padding:28px;color:#F5F2EC">
+    <div style="background:#542C35;border-radius:14px;padding:28px;color:#F5F2EC">
       <div style="font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:12px">VOTRE CONTACT</div>
-      <div style="font-size:18px;font-weight:500;margin-bottom:4px">Jade · Maison Jade</div>
+      <div style="font-size:18px;font-weight:500;margin-bottom:4px">Mélanie · Maison Jayla</div>
       <div style="font-size:13px;color:rgba(255,255,255,0.45)">Conciergerie premium · France & International</div>
       <div style="margin-top:12px;display:flex;gap:16px;flex-wrap:wrap">
-        <span style="font-size:13px;color:#9DC46A">✉ contact@maisonjade.com</span>
-        <span style="font-size:13px;color:#9DC46A">🌐 www.maisonjade.fr</span>
+        <span style="font-size:13px;color:#C5A477">✉ contact@maisonjayla.com</span>
+        <span style="font-size:13px;color:#C5A477">🌐 www.maisonjayla.com</span>
       </div>
     </div>
   </div>`;
 
   const win = window.open('', '_blank', 'width=900,height=700');
-  win.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Proposition Maison Jade — ${dos.prenom} ${dos.nom}</title></head><body>${doc}<script>window.onload=function(){window.print();}<\/script></body></html>`);
+  win.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Proposition Maison Jayla — ${dos.prenom} ${dos.nom}</title></head><body>${doc}<script>window.onload=function(){window.print();}<\/script></body></html>`);
   win.document.close();
 }
 
@@ -5043,9 +5043,9 @@ function dosLabel(dos) {
 function offreBadgeHTML(dos, compact=false) {
   if (!dos.offreChoisie) return '';
   const OFFRE = {
-    essentiel: { label: 'Essentiel', color: '#5B4335', bg: '#F5F0E8', border: '#CDBCA7' },
-    confort:   { label: 'Confort',   color: '#31483F', bg: '#E8EDEA', border: '#9AAFA8' },
-    premium:   { label: 'Premium',   color: '#7A5530', bg: '#F4EDE3', border: '#D4B898' }
+    essentiel: { label: 'Essentiel', color: '#5A4A4E', bg: '#F5EFE7', border: '#B9A99A' },
+    confort:   { label: 'Confort',   color: '#542C35', bg: '#F3E8E6', border: '#C9AEB2' },
+    premium:   { label: 'Premium',   color: '#6E5434', bg: '#F4EDE3', border: '#DCC6A6' }
   };
   const cfg = OFFRE[dos.offreChoisie]; if (!cfg) return '';
   const comm = dos['comm-'+dos.offreChoisie] || dos.comm || {essentiel:'16',confort:'22',premium:'25'}[dos.offreChoisie];
@@ -5216,8 +5216,8 @@ function genReglPDF() {
   const allItems = Object.entries(rgItemsData).flatMap(([key, items]) => items.map((lbl,i) => ({ lbl, id:'rg-'+key+'-'+i })));
   const rows = allItems.map(it => { const v=rg[it.id]||'faire'; return `<tr><td>${it.lbl}</td><td style="text-align:center">${v==='fait'?'✅':v==='cours'?'⏳':'❌'}</td></tr>`; }).join('');
   const win = window.open('','_blank');
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Récapitulatif réglementaire</title><style>body{font-family:sans-serif;padding:40px;color:#1A1710;}table{width:100%;border-collapse:collapse;margin-top:16px;}th{text-align:left;padding:8px;background:#F5EDD6;border-bottom:2px solid #DDD0B0;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;}td{padding:9px 8px;border-bottom:1px solid #F0E8D0;font-size:13px;}</style></head><body>
-  <h2 style="font-family:serif">Récapitulatif réglementaire · Maison Jade</h2>
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Récapitulatif réglementaire</title><style>body{font-family:sans-serif;padding:40px;color:#241D1F;}table{width:100%;border-collapse:collapse;margin-top:16px;}th{text-align:left;padding:8px;background:#F5EDD6;border-bottom:2px solid #DDD0B0;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;}td{padding:9px 8px;border-bottom:1px solid #F0E8D0;font-size:13px;}</style></head><body>
+  <h2 style="font-family:serif">Récapitulatif réglementaire · Maison Jayla</h2>
   <p style="color:#8A7A5A;font-size:13px">${dos.prenom} ${dos.nom} · ${dos.adresse||'—'} · ${today}</p>
   <table><thead><tr><th>Obligation</th><th>Statut</th></tr></thead><tbody>${rows}</tbody></table>
   ${rg.notes?`<div style="margin-top:20px;padding:14px;background:#F5EDD6;border-radius:8px"><strong>Notes :</strong> ${rg.notes}</div>`:''}
@@ -5281,7 +5281,7 @@ function renderActions(dos) {
   };
   document.getElementById('cl-pre').innerHTML = mkCL(preList,'pre','prog-prelancement');
   document.getElementById('cl-inter').innerHTML = mkCL(interList,'inter','prog-intersejour');
-  const urgences=[{pb:'Dégât des eaux',act:'Fermer vanne principale',contact:dos.prestataire_menage||'— à compléter'},{pb:'Panne électrique',act:'Vérifier disjoncteur',contact:dos.artisan||'— à compléter'},{pb:'Voyageur bloqué',act:'Appeler collaborateur de garde',contact:'— à définir'},{pb:'Serrure défaillante',act:'Serrurier d\'urgence',contact:'— à compléter'},{pb:'Incident voyageur',act:'Documenter + contacter Jade',contact:'+33 6 00 00 00 00'},{pb:'Sinistre / vol',act:'Police + Airbnb résolution',contact:'17 + support Airbnb'}];
+  const urgences=[{pb:'Dégât des eaux',act:'Fermer vanne principale',contact:dos.prestataire_menage||'— à compléter'},{pb:'Panne électrique',act:'Vérifier disjoncteur',contact:dos.artisan||'— à compléter'},{pb:'Voyageur bloqué',act:'Appeler collaborateur de garde',contact:'— à définir'},{pb:'Serrure défaillante',act:'Serrurier d\'urgence',contact:'— à compléter'},{pb:'Incident voyageur',act:'Documenter + contacter Mélanie',contact:'+33 6 00 00 00 00'},{pb:'Sinistre / vol',act:'Police + Airbnb résolution',contact:'17 + support Airbnb'}];
   document.getElementById('cl-urgences').innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr><th style="text-align:left;padding:8px 10px;background:var(--surface2);border-bottom:1px solid var(--border);color:var(--red)">Problème</th><th style="text-align:left;padding:8px 10px;background:var(--surface2);border-bottom:1px solid var(--border)">Action immédiate</th><th style="text-align:left;padding:8px 10px;background:var(--surface2);border-bottom:1px solid var(--border)">Contact</th></tr></thead><tbody>${urgences.map(u=>`<tr><td style="padding:8px 10px;border-bottom:1px solid var(--border);font-weight:500;color:var(--red)">${u.pb}</td><td style="padding:8px 10px;border-bottom:1px solid var(--border)">${u.act}</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--gold);font-weight:500">${u.contact}</td></tr>`).join('')}</tbody></table>`;
   const hist=dos.actions.interventions||[];
   document.getElementById('historique-interventions').innerHTML=hist.length?hist.map((h,i)=>`<div style="display:flex;align-items:flex-start;gap:10px;padding:9px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;font-size:12px"><span style="color:var(--ink3);min-width:80px;flex-shrink:0">${h.date}</span><span style="flex:1"><strong>${h.type}</strong> · ${h.collab}<br><span style="color:var(--ink3)">${h.note}</span></span><button onclick="dltInt(${i})" style="padding:2px 7px;border:1px solid var(--redbd);background:var(--redbg);color:var(--red);border-radius:5px;cursor:pointer;font-size:11px">✕</button></div>`).join(''):'<div style="font-size:12px;color:var(--ink3);padding:8px">Aucune intervention enregistrée.</div>';
@@ -5292,7 +5292,7 @@ function addIntervention() {
   if(!dos.actions) dos.actions={pre:{},inter:{},interventions:[]};
   const date=prompt('Date :')||new Date().toLocaleDateString('fr-FR');
   const type=prompt('Type d\'action :')||'—';
-  const collab=prompt('Collaborateur :')||'Jade';
+  const collab=prompt('Collaborateur :')||'Mélanie';
   const note=prompt('Note :')||'';
   dos.actions.interventions.unshift({date,type,collab,note}); persist(); renderActions(dos);
 }
@@ -5328,11 +5328,11 @@ function renderEmailTemplates() {
   const d=emailDos;
   const prenom=d?.prenom||'[Prénom]', adresse=d?.adresse||'[Adresse]', email=d?.email||'';
   const templates=[
-    {code:'E1',titre:'📅 Confirmation de visite découverte',sujet:`Maison Jade — Confirmation visite · ${adresse}`,corps:`Bonjour ${prenom},\n\nJe confirme notre visite découverte pour le bien situé au ${adresse}.\n\n📅 Date : ${d?.visite?.date?new Date(d.visite.date).toLocaleDateString('fr-FR'):'[date]'}\n⏰ Heure : ${d?.visite?.heure||'[heure]'}\n📍 Adresse : ${adresse}\n\nN'hésitez pas à me contacter pour toute question.\n\nÀ très bientôt,\nJade · Maison Jade\ncontact@maisonjade.com`},
-    {code:'E2',titre:'📄 Envoi de la proposition commerciale',sujet:`Maison Jade — Votre proposition commerciale · ${adresse}`,corps:`Bonjour ${prenom},\n\nSuite à notre visite, veuillez trouver en pièce jointe votre proposition commerciale pour le bien au ${adresse}.\n\nElle comprend notre estimation de revenus, les services retenus et les prochaines étapes.\n\nCordialement,\nJade · Maison Jade\ncontact@maisonjade.com`},
-    {code:'E3',titre:'📋 Demande de documents manquants',sujet:`Maison Jade — Documents nécessaires · ${adresse}`,corps:`Bonjour ${prenom},\n\nPour finaliser votre dossier, nous avons besoin de :\n\n□ Attestation assurance PNO\n□ Numéro d'enregistrement mairie\n□ Règlement de copropriété\n□ RIB pour les reversements\n□ DPE\n\nMerci de nous les transmettre par email ou WhatsApp.\n\nJade · Maison Jade\ncontact@maisonjade.com`},
-    {code:'E4',titre:'🎉 Confirmation mise en ligne',sujet:`Maison Jade — Votre annonce est en ligne ! · ${adresse}`,corps:`Bonjour ${prenom},\n\nVotre bien au ${adresse} est maintenant en ligne sur Airbnb ! 🎉\n\n${d?.lien?'👉 '+d.lien:'👉 Lien à venir'}\n\nNous gérons tout — vous recevrez votre premier rapport dans 30 jours.\n\nJade · Maison Jade\ncontact@maisonjade.com`},
-    {code:'E5',titre:'📊 Rapport mensuel propriétaire',sujet:`Maison Jade — Rapport du mois · ${adresse}`,corps:`Bonjour ${prenom},\n\nVoici le bilan du mois pour votre bien au ${adresse} :\n\n🏠 Nuits louées : [X]\n💰 Revenus : [X]€\n⭐ Note Airbnb : [X.X]/5\n📊 Taux d'occupation : [X]%\n\nProchaines actions : [À compléter]\n\nJade · Maison Jade\ncontact@maisonjade.com`}
+    {code:'E1',titre:'📅 Confirmation de visite découverte',sujet:`Maison Jayla — Confirmation visite · ${adresse}`,corps:`Bonjour ${prenom},\n\nJe confirme notre visite découverte pour le bien situé au ${adresse}.\n\n📅 Date : ${d?.visite?.date?new Date(d.visite.date).toLocaleDateString('fr-FR'):'[date]'}\n⏰ Heure : ${d?.visite?.heure||'[heure]'}\n📍 Adresse : ${adresse}\n\nN'hésitez pas à me contacter pour toute question.\n\nÀ très bientôt,\nMélanie · Maison Jayla\ncontact@maisonjayla.com`},
+    {code:'E2',titre:'📄 Envoi de la proposition commerciale',sujet:`Maison Jayla — Votre proposition commerciale · ${adresse}`,corps:`Bonjour ${prenom},\n\nSuite à notre visite, veuillez trouver en pièce jointe votre proposition commerciale pour le bien au ${adresse}.\n\nElle comprend notre estimation de revenus, les services retenus et les prochaines étapes.\n\nCordialement,\nMélanie · Maison Jayla\ncontact@maisonjayla.com`},
+    {code:'E3',titre:'📋 Demande de documents manquants',sujet:`Maison Jayla — Documents nécessaires · ${adresse}`,corps:`Bonjour ${prenom},\n\nPour finaliser votre dossier, nous avons besoin de :\n\n□ Attestation assurance PNO\n□ Numéro d'enregistrement mairie\n□ Règlement de copropriété\n□ RIB pour les reversements\n□ DPE\n\nMerci de nous les transmettre par email ou WhatsApp.\n\nMélanie · Maison Jayla\ncontact@maisonjayla.com`},
+    {code:'E4',titre:'🎉 Confirmation mise en ligne',sujet:`Maison Jayla — Votre annonce est en ligne ! · ${adresse}`,corps:`Bonjour ${prenom},\n\nVotre bien au ${adresse} est maintenant en ligne sur Airbnb ! 🎉\n\n${d?.lien?'👉 '+d.lien:'👉 Lien à venir'}\n\nNous gérons tout — vous recevrez votre premier rapport dans 30 jours.\n\nMélanie · Maison Jayla\ncontact@maisonjayla.com`},
+    {code:'E5',titre:'📊 Rapport mensuel propriétaire',sujet:`Maison Jayla — Rapport du mois · ${adresse}`,corps:`Bonjour ${prenom},\n\nVoici le bilan du mois pour votre bien au ${adresse} :\n\n🏠 Nuits louées : [X]\n💰 Revenus : [X]€\n⭐ Note Airbnb : [X.X]/5\n📊 Taux d'occupation : [X]%\n\nProchaines actions : [À compléter]\n\nMélanie · Maison Jayla\ncontact@maisonjayla.com`}
   ];
   const c=document.getElementById('email-templates'); if(!c) return;
   c.innerHTML=templates.map(t=>`<div class="scard" style="margin-bottom:1rem"><div class="scard-hd"><span class="scard-num">${t.code}</span><span class="scard-title">${t.titre}</span></div><div class="scard-body"><div style="margin-bottom:8px"><label class="fl">Sujet</label><input type="text" value="${t.sujet}" id="subj-${t.code}" style="background:var(--surface2)"></div><label class="fl">Corps</label><textarea id="body-${t.code}" style="min-height:150px;background:var(--surface2);font-family:'JetBrains Mono',monospace;font-size:12px">${t.corps}</textarea><div style="display:flex;gap:8px;margin-top:10px"><button class="btn btn-ghost btn-sm" onclick="cpEmail('${t.code}')">📋 Copier</button><button class="btn btn-primary btn-sm" onclick="mlEmail('${t.code}','${email}')">✉ Ouvrir messagerie</button></div></div></div>`).join('');
@@ -5486,7 +5486,7 @@ function renderCal() {
   const NAME_W = 170;
 
   // THEAD
-  let thead = `<tr><th style="width:${NAME_W}px;min-width:${NAME_W}px;position:sticky;left:0;z-index:3;background:white;padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:#1A1710;border-bottom:2px solid var(--border);border-right:2px solid var(--border)">Bien</th>`;
+  let thead = `<tr><th style="width:${NAME_W}px;min-width:${NAME_W}px;position:sticky;left:0;z-index:3;background:white;padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:#241D1F;border-bottom:2px solid var(--border);border-right:2px solid var(--border)">Bien</th>`;
   for (let d = 1; d <= daysInMonth; d++) {
     const date = new Date(calYear, calMonth, d); date.setHours(0,0,0,0);
     const isToday = date.getTime() === today.getTime();
@@ -5494,7 +5494,7 @@ function renderCal() {
     const isPast = date < today;
     thead += `<th style="width:${COL_W}px;min-width:${COL_W}px;padding:8px 2px;text-align:center;border-bottom:2px solid ${isToday?'var(--gold)':'var(--border)'};border-right:1px solid var(--border);background:${isToday?'var(--goldbg)':isPast?'white':'white'}">
       <div style="font-size:9px;color:${isWeekend&&!isToday?'#c0392b':'var(--ink3)'};font-weight:500">${JOURS_COURT[date.getDay()]}</div>
-      <div style="font-size:14px;font-weight:${isToday?'800':'400'};color:${isToday?'var(--gold)':isPast?'#8A7A5A':'#1A1710'};margin-top:1px">${d}</div>
+      <div style="font-size:14px;font-weight:${isToday?'800':'400'};color:${isToday?'var(--gold)':isPast?'#8A7A5A':'#241D1F'};margin-top:1px">${d}</div>
     </th>`;
   }
   thead += '</tr>';
@@ -5709,7 +5709,7 @@ function openReservModal(dosId, uidEnc) {
           <!-- Montant -->
           <div style="margin-bottom:12px">
             <label style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px">Montant réservation (€)</label>
-            <input type="number" id="reser-montant" value="${montant}" placeholder="Loyer brut voyageur (hors ménage)" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:14px;background:var(--surface2);font-family:'Inter',sans-serif">
+            <input type="number" id="reser-montant" value="${montant}" placeholder="Loyer brut voyageur (hors ménage)" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:14px;background:var(--surface2);font-family:'Manrope',sans-serif">
             <div style="font-size:11px;color:var(--ink3);margin-top:3px">Saisie manuelle — non disponible via iCal</div>
           </div>
 
@@ -5725,7 +5725,7 @@ function openReservModal(dosId, uidEnc) {
           <!-- Notes -->
           <div style="margin-bottom:16px">
             <label style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px">Notes internes</label>
-            <textarea id="reser-notes" placeholder="Check-in tardif, voyageur fidèle, incident signalé..." style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;min-height:60px;background:var(--surface2);font-family:'Inter',sans-serif;resize:vertical">${(dos.calNotes||{})[uid]||''}</textarea>
+            <textarea id="reser-notes" placeholder="Check-in tardif, voyageur fidèle, incident signalé..." style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;min-height:60px;background:var(--surface2);font-family:'Manrope',sans-serif;resize:vertical">${(dos.calNotes||{})[uid]||''}</textarea>
           </div>
 
           <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saveReservModal(${dosId},'${uidEnc}')">💾 Enregistrer</button>
@@ -6040,42 +6040,42 @@ function apercuFacture(id) {
   const idx = factures.indexOf(f);
   document.getElementById('pdf-modal-title').textContent = 'Facture ' + f.num;
   document.getElementById('fact-pdf-content').innerHTML = `
-    <div style="padding:20px;max-width:600px;margin:0 auto;font-family:'Montserrat',sans-serif">
+    <div style="padding:20px;max-width:600px;margin:0 auto;font-family:'Manrope',sans-serif">
       <!-- En-tête -->
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px">
         <div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#31483F">Maison <em style="font-style:italic">Jade</em></div>
-          <div style="font-size:11px;color:#9A8878;letter-spacing:0.12em;text-transform:uppercase;margin-top:4px">Conciergerie Premium</div>
-          <div style="font-size:11px;color:#5B4335;margin-top:8px;line-height:1.7">
-            contact@maisonjade.com<br>www.maisonjade.fr<br>SASU — TVA FR00 000 000 000
+          <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#542C35">Maison <em style="font-style:italic">Jayla</em></div>
+          <div style="font-size:11px;color:#8A7B7E;letter-spacing:0.12em;text-transform:uppercase;margin-top:4px">Conciergerie Premium</div>
+          <div style="font-size:11px;color:#5A4A4E;margin-top:8px;line-height:1.7">
+            contact@maisonjayla.com<br>www.maisonjayla.com<br>MAISON J LTD · Companies House n° 17471574
           </div>
         </div>
         <div style="text-align:right">
-          <div style="font-size:20px;font-weight:600;color:#31483F">FACTURE</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#5B4335;margin-top:4px">${f.num}</div>
-          <div style="font-size:12px;color:#9A8878;margin-top:8px">Émise le : ${new Date(f.dateEmission).toLocaleDateString('fr-FR')}</div>
-          <div style="font-size:12px;color:#9A8878">Échéance : ${new Date(f.dateEcheance).toLocaleDateString('fr-FR')}</div>
+          <div style="font-size:20px;font-weight:600;color:#542C35">FACTURE</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#5A4A4E;margin-top:4px">${f.num}</div>
+          <div style="font-size:12px;color:#8A7B7E;margin-top:8px">Émise le : ${new Date(f.dateEmission).toLocaleDateString('fr-FR')}</div>
+          <div style="font-size:12px;color:#8A7B7E">Échéance : ${new Date(f.dateEcheance).toLocaleDateString('fr-FR')}</div>
         </div>
       </div>
       <!-- Client -->
-      <div style="background:#F5F0E8;border-radius:6px;padding:16px;margin-bottom:24px">
-        <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#9A8878;margin-bottom:8px">Facturé à</div>
-        <div style="font-size:15px;font-weight:500;color:#2A1F15">${demoNom(f.proprietaireNom,'',idx)}</div>
-        <div style="font-size:13px;color:#5B4335;margin-top:4px">${demoAdresse(f.bien,idx)}</div>
-        ${f.proprietaireEmail?`<div style="font-size:12px;color:#9A8878;margin-top:4px">${demoStr(f.proprietaireEmail,'e••••@•••.fr')}</div>`:''}
+      <div style="background:#F5EFE7;border-radius:6px;padding:16px;margin-bottom:24px">
+        <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#8A7B7E;margin-bottom:8px">Facturé à</div>
+        <div style="font-size:15px;font-weight:500;color:#30282A">${demoNom(f.proprietaireNom,'',idx)}</div>
+        <div style="font-size:13px;color:#5A4A4E;margin-top:4px">${demoAdresse(f.bien,idx)}</div>
+        ${f.proprietaireEmail?`<div style="font-size:12px;color:#8A7B7E;margin-top:4px">${demoStr(f.proprietaireEmail,'e••••@•••.fr')}</div>`:''}
       </div>
       <!-- Détail -->
       <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
-        <thead><tr style="background:#31483F;color:white">
+        <thead><tr style="background:#542C35;color:white">
           <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:500;letter-spacing:0.08em">Prestation</th>
           <th style="padding:10px 14px;text-align:right;font-size:11px;font-weight:500">Montant HT</th>
         </tr></thead>
         <tbody>
-          <tr style="border-bottom:1px solid #D8CFBF">
+          <tr style="border-bottom:1px solid #E3D9CE">
             <td style="padding:12px 14px;font-size:13px">
               <div style="font-weight:500">Commission de gestion Airbnb — ${MOIS[f.mois]} ${f.annee}</div>
-              <div style="font-size:11px;color:#9A8878;margin-top:3px">Bien : ${demoAdresse(f.bien,idx)} · Offre ${f.offre} (${f.taux}%)</div>
-              ${f.notes?`<div style="font-size:11px;color:#9A8878;margin-top:3px;white-space:pre-line">${f.notes}</div>`:''}
+              <div style="font-size:11px;color:#8A7B7E;margin-top:3px">Bien : ${demoAdresse(f.bien,idx)} · Offre ${f.offre} (${f.taux}%)</div>
+              ${f.notes?`<div style="font-size:11px;color:#8A7B7E;margin-top:3px;white-space:pre-line">${f.notes}</div>`:''}
             </td>
             <td style="padding:12px 14px;text-align:right;font-weight:500;font-size:14px">${demoChiffre(f.montantHT).toLocaleString('fr-FR')} €</td>
           </tr>
@@ -6084,21 +6084,21 @@ function apercuFacture(id) {
       <!-- Totaux -->
       <div style="display:flex;justify-content:flex-end;margin-bottom:32px">
         <div style="width:260px">
-          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #D8CFBF;font-size:13px;color:#5B4335">
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #E3D9CE;font-size:13px;color:#5A4A4E">
             <span>Sous-total HT</span><span>${demoChiffre(f.montantHT).toLocaleString('fr-FR')} €</span>
           </div>
-          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #D8CFBF;font-size:13px;color:#5B4335">
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #E3D9CE;font-size:13px;color:#5A4A4E">
             <span>TVA (20%)</span><span>${demoChiffre(f.tva).toLocaleString('fr-FR')} €</span>
           </div>
-          <div style="display:flex;justify-content:space-between;padding:12px 0;font-size:16px;font-weight:700;color:#31483F">
+          <div style="display:flex;justify-content:space-between;padding:12px 0;font-size:16px;font-weight:700;color:#542C35">
             <span>Total TTC</span><span>${demoChiffre(f.ttc).toLocaleString('fr-FR')} €</span>
           </div>
         </div>
       </div>
       <!-- Pied -->
-      <div style="border-top:1px solid #D8CFBF;padding-top:16px;font-size:11px;color:#9A8878;line-height:1.7">
+      <div style="border-top:1px solid #E3D9CE;padding-top:16px;font-size:11px;color:#8A7B7E;line-height:1.7">
         Virement bancaire sous ${new Date(f.dateEcheance)>new Date()?Math.ceil((new Date(f.dateEcheance)-new Date())/86400000)+' jours':'30 jours'}. 
-        Maison Jade SASU — contact@maisonjade.com · Tout retard de paiement entraîne des pénalités de 3× le taux légal.
+        MAISON J LTD (Maison Jayla) — contact@maisonjayla.com · Tout retard de paiement entraîne des pénalités de 3× le taux légal.
       </div>
     </div>`;
   openModal('modal-facture-pdf');
@@ -6371,7 +6371,7 @@ function updateSaisonnalite() {
   bars.innerHTML = profil.taux.map((t, i) => {
     const pct = Math.round(t * 100);
     const h = Math.round((t / max) * 80) + 20;
-    const col = t >= 0.75 ? '#A57C52' : t >= 0.55 ? '#31483F' : '#C2D4CD';
+    const col = t >= 0.75 ? '#9A7A4C' : t >= 0.55 ? '#542C35' : '#DCC8CA';
     return `<div style="text-align:center">
       <div style="font-size:9px;color:var(--ink3);margin-bottom:2px">${pct}%</div>
       <div style="height:${h}px;background:${col};border-radius:3px 3px 0 0;min-height:8px"></div>
@@ -6380,9 +6380,9 @@ function updateSaisonnalite() {
 
   // Légende
   document.getElementById('saison-legend').innerHTML = `
-    <span style="display:flex;align-items:center;gap:4px;font-size:11px"><span style="width:10px;height:10px;border-radius:2px;background:#A57C52;display:inline-block"></span>Haute saison (≥75%)</span>
-    <span style="display:flex;align-items:center;gap:4px;font-size:11px"><span style="width:10px;height:10px;border-radius:2px;background:#31483F;display:inline-block"></span>Moyenne saison (55-75%)</span>
-    <span style="display:flex;align-items:center;gap:4px;font-size:11px"><span style="width:10px;height:10px;border-radius:2px;background:#C2D4CD;display:inline-block"></span>Basse saison (<55%)</span>`;
+    <span style="display:flex;align-items:center;gap:4px;font-size:11px"><span style="width:10px;height:10px;border-radius:2px;background:#9A7A4C;display:inline-block"></span>Haute saison (≥75%)</span>
+    <span style="display:flex;align-items:center;gap:4px;font-size:11px"><span style="width:10px;height:10px;border-radius:2px;background:#542C35;display:inline-block"></span>Moyenne saison (55-75%)</span>
+    <span style="display:flex;align-items:center;gap:4px;font-size:11px"><span style="width:10px;height:10px;border-radius:2px;background:#DCC8CA;display:inline-block"></span>Basse saison (<55%)</span>`;
 
   // Mettre à jour les fourchettes indicatives à l'étape 2
   updateFourchettes();
@@ -6644,7 +6644,7 @@ function calculerResultats() {
     <tr style="${r.style}">
       <td style="padding:7px 10px;font-weight:500">${r.mois}</td>
       <td style="padding:7px 10px;text-align:center;font-size:12px">
-        <div style="background:${r.taux>=75?'#A57C52':r.taux>=55?'#31483F':'#C2D4CD'};color:white;border-radius:10px;padding:2px 6px;display:inline-block">${r.taux}%</div>
+        <div style="background:${r.taux>=75?'#9A7A4C':r.taux>=55?'#542C35':'#DCC8CA'};color:white;border-radius:10px;padding:2px 6px;display:inline-block">${r.taux}%</div>
       </td>
       <td style="padding:7px 10px;text-align:center">${r.nuits}</td>
       <td style="padding:7px 10px;text-align:center">${r.prix}€</td>
@@ -6705,7 +6705,7 @@ function calculerResultats() {
         ${l("Chiffre d'affaires brut (loyers voyageurs)", totalCA.toLocaleString('fr-FR')+'€', 'font-weight:600')}
         ${_tpf > 0 ? l("− Frais de plateforme ("+(_tpf*100).toString().replace('.',',')+"%)", '-'+fraisPF.toLocaleString('fr-FR')+'€', 'color:var(--ink3)') : ''}
         ${_tpf > 0 ? l("= Revenu encaissé", encaisse.toLocaleString('fr-FR')+'€', 'border-top:1px solid var(--border)') : ''}
-        ${l("− Honoraires Maison Jade", '-'+totalComm.toLocaleString('fr-FR')+'€', 'color:var(--or)')}
+        ${l("− Honoraires Maison Jayla", '-'+totalComm.toLocaleString('fr-FR')+'€', 'color:var(--or)')}
         ${l("= Revenu net propriétaire", totalNet.toLocaleString('fr-FR')+'€', 'border-top:2px solid var(--jade);font-weight:700;color:var(--jade);font-size:15px')}
       </table>
       <div style="font-size:10.5px;color:var(--ink3);margin-top:8px;line-height:1.5">Hors charges propriétaire (taxe de séjour, charges courantes, assurance, fiscalité). Les frais de ménage sont refacturés au voyageur.</div>
@@ -6713,7 +6713,7 @@ function calculerResultats() {
     el.style.display = 'block';
   })();
 
-  // ── SCORE MAISON JADE /100 (explicatif, n'entre pas dans le calcul des revenus) ──
+  // ── SCORE MAISON JAYLA /100 (explicatif, n'entre pas dans le calcul des revenus) ──
   (function calculerScoreMJ() {
     const g = geoData ? (geoData.coeffOcc - 1) : 0;
     const sect = secteurDetecte ? secteurDetecte.type : 'standard';
@@ -6751,12 +6751,12 @@ function calculerResultats() {
 
     const el = document.getElementById('score-mj');
     if (el) {
-      const couleur = total >= 75 ? 'var(--jade)' : total >= 55 ? '#A57C52' : '#B0703C';
+      const couleur = total >= 75 ? 'var(--jade)' : total >= 55 ? '#9A7A4C' : '#B0703C';
       const barre = (v) => `<div style="flex:1"><div style="font-size:10px;color:var(--ink3);margin-bottom:2px">${v.l}</div><div style="height:6px;background:var(--surface2);border-radius:3px;overflow:hidden"><div style="height:100%;width:${v.n/25*100}%;background:${couleur}"></div></div><div style="font-size:11px;color:var(--noyer);margin-top:2px">${v.n}/25</div></div>`;
       el.innerHTML = `<div style="padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px">
         <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px">
           <span style="font-size:26px;font-weight:700;color:${couleur}">${total}</span>
-          <span style="font-size:13px;color:var(--ink3)">/100 · Score Maison Jade</span>
+          <span style="font-size:13px;color:var(--ink3)">/100 · Score Maison Jayla</span>
         </div>
         <div style="display:flex;gap:12px">
           ${barre({l:'Emplacement',n:emp})}${barre({l:'Caractéristiques',n:car})}${barre({l:'Standing',n:sta})}${barre({l:'Potentiel',n:pot})}
@@ -6779,7 +6779,7 @@ function calculerResultats() {
   // Afficher l'indice à l'écran
   const confEl2 = document.getElementById('indice-confiance');
   if (confEl2) {
-    const bg = confNiv==='haute' ? '#E8EDEA' : confNiv==='moyenne' ? '#FBF3E0' : '#FBEDE3';
+    const bg = confNiv==='haute' ? '#F3E8E6' : confNiv==='moyenne' ? '#FBF3E0' : '#FBEDE3';
     const bd = confNiv==='haute' ? 'var(--jade-bd)' : confNiv==='moyenne' ? '#E5C88A' : '#E0B088';
     confEl2.innerHTML = `<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:${bg};border:1px solid ${bd};border-radius:8px;font-size:13px">
       <span style="font-size:18px">${confIco}</span>
@@ -6808,49 +6808,49 @@ function genererPDFSimulation() {
 <head>
 <meta charset="UTF-8">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter:wght@300;400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Manrope:wght@300;400;500;600;700&display=swap');
   *{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;color-adjust:exact !important}
   @page{size:A4;margin:0}
   @media print{body{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}}
-  body{font-family:'Inter',sans-serif;color:#2A1F15;background:white;font-size:12px}
+  body{font-family:'Manrope',sans-serif;color:#30282A;background:white;font-size:12px}
   .page{width:210mm;min-height:297mm;padding:12mm 14mm;margin:0 auto}
-  .header{background:#31483F;padding:16px 20px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+  .header{background:#542C35;padding:16px 20px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
   .logo{font-family:'Cormorant Garamond',serif;font-size:28px;color:white;letter-spacing:0.06em}
-  .logo em{color:#A57C52;font-style:italic}
+  .logo em{color:#9A7A4C;font-style:italic}
   .header-right{text-align:right;font-size:11px;color:rgba(255,255,255,0.6)}
   .header-right strong{color:white;display:block;font-size:13px;margin-bottom:2px}
-  .title-block{margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid #D8CFBF}
-  h1{font-family:'Cormorant Garamond',serif;font-size:26px;color:#31483F;font-weight:300}
-  h1 em{color:#A57C52}
-  .meta{font-size:11px;color:#9A8878;margin-top:4px}
+  .title-block{margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid #E3D9CE}
+  h1{font-family:'Cormorant Garamond',serif;font-size:26px;color:#542C35;font-weight:300}
+  h1 em{color:#9A7A4C}
+  .meta{font-size:11px;color:#8A7B7E;margin-top:4px}
   .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-  .kpi{background:#F5F0E8;border-radius:8px;padding:12px;text-align:center}
-  .kpi-val{font-family:'Cormorant Garamond',serif;font-size:22px;color:#31483F;font-weight:300}
-  .kpi-label{font-size:9px;color:#9A8878;text-transform:uppercase;letter-spacing:0.1em;margin-top:3px}
+  .kpi{background:#F5EFE7;border-radius:8px;padding:12px;text-align:center}
+  .kpi-val{font-family:'Cormorant Garamond',serif;font-size:22px;color:#542C35;font-weight:300}
+  .kpi-label{font-size:9px;color:#8A7B7E;text-transform:uppercase;letter-spacing:0.1em;margin-top:3px}
   table{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:11px}
-  th{background:#31483F;color:white;padding:7px 8px;text-align:center}
+  th{background:#542C35;color:white;padding:7px 8px;text-align:center}
   th:first-child{text-align:left;border-radius:4px 0 0 0}
   th:last-child{border-radius:0 4px 0 0}
   td{padding:6px 8px;border-bottom:1px solid rgba(216,207,191,0.4);text-align:center}
   td:first-child{text-align:left;font-weight:500}
   .sc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
   .sc-card{border-radius:8px;padding:14px;text-align:center}
-  .sc-prudent{background:#F5F0E8}
-  .sc-realiste{background:#EAF0EE;border:1px solid #C2D4CD}
-  .sc-optimiste{background:#FDF5E9;border:1px solid #D4B896}
+  .sc-prudent{background:#F5EFE7}
+  .sc-realiste{background:#F3E8E6;border:1px solid #DCC8CA}
+  .sc-optimiste{background:#FDF5E9;border:1px solid #DCC6A6}
   .sc-val{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300}
   .sc-label{font-size:9px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
-  .footer{margin-top:auto;padding-top:12px;border-top:1px solid #D8CFBF;display:flex;justify-content:space-between;font-size:10px;color:#9A8878}
+  .footer{margin-top:auto;padding-top:12px;border-top:1px solid #E3D9CE;display:flex;justify-content:space-between;font-size:10px;color:#8A7B7E}
   .badge{display:inline-block;padding:2px 6px;border-radius:10px;font-size:9px;font-weight:600;color:white}
-  .note{background:#EAF0EE;border:1px solid #C2D4CD;border-radius:6px;padding:10px 12px;font-size:10px;color:#5B4335;margin-bottom:16px;line-height:1.6}
-  tr.total-row{background:#31483F;color:white;font-weight:600}
+  .note{background:#F3E8E6;border:1px solid #DCC8CA;border-radius:6px;padding:10px 12px;font-size:10px;color:#5A4A4E;margin-bottom:16px;line-height:1.6}
+  tr.total-row{background:#542C35;color:white;font-weight:600}
   tr.total-row td{color:white;border:none}
 </style>
 </head>
 <body>
 <div class="page">
   <div class="header">
-    <div class="logo">Maison <em>Jade</em></div>
+    <div class="logo">Maison <em>Jayla</em></div>
     <div class="header-right">
       <strong>Simulation de revenus locatifs</strong>
       Préparé le ${d.date} · Confidentiel
@@ -6890,8 +6890,8 @@ function genererPDFSimulation() {
         <td style="text-align:center">${r.prix}€</td>
         <td style="text-align:center">${r.ca.toLocaleString('fr-FR')}€</td>
         <td style="text-align:center;color:#8A8177">-${r.commAirbnb.toLocaleString('fr-FR')}€</td>
-        <td style="text-align:center;color:#A57C52">-${r.commMJ.toLocaleString('fr-FR')}€</td>
-        <td style="text-align:right;font-weight:600;color:#31483F">${r.netProprio.toLocaleString('fr-FR')}€</td>
+        <td style="text-align:center;color:#9A7A4C">-${r.commMJ.toLocaleString('fr-FR')}€</td>
+        <td style="text-align:right;font-weight:600;color:#542C35">${r.netProprio.toLocaleString('fr-FR')}€</td>
       </tr>`).join('')}
     </tbody>
     <tfoot>
@@ -6910,54 +6910,54 @@ function genererPDFSimulation() {
 
   <div class="sc-grid">
     <div class="sc-card sc-prudent">
-      <div class="sc-label" style="color:#9A8878">😐 Scénario prudent</div>
+      <div class="sc-label" style="color:#8A7B7E">😐 Scénario prudent</div>
       <div class="sc-val">${d.prudent.ca.toLocaleString('fr-FR')}€</div>
-      <div style="font-size:9px;color:#9A8878;margin-top:2px">CA annuel (taux -20%)</div>
+      <div style="font-size:9px;color:#8A7B7E;margin-top:2px">CA annuel (taux -20%)</div>
       <div class="sc-val" style="font-size:16px;margin-top:8px">${d.prudent.net.toLocaleString('fr-FR')}€</div>
-      <div style="font-size:9px;color:#9A8878">Net propriétaire</div>
+      <div style="font-size:9px;color:#8A7B7E">Net propriétaire</div>
     </div>
     <div class="sc-card sc-realiste">
-      <div class="sc-label" style="color:#31483F">✅ Scénario réaliste</div>
-      <div class="sc-val" style="color:#31483F">${d.realiste.ca.toLocaleString('fr-FR')}€</div>
-      <div style="font-size:9px;color:#31483F;margin-top:2px">CA annuel estimé</div>
-      <div class="sc-val" style="font-size:16px;margin-top:8px;color:#31483F">${d.realiste.net.toLocaleString('fr-FR')}€</div>
-      <div style="font-size:9px;color:#31483F">Net propriétaire</div>
+      <div class="sc-label" style="color:#542C35">✅ Scénario réaliste</div>
+      <div class="sc-val" style="color:#542C35">${d.realiste.ca.toLocaleString('fr-FR')}€</div>
+      <div style="font-size:9px;color:#542C35;margin-top:2px">CA annuel estimé</div>
+      <div class="sc-val" style="font-size:16px;margin-top:8px;color:#542C35">${d.realiste.net.toLocaleString('fr-FR')}€</div>
+      <div style="font-size:9px;color:#542C35">Net propriétaire</div>
     </div>
     <div class="sc-card sc-optimiste">
-      <div class="sc-label" style="color:#7A5530">🚀 Scénario optimiste</div>
-      <div class="sc-val" style="color:#A57C52">${d.optimist.ca.toLocaleString('fr-FR')}€</div>
-      <div style="font-size:9px;color:#7A5530;margin-top:2px">CA annuel (taux +15%)</div>
-      <div class="sc-val" style="font-size:16px;margin-top:8px;color:#A57C52">${d.optimist.net.toLocaleString('fr-FR')}€</div>
-      <div style="font-size:9px;color:#7A5530">Net propriétaire</div>
+      <div class="sc-label" style="color:#6E5434">🚀 Scénario optimiste</div>
+      <div class="sc-val" style="color:#9A7A4C">${d.optimist.ca.toLocaleString('fr-FR')}€</div>
+      <div style="font-size:9px;color:#6E5434;margin-top:2px">CA annuel (taux +15%)</div>
+      <div class="sc-val" style="font-size:16px;margin-top:8px;color:#9A7A4C">${d.optimist.net.toLocaleString('fr-FR')}€</div>
+      <div style="font-size:9px;color:#6E5434">Net propriétaire</div>
     </div>
   </div>
 
     <div style="margin:16px 0;padding:14px 18px;background:#F7F4EF;border-radius:8px">
-    <div style="font-size:13px;font-weight:600;color:#31483F;margin-bottom:10px">Du chiffre d'affaires à votre revenu net</div>
+    <div style="font-size:13px;font-weight:600;color:#542C35;margin-bottom:10px">Du chiffre d'affaires à votre revenu net</div>
     <table style="width:100%;border-collapse:collapse;font-size:12px">
       <tr><td style="padding:5px 0">Chiffre d'affaires brut (loyers voyageurs)</td><td style="text-align:right;font-weight:600">${d.totalCA.toLocaleString('fr-FR')}€</td></tr>
       ${d.tauxPF > 0 ? `<tr><td style="padding:5px 0;color:#8A8177">− Frais de plateforme (${String(d.tauxPF).replace('.',',')}%)</td><td style="text-align:right;color:#8A8177">-${Math.round(d.totalCA*d.tauxPF/100).toLocaleString('fr-FR')}€</td></tr>` : ''}
       ${d.tauxPF > 0 ? `<tr><td style="padding:5px 0;border-top:1px solid #E0D8C8">= Revenu encaissé</td><td style="text-align:right;border-top:1px solid #E0D8C8">${(d.totalCA-Math.round(d.totalCA*d.tauxPF/100)).toLocaleString('fr-FR')}€</td></tr>` : ''}
-      <tr><td style="padding:5px 0;color:#A57C52">− Honoraires Maison Jade (${d.tauxMJ}% HT)</td><td style="text-align:right;color:#A57C52">-${(d.totalCA-Math.round(d.totalCA*d.tauxPF/100)-d.totalNet).toLocaleString('fr-FR')}€</td></tr>
-      <tr><td style="padding:7px 0;border-top:2px solid #31483F;font-weight:700;color:#31483F">= Votre revenu net</td><td style="text-align:right;border-top:2px solid #31483F;font-weight:700;font-size:15px;color:#31483F">${d.totalNet.toLocaleString('fr-FR')}€</td></tr>
+      <tr><td style="padding:5px 0;color:#9A7A4C">− Honoraires Maison Jayla (${d.tauxMJ}% HT)</td><td style="text-align:right;color:#9A7A4C">-${(d.totalCA-Math.round(d.totalCA*d.tauxPF/100)-d.totalNet).toLocaleString('fr-FR')}€</td></tr>
+      <tr><td style="padding:7px 0;border-top:2px solid #542C35;font-weight:700;color:#542C35">= Votre revenu net</td><td style="text-align:right;border-top:2px solid #542C35;font-weight:700;font-size:15px;color:#542C35">${d.totalNet.toLocaleString('fr-FR')}€</td></tr>
     </table>
     <div style="font-size:9.5px;color:#8A8177;margin-top:8px;line-height:1.5">Hors charges propriétaire (taxe de séjour, charges courantes, assurance, fiscalité). Les frais de ménage sont refacturés au voyageur.</div>
   </div>
 
 ${(document.getElementById('pdf-show-confiance')?.checked && d.confiance) ? `
   <div style="margin:16px 0;padding:12px 16px;background:#F7F4EF;border:1px solid #E0D8C8;border-radius:8px">
-    <div style="font-size:13px;font-weight:600;color:#31483F;margin-bottom:4px">${d.confiance.icone} Indice de confiance de l'estimation</div>
-    <div style="font-size:12px;color:#5B4335">${d.confiance.texte}</div>
+    <div style="font-size:13px;font-weight:600;color:#542C35;margin-bottom:4px">${d.confiance.icone} Indice de confiance de l'estimation</div>
+    <div style="font-size:12px;color:#5A4A4E">${d.confiance.texte}</div>
     ${d.geoDetail && d.geoDetail.length ? '<div style="font-size:11px;color:#8A8278;margin-top:6px">Ajustements localisation : ' + d.geoDetail.join(' · ') + '</div>' : ''}
   </div>` : ''}
 
   <div class="note">
-    ⚠️ <strong>Note importante :</strong> Ces projections sont des estimations basées sur les profils de marché observés dans des zones comparables. Les revenus réels dépendent de la qualité du bien, de sa notation Airbnb, de la concurrence locale et de la stratégie tarifaire appliquée. Maison Jade optimise en continu les tarifs pour maximiser votre taux d'occupation et vos revenus.
+    ⚠️ <strong>Note importante :</strong> Ces projections sont des estimations basées sur les profils de marché observés dans des zones comparables. Les revenus réels dépendent de la qualité du bien, de sa notation Airbnb, de la concurrence locale et de la stratégie tarifaire appliquée. Maison Jayla optimise en continu les tarifs pour maximiser votre taux d'occupation et vos revenus.
   </div>
 
   <div class="footer">
-    <span>Maison Jade Ltd · contact@maisonjade.com · maisonjade.github.io/maison-jade</span>
-    <span>Simulation préparée par Maison Jade · ${d.date}</span>
+    <span>MAISON J LTD · Maison Jayla · contact@maisonjayla.com · maisonjade.github.io/maison-jade</span>
+    <span>Simulation préparée par Maison Jayla · ${d.date}</span>
   </div>
 </div>
 </body>
@@ -7013,8 +7013,8 @@ async function envoyerEmailMission(presta, menage, dos) {
       type_mission:  TYPES[menage.type] || 'Ménage',
       heure_checkin: dos.checkin || '16:00',
       notes:         menage.notes || 'Aucune note particulière.',
-      name:          'Maison Jade',
-      email:         'contact@maisonjade.com'
+      name:          'Maison Jayla',
+      email:         'contact@maisonjayla.com'
     });
     return true;
   } catch(e) { console.error('EmailJS erreur:', e); return false; }
@@ -7148,7 +7148,7 @@ function removeAssignation(prestId,dosId) {
 async function envoyerTestEmail(prestId) {
   const p=prestatairesMenage.find(x=>x.id===prestId); if(!p) return;
   const fakeDos=D.dossiers[0]||{adresse:'Bien test',checkin:'16:00',checkout:'11:00',surnom:'Studio Test'};
-  const fakeM={date:new Date().toISOString().split('T')[0],heure:'11:00',duree:'2',type:'menage',notes:'Email de test Maison Jade'};
+  const fakeM={date:new Date().toISOString().split('T')[0],heure:'11:00',duree:'2',type:'menage',notes:'Email de test Maison Jayla'};
   showToast('📧 Envoi en cours…');
   const ok=await envoyerEmailMission(p,fakeM,fakeDos);
   showToast(ok?'✅ Email de test envoyé à '+p.email:'❌ Erreur — vérifiez la config EmailJS');
@@ -7372,7 +7372,7 @@ function _plusProche(lat, lon, liste) {
 
 // ── DÉTECTION AUTOMATIQUE DU SECTEUR ──
 // ═══════════════════════════════════════════════════════════
-//  MAISON JADE — Détection automatique du secteur (France entière)
+//  MAISON JAYLA — Détection automatique du secteur (France entière)
 //  Classe un bien selon sa localisation → applique la bonne courbe saisonnière
 //  Couche 1 : type de secteur détecté. Couche 2 : événements enrichissables.
 // ═══════════════════════════════════════════════════════════
@@ -7763,8 +7763,8 @@ async function alertDoublonModal(check, callback) {
     '⛔ CONFLIT DE PROSPECT DÉTECTÉ\n\n' +
     'Ce prospect (' + check.matched_field + ') est déjà suivi par un autre partenaire du réseau depuis le ' + dateStr + '.\n' +
     'Étape actuelle : ' + formaterEtape(check.existing_etape) + '\n\n' +
-    'Pour respecter la charte réseau Maison Jade, vous ne pouvez pas prospecter un client déjà enregistré.\n' +
-    'Contactez contact@maisonjade.com en cas de question.';
+    'Pour respecter la charte réseau Maison Jayla, vous ne pouvez pas prospecter un client déjà enregistré.\n' +
+    'Contactez contact@maisonjayla.com en cas de question.';
   alert(msg);
 }
 
@@ -7863,7 +7863,7 @@ async function ouvrirApp(user) {
   if (tb) tb.textContent = `${profile.prenom || ''} ${profile.nom || ''}`.trim() || profile.email;
   loadFromSupabase();
   loadAdminDonnees();
-  avisCompterNouveaux();
+  if (typeof avisCompterNouveaux === "function") avisCompterNouveaux();
 }
 async function initAuth() {
   const { data: { session } } = await sb.auth.getSession();
@@ -7927,10 +7927,10 @@ Notes : ${dos.notesPros || ''}
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 1000,
-        system: `Tu es un assistant de conciergerie premium pour Maison Jade. Tu rédiges des réponses aux voyageurs en ${LANGUE_NOM[langue]}, avec un ton ${TON_DESC[ton]}. 
+        system: `Tu es un assistant de conciergerie premium pour Maison Jayla. Tu rédiges des réponses aux voyageurs en ${LANGUE_NOM[langue]}, avec un ton ${TON_DESC[ton]}. 
 Tu utilises les informations du bien pour personnaliser la réponse. 
 Sois précis, chaleureux et professionnel. 
-Signe toujours "L'équipe Maison Jade" à la fin.
+Signe toujours "L'équipe Maison Jayla" à la fin.
 Ne mentionne pas les informations manquantes — réponds uniquement avec ce que tu sais.`,
         messages: [{
           role: 'user',
@@ -7995,13 +7995,13 @@ function renderMsgHistory() {
 // Manifest dynamique
 function installPWA() {
   const manifest = {
-    name: 'Maison Jade',
+    name: 'Maison Jayla',
     short_name: 'MJ Pro',
-    description: 'Espace professionnel Maison Jade',
+    description: 'Espace professionnel Maison Jayla',
     start_url: '/maison-jade/',
     display: 'standalone',
-    background_color: '#F5F0E8',
-    theme_color: '#31483F',
+    background_color: '#F5EFE7',
+    theme_color: '#542C35',
     icons: [
       { src: 'https://via.placeholder.com/192x192/31483F/FCFAF7?text=MJ', sizes: '192x192', type: 'image/png' },
       { src: 'https://via.placeholder.com/512x512/31483F/FCFAF7?text=MJ', sizes: '512x512', type: 'image/png' }
@@ -8015,7 +8015,7 @@ function installPWA() {
 
   // Meta theme
   const meta = document.createElement('meta');
-  meta.name = 'theme-color'; meta.content = '#31483F';
+  meta.name = 'theme-color'; meta.content = '#542C35';
   document.head.appendChild(meta);
 
   // Apple
@@ -8114,14 +8114,14 @@ async function renderReservationsAmounts(dossierId) {
       <td><input type="number" class="ra-fp" value="${fp || ''}" placeholder="0" style="width:64px;${inp}"></td>
       <td><input type="number" class="ra-fm" value="${fm || ''}" placeholder="0" style="width:64px;${inp}"></td>
       <td><input type="number" class="ra-fpm" value="${fpm || ''}" placeholder="0" style="width:64px;${inp}"></td>
-      <td class="ra-comm" style="text-align:right;color:var(--gold,#A57C52);white-space:nowrap">${cm ? '-' + cm + '€' : '—'}</td>
+      <td class="ra-comm" style="text-align:right;color:var(--gold,#9A7A4C);white-space:nowrap">${cm ? '-' + cm + '€' : '—'}</td>
       <td class="ra-net" style="text-align:right;font-weight:600;white-space:nowrap">${net ? net + '€' : '—'}</td>
       <td style="text-align:center"><button class="btn btn-primary btn-sm" onclick="saveReservationAmount(${r.id}, this)">💾</button></td>
     </tr>`;
   }).join('');
   cont.innerHTML = `<div style="overflow-x:auto;border:1px solid var(--border);border-radius:8px">
     <table style="width:100%;border-collapse:collapse;font-size:12px">
-    <thead><tr style="text-align:left;color:var(--ink3);background:var(--surface2,#f5f0e8);border-bottom:1px solid var(--border)">
+    <thead><tr style="text-align:left;color:var(--ink3);background:var(--surface2,#F5EFE7);border-bottom:1px solid var(--border)">
       <th style="padding:8px 6px">Séjour</th><th>Voyageur</th><th style="text-align:right">Nuits</th>
       <th style="text-align:right">Brut €</th><th style="text-align:right">Frais plat.</th><th style="text-align:right">Ménage voyageur</th><th style="text-align:right">Frais plat. ménage</th>
       <th style="text-align:right">Comm. MJ</th><th style="text-align:right">Net proprio</th><th></th>
@@ -8523,7 +8523,7 @@ async function validerNouveauMdp() {
 
   if (error) { showErr('Erreur : ' + error.message); return; }
 
-  err.style.background = '#E8EDEA'; err.style.borderLeftColor = '#31483F'; err.style.color = '#31483F';
+  err.style.background = '#F3E8E6'; err.style.borderLeftColor = '#542C35'; err.style.color = '#542C35';
   showErr('✅ Mot de passe modifié. Reconnexion…');
   setTimeout(() => { location.href = location.pathname; }, 1500);
 }
@@ -8531,21 +8531,21 @@ async function validerNouveauMdp() {
 </script>
 
 <!-- ÉCRAN NOUVEAU MOT DE PASSE (lien de récupération) -->
-<div id="reset-screen" style="display:none;position:fixed;inset:0;z-index:10000;align-items:center;justify-content:center;background:#31483F;padding:20px">
-  <div style="background:#FDFAF6;border-radius:6px;padding:36px 30px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
-    <div style="font-family:'Cormorant Garamond',serif;font-size:30px;color:#31483F;text-align:center">Maison <em style="color:#A57C52">Jade</em></div>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:21px;color:#5B4335;text-align:center;margin:22px 0 4px;font-weight:500">Nouveau mot de passe</h2>
+<div id="reset-screen" style="display:none;position:fixed;inset:0;z-index:10000;align-items:center;justify-content:center;background:#542C35;padding:20px">
+  <div style="background:#FBF8F3;border-radius:6px;padding:36px 30px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:30px;color:#542C35;text-align:center">Maison <em style="color:#9A7A4C">Jayla</em></div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:21px;color:#5A4A4E;text-align:center;margin:22px 0 4px;font-weight:500">Nouveau mot de passe</h2>
     <p style="text-align:center;font-size:12.5px;color:#8A8177;margin-bottom:20px">Choisissez un mot de passe d'au moins 8 caractères</p>
     <div id="reset-error" style="display:none;background:#FBEAE8;border-left:3px solid #C0392B;color:#9B2C22;padding:10px 12px;border-radius:3px;font-size:12.5px;margin-bottom:14px"></div>
     <div style="margin-bottom:14px">
-      <label style="display:block;font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#31483F;margin-bottom:6px">Nouveau mot de passe</label>
-      <input type="password" id="reset-pass1" placeholder="••••••••" style="width:100%;padding:11px 13px;font-size:14px;font-family:inherit;border:1px solid #DDD0BF;border-radius:3px;background:#F5F0E8;color:#5B4335">
+      <label style="display:block;font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#542C35;margin-bottom:6px">Nouveau mot de passe</label>
+      <input type="password" id="reset-pass1" placeholder="••••••••" style="width:100%;padding:11px 13px;font-size:14px;font-family:inherit;border:1px solid #E0D4C8;border-radius:3px;background:#F5EFE7;color:#5A4A4E">
     </div>
     <div style="margin-bottom:14px">
-      <label style="display:block;font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#31483F;margin-bottom:6px">Confirmer</label>
-      <input type="password" id="reset-pass2" placeholder="••••••••" style="width:100%;padding:11px 13px;font-size:14px;font-family:inherit;border:1px solid #DDD0BF;border-radius:3px;background:#F5F0E8;color:#5B4335">
+      <label style="display:block;font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#542C35;margin-bottom:6px">Confirmer</label>
+      <input type="password" id="reset-pass2" placeholder="••••••••" style="width:100%;padding:11px 13px;font-size:14px;font-family:inherit;border:1px solid #E0D4C8;border-radius:3px;background:#F5EFE7;color:#5A4A4E">
     </div>
-    <button id="reset-btn" onclick="validerNouveauMdp()" style="width:100%;padding:13px;margin-top:8px;cursor:pointer;background:#31483F;color:#F5F0E8;border:none;border-radius:3px;font-family:inherit;font-size:13px;font-weight:600;letter-spacing:0.06em">Enregistrer →</button>
+    <button id="reset-btn" onclick="validerNouveauMdp()" style="width:100%;padding:13px;margin-top:8px;cursor:pointer;background:#542C35;color:#F5EFE7;border:none;border-radius:3px;font-family:inherit;font-size:13px;font-weight:600;letter-spacing:0.06em">Enregistrer →</button>
   </div>
 </div>
 

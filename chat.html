@@ -4,26 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://lvfncstosaaqgtfozthw.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self';">
-<title>Maison Jade · Assistant</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Maison Jayla · Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --jade:    #31483F;
-  --jade-mid:#3D5A50;
-  --or:      #A57C52;
-  --ivoire:  #F5F0E8;
-  --blanc:   #FDFAF6;
-  --border:  #D8CFBF;
-  --ink:     #2A1F15;
-  --ink2:    #5B4335;
-  --ink3:    #9A8878;
-  --noyer:   #5B4335;
+  --jade:    #542C35;
+  --jade-mid:#6B3A45;
+  --or:      #9A7A4C;
+  --ivoire:  #F5EFE7;
+  --blanc:   #FBF8F3;
+  --border:  #E3D9CE;
+  --ink:     #30282A;
+  --ink2:    #5A4A4E;
+  --ink3:    #8A7B7E;
+  --noyer:   #5A4A4E;
 }
 html, body {
   height: 100%;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Manrope', sans-serif;
   background: var(--ivoire);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
@@ -157,7 +157,7 @@ html, body {
   border: 1px solid var(--border);
   background: var(--blanc);
   font-size: 12px; color: var(--noyer);
-  cursor: pointer; font-family: 'Inter', sans-serif;
+  cursor: pointer; font-family: 'Manrope', sans-serif;
   transition: all 0.15s; flex-shrink: 0;
 }
 .sug-btn:hover, .sug-btn:active {
@@ -181,7 +181,7 @@ html, body {
   border-radius: 22px;
   padding: 10px 16px;
   font-size: 14px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Manrope', sans-serif;
   background: var(--ivoire);
   color: var(--ink);
   resize: none;
@@ -285,7 +285,7 @@ html, body {
   cursor: pointer;
   font-size: 18px;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 12px rgba(49,72,63,0.3);
+  box-shadow: 0 4px 12px rgba(84,44,53,0.3);
   z-index: 10;
   transition: transform 0.2s;
 }
@@ -332,7 +332,7 @@ html, body {
   border-radius: 8px;
   border: none; cursor: pointer;
   font-size: 12px; font-weight: 500;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Manrope', sans-serif;
 }
 .btn-copy-url { background: var(--jade); color: white; }
 .btn-close-modal { background: var(--ivoire); color: var(--noyer); border: 1px solid var(--border) !important; }
@@ -342,7 +342,7 @@ html, body {
 
 <!-- Loading -->
 <div id="loading-screen">
-  <div class="loading-logo">Maison <em>Jade</em></div>
+  <div class="loading-logo">Maison <em>Jayla</em></div>
   <div class="loading-sub">Assistant voyageur</div>
   <div class="loading-spinner"></div>
 </div>
@@ -351,8 +351,8 @@ html, body {
 <div id="error-screen">
   <div class="error-icon">🏠</div>
   <div class="error-title">Assistant introuvable</div>
-  <div class="error-sub">Ce lien ne correspond à aucun logement Maison Jade.<br>Contactez votre hôte directement.</div>
-  <a href="mailto:contact@maisonjade.fr" style="color:var(--jade);font-size:13px">contact@maisonjade.fr</a>
+  <div class="error-sub">Ce lien ne correspond à aucun logement Maison Jayla.<br>Contactez votre hôte directement.</div>
+  <a href="mailto:contact@maisonjayla.com" style="color:var(--jade);font-size:13px">contact@maisonjayla.com</a>
 </div>
 
 <!-- App -->
@@ -360,7 +360,7 @@ html, body {
   <div class="header">
     <div class="header-avatar">MJ</div>
     <div class="header-info">
-      <div class="header-name">Maison <em>Jade</em> · Assistant</div>
+      <div class="header-name">Maison <em>Jayla</em> · Assistant</div>
       <div class="header-sub" id="header-bien">Chargement…</div>
     </div>
     <div class="header-status">
@@ -391,7 +391,7 @@ html, body {
   </div>
 
   <div class="chat-footer">
-    Assistant Maison Jade · <a href="mailto:contact@maisonjade.fr">Nous contacter</a>
+    Assistant Maison Jayla · <a href="mailto:contact@maisonjayla.com">Nous contacter</a>
   </div>
 </div>
 
@@ -466,7 +466,7 @@ async function init() {
   const heure = new Date().getHours();
   const salut = heure < 12 ? 'Bonjour' : heure < 18 ? 'Bon après-midi' : 'Bonsoir';
   const type = info.type || 'logement';
-  addBotMessage(`${salut} ! 👋\n\nBienvenue dans votre ${type.toLowerCase()} Maison Jade.\n\nJe suis votre assistant disponible **24h/24** pour répondre à toutes vos questions — check-in, accès, WiFi, recommandations locales...\n\nComment puis-je vous aider ?`);
+  addBotMessage(`${salut} ! 👋\n\nBienvenue dans votre ${type.toLowerCase()} Maison Jayla.\n\nJe suis votre assistant disponible **24h/24** pour répondre à toutes vos questions — check-in, accès, WiFi, recommandations locales...\n\nComment puis-je vous aider ?`);
 
   // URL de partage
   document.getElementById('share-url').textContent = window.location.href;
@@ -583,7 +583,7 @@ async function sendMessage() {
 
   } catch(e) {
     hideTyping();
-    addBotMessage("Je rencontre une difficulté technique momentanée. Pour toute urgence, contactez Maison Jade directement :\n\n📞 **contact@maisonjade.fr**");
+    addBotMessage("Je rencontre une difficulté technique momentanée. Pour toute urgence, contactez Maison Jayla directement :\n\n📞 **contact@maisonjayla.com**");
   }
 
   isTyping = false;

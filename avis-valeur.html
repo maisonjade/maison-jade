@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://lvfncstosaaqgtfozthw.supabase.co https://data.geopf.fr https://api.emailjs.com; object-src 'none'; base-uri 'self'; form-action 'self';">
-<title>Estimation de revenus locatifs offerte · Maison Jade</title>
-<meta name="description" content="Découvrez en deux minutes combien votre bien peut vous rapporter en location courte durée. Estimation offerte et sans engagement par Maison Jade.">
+<title>Estimation de revenus locatifs offerte · Maison Jayla</title>
+<meta name="description" content="Découvrez en deux minutes combien votre bien peut vous rapporter en location courte durée. Estimation offerte et sans engagement par Maison Jayla.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@300;400;500;600;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root{
-  --ivoire:#F9F6F1; --surface:#FFFFFF; --ligne:#E4DCCF; --encre:#1D1B19; --doux:#6E655B;
-  --jade:#31483F; --jade-clair:#E7EDE9; --or:#B89452; --or-clair:#F4ECDD; --erreur:#9B2F2F;
-  --titre:"Cormorant Garamond", Georgia, serif; --texte:"Lato","Segoe UI",Helvetica,Arial,sans-serif;
+  --ivoire:#F5EFE7; --surface:#FFFFFF; --ligne:#E4DCCF; --encre:#1D1B19; --doux:#6E655B;
+  --jade:#542C35; --jade-clair:#F3E8E6; --or:#9A7A4C; --or-clair:#F4ECDD; --erreur:#9B2F2F;
+  --titre:"Cormorant Garamond", Georgia, serif; --texte:"Manrope","Segoe UI",Helvetica,Arial,sans-serif;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -24,14 +24,14 @@ a{color:var(--jade)}
 
 /* Colonne marque */
 .marque{background:var(--jade);color:var(--ivoire);padding:48px clamp(20px,5vw,64px);display:flex;flex-direction:column;justify-content:space-between;gap:40px;position:relative;overflow:hidden}
-.marque::after{content:"";position:absolute;right:-120px;bottom:-120px;width:340px;height:340px;border:1px solid rgba(184,148,82,.35);border-radius:50%}
+.marque::after{content:"";position:absolute;right:-120px;bottom:-120px;width:340px;height:340px;border:1px solid rgba(197,164,119,.35);border-radius:50%}
 .logo{font-family:var(--titre);font-size:26px;letter-spacing:.32em;text-transform:uppercase;font-weight:500}
 .logo small{display:block;font-family:var(--texte);font-size:11px;letter-spacing:.3em;color:var(--or);margin-top:4px}
 .marque h1{font-family:var(--titre);font-weight:400;font-size:clamp(36px,4.6vw,58px);line-height:1.04;margin:0 0 18px;text-wrap:balance}
 .marque h1 em{color:var(--or);font-style:italic}
-.marque p{color:rgba(249,246,241,.82);max-width:440px;margin:0}
+.marque p{color:rgba(245,239,231,.82);max-width:440px;margin:0}
 .garanties{list-style:none;padding:0;margin:0;display:grid;gap:12px;font-size:14px}
-.garanties li{display:flex;gap:12px;align-items:flex-start;color:rgba(249,246,241,.88)}
+.garanties li{display:flex;gap:12px;align-items:flex-start;color:rgba(245,239,231,.88)}
 .garanties li::before{content:"";flex:none;width:18px;height:1px;background:var(--or);margin-top:11px}
 @media (max-width:900px){.marque{padding:28px 20px 32px;gap:24px}.marque::after{display:none}.garanties{display:none}}
 
@@ -70,7 +70,7 @@ input:focus,select:focus{outline:none;border-color:var(--jade);background:#fff;b
 .compteur input{border:none;background:none;text-align:center;padding:0;box-shadow:none!important}
 .actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:28px}
 .btn{font:inherit;font-size:15px;font-weight:700;letter-spacing:.04em;border:none;border-radius:3px;padding:15px 26px;cursor:pointer;background:var(--jade);color:var(--ivoire);transition:background .15s}
-.btn:hover{background:#263a32}
+.btn:hover{background:#3E1F27}
 .btn:disabled{opacity:.6;cursor:wait}
 .btn.or{background:var(--or);color:#fff}
 .btn.or:hover{background:#a5813f}
@@ -98,7 +98,7 @@ input:focus,select:focus{outline:none;border-color:var(--jade);background:#fff;b
 <body>
 <main class="page">
   <aside class="marque">
-    <div class="logo">Maison Jade<small>Conciergerie &amp; valorisation</small></div>
+    <div class="logo">Maison Jayla<small>Conciergerie &amp; valorisation</small></div>
     <div>
       <h1>Combien votre bien peut-il <em>vous rapporter</em>&nbsp;?</h1>
       <p>Nous estimons gratuitement les revenus de votre logement en location courte durée, selon sa localisation, ses atouts et la saisonnalité de votre secteur.</p>
@@ -193,7 +193,7 @@ input:focus,select:focus{outline:none;border-color:var(--jade);background:#fff;b
           </label>
           <div class="piege" aria-hidden="true"><label>Site web<input type="text" id="site_web" tabindex="-1" autocomplete="off"></label></div>
           <label class="rgpd large"><input type="checkbox" id="consent" required>
-            <span>J'accepte d'être recontacté·e par Maison Jade au sujet de mon bien. Mes données ne sont jamais revendues. <a href="#" id="lien-confidentialite">Politique de confidentialité</a>.</span>
+            <span>J'accepte d'être recontacté·e par Maison Jayla au sujet de mon bien. Mes données ne sont jamais revendues. <a href="#" id="lien-confidentialite">Politique de confidentialité</a>.</span>
           </label>
         </div>
         <div class="erreur" data-erreur="3" role="alert"></div>
@@ -213,7 +213,7 @@ input:focus,select:focus{outline:none;border-color:var(--jade);background:#fff;b
         <div class="fourchette"><span id="res-fourchette"></span><small>de chiffre d'affaires brut par an, en location courte durée</small></div>
         <div class="net">Soit environ <strong id="res-net"></strong> net pour vous par an avec notre formule Sérénité (commission 22&nbsp;% TTC, frais de plateforme déduits).</div>
         <p class="suite"><strong>Nous vous recontactons sous 48 à 72&nbsp;h</strong> pour affiner cette estimation avec vous et répondre à vos questions.</p>
-        <p class="mention">Estimation indicative fondée sur la méthode Maison Jade et les données de marché disponibles. Elle ne constitue ni une garantie de revenus ni une expertise. Hors charges du propriétaire (taxe de séjour, charges, assurance, fiscalité) ; les frais de ménage sont refacturés aux voyageurs.</p>
+        <p class="mention">Estimation indicative fondée sur la méthode Maison Jayla et les données de marché disponibles. Elle ne constitue ni une garantie de revenus ni une expertise. Hors charges du propriétaire (taxe de séjour, charges, assurance, fiscalité) ; les frais de ménage sont refacturés aux voyageurs.</p>
       </div>
     </form>
   </section>

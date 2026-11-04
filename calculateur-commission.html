@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
-<title>Calculateur de commission — Maison Jade</title>
+<title>Calculateur de commission — Maison Jayla</title>
 <style>
   :root{
-    --jade:#31483F;
-    --or:#A57C52;
-    --ivoire:#F5F0E8;
-    --noyer:#5B4335;
+    --jade:#542C35;
+    --or:#9A7A4C;
+    --ivoire:#F5EFE7;
+    --noyer:#5A4A4E;
     --blanc:#FFFDF9;
     --trait:#DED5C6;
     --gris:#8A8177;
@@ -114,7 +114,7 @@
 <div class="wrap no-print">
   <header>
     <h1>Calculateur de commission co-hôte</h1>
-    <p>Maison Jade — récap mensuel et pré-facture</p>
+    <p>Maison Jayla — récap mensuel et pré-facture</p>
   </header>
 
   <div class="periode">
@@ -137,7 +137,7 @@
   <button class="btn-ligne" onclick="ajouterBien()">+ Ajouter un bien</button>
 
   <div class="total">
-    <div class="total-ligne"><span>Honoraires Maison Jade encaissés</span><span id="t-honoraires">0 €</span></div>
+    <div class="total-ligne"><span>Honoraires Maison Jayla encaissés</span><span id="t-honoraires">0 €</span></div>
     <div class="total-ligne"><span>Dont commission gestion</span><span id="t-gestion">0 €</span></div>
     <div class="total-ligne"><span>Dont services à la carte (85 %)</span><span id="t-services">0 €</span></div>
     <div class="total-net"><span>Total dû au co-hôte</span><span id="t-net">0 €</span></div>
@@ -151,7 +151,7 @@
   <p class="note">
     <strong>Rappel du barème.</strong> Commission gestion = CA net du bien (après frais de plateforme)
     × taux de l'offre propriétaire (16 / 22 / 25 %) × part co-hôte
-    (50 % bien Maison Jade, 70 % bien apporté par le co-hôte).
+    (50 % bien Maison Jayla, 70 % bien apporté par le co-hôte).
     Services à la carte : 85 % reversés au co-hôte.
     La pré-facture est un document de travail : elle ne remplace pas la facture émise par le co-hôte.
   </p>
@@ -163,7 +163,7 @@
   <div id="f-ref"></div>
   <div class="parties">
     <div><strong>Émetteur</strong><br><span id="f-cohote"></span><br><span id="f-siret"></span></div>
-    <div style="text-align:right"><strong>Destinataire</strong><br>Maison Jade Ltd<br>contact@maisonjade.com</div>
+    <div style="text-align:right"><strong>Destinataire</strong><br>MAISON J LTD · Maison Jayla<br>contact@maisonjayla.com</div>
   </div>
   <table>
     <thead>
@@ -176,7 +176,7 @@
     <tfoot><tr><td colspan="5" class="tot">Total dû au co-hôte</td><td class="num tot" id="f-total"></td></tr></tfoot>
   </table>
   <div class="mentions">
-    Prestation de services de co-hébergement réalisée pour le compte de Maison Jade Ltd (Royaume-Uni).<br>
+    Prestation de services de co-hébergement réalisée pour le compte de MAISON J LTD (Royaume-Uni), nom commercial Maison Jayla.<br>
     Les montants « CA net » s'entendent après déduction des frais de plateforme.<br>
     <em>Mentions de TVA à valider avec votre comptable avant émission de la facture définitive.</em><br>
     Règlement par virement — délai contractuel.
@@ -247,7 +247,7 @@ function render(){
         <div>
           <label>Origine du bien</label>
           <select onchange="maj(${b.id},'part',this.value)">
-            <option value="50" ${b.part==50?'selected':''}>Bien Maison Jade — 50 %</option>
+            <option value="50" ${b.part==50?'selected':''}>Bien Maison Jayla — 50 %</option>
             <option value="70" ${b.part==70?'selected':''}>Bien apporté — 70 %</option>
           </select>
         </div>
@@ -258,7 +258,7 @@ function render(){
         </div>
       </div>
       <div class="calcul">
-        <div><span>Honoraires Maison Jade</span><span>${euro(c.honoraires)}</span></div>
+        <div><span>Honoraires Maison Jayla</span><span>${euro(c.honoraires)}</span></div>
         <div><span>Commission gestion (${b.part} %)</span><span>${euro(c.gestion)}</span></div>
         <div><span>Services à la carte (85 %)</span><span>${euro(c.services)}</span></div>
         <div class="net"><span>Commission du bien</span><span>${euro(c.total)}</span></div>

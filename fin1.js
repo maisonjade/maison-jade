@@ -1,4 +1,4 @@
-// ══ RÈGLE FIN-1 — SEUL CALCUL DE COMMISSION MAISON JADE ══
+// ══ RÈGLE FIN-1 — SEUL CALCUL DE COMMISSION MAISON JAYLA ══
 // Chargé par index.html, proprio.html, cohote.html, cockpit.html et calculateur-commission.html.
 // Identique au trigger SQL reservations_fin1 (arrondi à l'euro), qui fait foi pour les montants en base.
 //
