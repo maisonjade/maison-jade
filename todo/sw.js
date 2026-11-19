@@ -1,7 +1,7 @@
 // Service worker minimal de la TO DO LIST (portée : dossier /todo/ uniquement).
 // Il garde seulement la « coquille » de l'application (page, icônes) pour qu'elle s'ouvre vite.
 // Les tâches elles-mêmes ne sont JAMAIS mises en cache : elles viennent de Supabase à chaque ouverture.
-const CACHE = 'mj-todo-v3';
+const CACHE = 'mj-todo-v4';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', event => {

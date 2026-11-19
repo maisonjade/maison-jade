@@ -328,6 +328,7 @@ button,input,select{font:inherit;color:inherit}
     <p class="sec-status" id="sec-status" role="status"></p>
     <textarea class="sec-text" id="sec-text" maxlength="1500" placeholder="Ou écris ta demande ici…" aria-label="Ta demande"></textarea>
     <div class="sec-btns"><button class="btn" id="sec-send" type="button">Envoyer</button></div>
+    <button class="link" id="sec-retry" type="button" hidden>Réessayer la dictée du navigateur</button>
     <div id="sec-result" hidden>
       <p class="sec-rep" id="sec-rep"></p>
       <ul class="sec-acts" id="sec-acts"></ul>
@@ -780,12 +781,22 @@ sb.auth.getSession().then(({data})=>{
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 const CAT_LABEL={perso:'Perso',pro:'Pro',immeuble:'Immeuble',conciergerie:'Conciergerie'};
 let rec=null,listening=false,secBusy=false,secActions=[];
+// Sur certains téléphones (Huawei sans services Google…), la dictée du navigateur ne marche pas :
+// on le retient et on passe par le micro du CLAVIER, qui fonctionne partout.
+let noSR=!SR;try{if(localStorage.getItem('todo-nosr')==='1')noSR=true}catch(e){}
+const KB_HINT='Touche la case ci-dessous, puis le micro 🎤 de ton clavier pour dicter. Touche ensuite « Envoyer ».';
 function secStatus(m){$('sec-status').textContent=m||''}
+function useKeyboard(msg){
+  noSR=true;try{localStorage.setItem('todo-nosr','1')}catch(e){}
+  $('sec-mic').hidden=true;$('sec-retry').hidden=!SR;secStatus(msg||KB_HINT);
+  const ta=$('sec-text');ta.focus();
+}
 function secOpen(){
   if(!userId)return;
   $('sec').hidden=false;$('sec-bg').hidden=false;$('sec-result').hidden=true;
-  secStatus(SR?'Touche « Parler » puis dis ce que tu veux faire.':'Le micro n’est pas disponible ici : écris ta demande.');
-  $('sec-mic').hidden=!SR;
+  $('sec-mic').hidden=noSR;$('sec-retry').hidden=!(SR&&noSR);
+  secStatus(noSR?KB_HINT:'Touche « Parler » puis dis ce que tu veux faire.');
+  if(noSR)setTimeout(()=>$('sec-text').focus(),150);
 }
 function secClose(){stopListen(false);$('sec').hidden=true;$('sec-bg').hidden=true}
 // Remet le bouton à l'état « Parler » tout de suite (sans attendre Chrome)
@@ -798,6 +809,7 @@ function stopListen(send){
   try{r.stop()}catch(e){}
   setTimeout(()=>{try{r.abort()}catch(e){}},600);
   if(send&&$('sec-text').value.trim()){secStatus('');secSend()}
+  else if(send&&!r._heard)useKeyboard('La dictée du navigateur ne marche pas sur ce téléphone. '+KB_HINT);
   else secStatus(send?'Je n’ai rien entendu, réessaie.':'');
 }
 function startListen(){
@@ -806,6 +818,7 @@ function startListen(){
   const base=$('sec-text').value.trim();let finalTxt='';
   listening=true;$('sec-mic').classList.add('on');$('sec-mic').textContent='■ Arrêter';secStatus('Je t’écoute… parle normalement.');
   r.onresult=ev=>{
+    r._heard=true;
     if(rec!==r)return;
     let interim='';finalTxt='';
     for(const x of ev.results){if(x.isFinal)finalTxt+=x[0].transcript;else interim+=x[0].transcript}
@@ -813,15 +826,19 @@ function startListen(){
   };
   r.onerror=ev=>{
     if(rec!==r||ev.error==='aborted')return;
-    const m={'not-allowed':'Micro refusé : autorise le micro pour cette application dans les réglages de Chrome.','no-speech':'Je n’ai rien entendu, réessaie.','network':'Pas de connexion pour la reconnaissance vocale.'}[ev.error];
-    rec=null;micIdle();secStatus(m||'Le micro s’est arrêté ('+ev.error+').');
+    rec=null;micIdle();
+    if(ev.error==='no-speech'){secStatus('Je n’ai rien entendu, réessaie.');return}
+    if(ev.error==='not-allowed'){secStatus('Micro refusé. '+KB_HINT);$('sec-text').focus();return}
+    // network, service-not-allowed, language-not-supported, audio-capture… : la dictée du navigateur est inutilisable ici
+    useKeyboard('La dictée du navigateur ne marche pas sur ce téléphone. '+KB_HINT);
   };
   r.onend=()=>{
     if(rec!==r)return; // arrêt manuel déjà traité
     rec=null;micIdle();
     if(finalTxt.trim()&&$('sec-text').value.trim())secSend();
+    else if(!r._heard)useKeyboard('La dictée du navigateur ne marche pas sur ce téléphone. '+KB_HINT);
   };
-  try{r.start()}catch(e){rec=null;micIdle();secStatus('Impossible de démarrer le micro.')}
+  try{r.start()}catch(e){rec=null;micIdle();useKeyboard()}
 }
 function frDate(s){return s?fmt(s):''}
 function describe(a){
@@ -840,11 +857,14 @@ function describe(a){
 }
 async function secSend(){
   const texte=$('sec-text').value.trim();
-  if(!texte||secBusy)return;
-  stopListen();secBusy=true;$('sec-send').disabled=true;$('sec-result').hidden=true;
-  secStatus('Je réfléchis…');
+  if(secBusy)return;
+  if(!texte){secStatus('La case est vide. '+KB_HINT);$('sec-text').focus();return}
+  stopListen();secBusy=true;$('sec-send').disabled=true;$('sec-send').textContent='Envoi…';$('sec-result').hidden=true;
+  secStatus('Je réfléchis… (quelques secondes)');
   try{
-    const {data,error}=await sb.functions.invoke('todo-secretaire',{body:{texte}});
+    const call=sb.functions.invoke('todo-secretaire',{body:{texte}});
+    const limite=new Promise((_,rej)=>setTimeout(()=>rej(new Error('La secrétaire met trop de temps à répondre, réessaie.')),45000));
+    const {data,error}=await Promise.race([call,limite]);
     if(error){let msg='';try{msg=(await error.context.json()).error}catch(e){}throw new Error(msg||'La secrétaire ne répond pas, réessaie.')}
     secActions=(data&&data.actions)||[];
     $('sec-rep').textContent=(data&&data.reponse)||'';
@@ -859,7 +879,7 @@ async function secSend(){
     $('sec-result').hidden=false;
     secStatus(secActions.length?'Vérifie puis valide :':'');
   }catch(e){secStatus(navigator.onLine?String(e.message||e):'Pas de connexion internet.')}
-  finally{secBusy=false;$('sec-send').disabled=false}
+  finally{secBusy=false;$('sec-send').disabled=false;$('sec-send').textContent='Envoyer'}
 }
 async function secApply(){
   const chosen=[...$('sec-acts').querySelectorAll('input:checked')].map(c=>secActions[+c.dataset.i]);
@@ -894,7 +914,8 @@ async function secApply(){
   toast(ko?ok+' action(s) faite(s), '+ko+' en échec.':(ok>1?ok+' actions enregistrées':'Action enregistrée'));
   $('sec-text').value='';secClose();load();
 }
-$('sec-open').addEventListener('click',()=>{secOpen();if(SR)startListen()});
+$('sec-open').addEventListener('click',()=>{secOpen();if(!noSR)startListen()});
+$('sec-retry').addEventListener('click',()=>{noSR=false;try{localStorage.removeItem('todo-nosr')}catch(e){}$('sec-retry').hidden=true;$('sec-mic').hidden=false;startListen()});
 $('sec-close').addEventListener('click',secClose);
 $('sec-bg').addEventListener('click',secClose);
 $('sec-cancel').addEventListener('click',()=>{$('sec-result').hidden=true;secStatus('Modifie ta demande ou parle à nouveau.')});
