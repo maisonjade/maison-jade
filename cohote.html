@@ -1548,7 +1548,7 @@ async function initApp(user) {
     document.getElementById('p-adresse').value = profile.adresse || '';
     document.getElementById('p-tva').checked = !!profile.assujetti_tva;
     document.getElementById('p-statut').textContent = profile.statut === 'ambassadeur' ? '⭐ Ambassadeur' : '✅ Co-Hôte actif';
-    document.getElementById('p-abo').textContent = profile.abonnement_actif ? '✅ Actif — 49€/mois' : '❌ Inactif';
+    document.getElementById('p-abo').textContent = profile.abonnement_actif ? '✅ Actif — 39,99 €/mois' : '❌ Inactif';
     document.getElementById('profil-avatar-lg').textContent = initiale;
   }
 
