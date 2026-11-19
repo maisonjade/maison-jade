@@ -10,6 +10,9 @@
   "orientation": "portrait",
   "background_color": "#542C35",
   "theme_color": "#542C35",
+  "shortcuts": [
+    { "name": "Parler à ma secrétaire", "short_name": "Secrétaire", "url": "./?voix=1", "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }] }
+  ],
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },

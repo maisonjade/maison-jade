@@ -74,7 +74,7 @@ button,input,select{font:inherit;color:inherit}
 .top-actions{display:flex;gap:8px}
 .top-btn{border:1px solid rgba(245,239,231,.35);background:transparent;color:var(--ivoire);border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;min-height:36px}
 
-.wrap{max-width:980px;margin:0 auto;padding-block:16px calc(56px + env(safe-area-inset-bottom,0px));
+.wrap{max-width:980px;margin:0 auto;padding-block:16px calc(100px + env(safe-area-inset-bottom,0px));
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
   display:flex;flex-direction:column;gap:18px}
 .status{color:var(--warn);font-size:13px;margin:0}
@@ -217,6 +217,31 @@ button,input,select{font:inherit;color:inherit}
 .empty{border:1px dashed var(--line);border-radius:12px;padding:28px 16px;text-align:center;color:var(--muted)}
 #list{display:flex;flex-direction:column;gap:14px}
 .foot{text-align:center;font-size:12px;color:var(--muted)}
+/* Secrétaire vocale */
+.fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));width:62px;height:62px;border-radius:50%;border:0;background:var(--jade);color:#fff;font-size:26px;box-shadow:0 6px 18px rgba(0,0,0,.28);cursor:pointer;z-index:30;display:flex;align-items:center;justify-content:center}
+.sheet-bg{position:fixed;inset:0;background:rgba(20,12,14,.45);z-index:40}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-height:88vh;max-height:88dvh;overflow:auto;background:var(--surface);color:var(--ink);border-radius:18px 18px 0 0;padding:18px max(16px,env(safe-area-inset-left,0px)) calc(18px + env(safe-area-inset-bottom,0px));z-index:41;display:flex;flex-direction:column;gap:12px;max-width:720px;margin:0 auto}
+.sheet h2{font-size:24px}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sec-status{font-size:14px;color:var(--muted);margin:0;min-height:1.4em}
+.sec-text{width:100%;min-height:84px;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:10px 12px;font-size:16px;resize:vertical}
+.sec-btns{display:flex;gap:10px}
+.sec-btns .btn{flex:1}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.mic{width:100%;min-height:56px;font-size:17px}
+.mic.on{background:var(--warn);color:#fff;animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.75}}
+@media (prefers-reduced-motion: reduce){.mic.on{animation:none}}
+.sec-rep{background:var(--bg);border-left:3px solid var(--jade);border-radius:8px;padding:9px 12px;font-size:15px;margin:0}
+.sec-acts{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.sec-acts label{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;background:var(--surface)}
+.sec-acts input{width:22px;height:22px;flex:none;margin:1px 0 0;accent-color:var(--jade)}
+.sec-acts label>span{min-width:0;overflow-wrap:anywhere}
+.sec-rep{overflow-wrap:anywhere}
+.sec-acts .k{font-weight:700}
+.sec-acts .d{font-size:13px;color:var(--muted);display:block;margin-top:2px}
+.sec-acts .del-act .k{color:var(--warn)}
+.sec-hint{font-size:12px;color:var(--muted);margin:0}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--accent);color:var(--accent-ink);padding:10px 16px;border-radius:10px;font-size:14px;max-width:calc(100% - 32px);z-index:50}
 </style>
 </head>
@@ -290,6 +315,28 @@ button,input,select{font:inherit;color:inherit}
 
     <p class="foot"><button class="link" id="logout" type="button">Se déconnecter</button></p>
   </div>
+
+  <button class="fab" id="sec-open" type="button" aria-label="Parler à ma secrétaire">🎤</button>
+  <div class="sheet-bg" id="sec-bg" hidden></div>
+  <section class="sheet" id="sec" role="dialog" aria-modal="true" aria-labelledby="sec-h" hidden>
+    <div class="sheet-head">
+      <h2 id="sec-h">Ma secrétaire</h2>
+      <button class="icon-btn" id="sec-close" type="button" aria-label="Fermer">✕</button>
+    </div>
+    <p class="sec-hint">Ex. « Coche la CFE, décale ENEDIS à lundi et ajoute une note sur la cuisine : retrait samedi ».</p>
+    <button class="btn mic" id="sec-mic" type="button">🎤 Parler</button>
+    <p class="sec-status" id="sec-status" role="status"></p>
+    <textarea class="sec-text" id="sec-text" maxlength="1500" placeholder="Ou écris ta demande ici…" aria-label="Ta demande"></textarea>
+    <div class="sec-btns"><button class="btn" id="sec-send" type="button">Envoyer</button></div>
+    <div id="sec-result" hidden>
+      <p class="sec-rep" id="sec-rep"></p>
+      <ul class="sec-acts" id="sec-acts"></ul>
+      <div class="sec-btns" style="margin-top:12px">
+        <button class="btn ghost" id="sec-cancel" type="button">Annuler</button>
+        <button class="btn" id="sec-apply" type="button">Valider</button>
+      </div>
+    </div>
+  </section>
 </div>
 <div class="toast" id="toast" role="status" hidden></div>
 
@@ -728,6 +775,123 @@ sb.auth.onAuthStateChange((event,session)=>{
 sb.auth.getSession().then(({data})=>{
   if(data&&data.session)showApp(data.session);else if(!userId)showLogin('');
 }).catch(()=>showLogin(''));
+
+// ── Secrétaire vocale : la voix devient du texte (Chrome), Claude propose des actions, Jade valide ──
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const CAT_LABEL={perso:'Perso',pro:'Pro',immeuble:'Immeuble',conciergerie:'Conciergerie'};
+let rec=null,listening=false,secBusy=false,secActions=[];
+function secStatus(m){$('sec-status').textContent=m||''}
+function secOpen(){
+  if(!userId)return;
+  $('sec').hidden=false;$('sec-bg').hidden=false;$('sec-result').hidden=true;
+  secStatus(SR?'Touche « Parler » puis dis ce que tu veux faire.':'Le micro n’est pas disponible ici : écris ta demande.');
+  $('sec-mic').hidden=!SR;
+}
+function secClose(){stopListen();$('sec').hidden=true;$('sec-bg').hidden=true}
+function stopListen(){if(rec&&listening){try{rec.stop()}catch(e){}}}
+function startListen(){
+  if(!SR||listening)return;
+  rec=new SR();rec.lang='fr-FR';rec.interimResults=true;rec.continuous=false;rec.maxAlternatives=1;
+  const base=$('sec-text').value.trim();let finalTxt='';
+  rec.onstart=()=>{listening=true;$('sec-mic').classList.add('on');$('sec-mic').textContent='■ J’écoute… (touche pour arrêter)';secStatus('Parle normalement, je t’écoute.')};
+  rec.onresult=ev=>{
+    let interim='';finalTxt='';
+    for(const r of ev.results){if(r.isFinal)finalTxt+=r[0].transcript;else interim+=r[0].transcript}
+    $('sec-text').value=(base?base+' ':'')+(finalTxt+interim).trim();
+  };
+  rec.onerror=ev=>{
+    const m={'not-allowed':'Micro refusé : autorise le micro pour cette application dans les réglages de Chrome.','no-speech':'Je n’ai rien entendu, réessaie.','network':'Pas de connexion pour la reconnaissance vocale.'}[ev.error];
+    secStatus(m||'Le micro s’est arrêté ('+ev.error+').');
+  };
+  rec.onend=()=>{
+    listening=false;$('sec-mic').classList.remove('on');$('sec-mic').textContent='🎤 Parler';
+    if(finalTxt.trim()&&$('sec-text').value.trim())secSend();
+  };
+  try{rec.start()}catch(e){secStatus('Impossible de démarrer le micro.')}
+}
+function frDate(s){return s?fmt(s):''}
+function describe(a){
+  const t=tasks.find(x=>x.id===a.id);const nom=t?t.title:(a.title||'');
+  const bits=[];
+  if(a.cat)bits.push(CAT_LABEL[a.cat]||a.cat);
+  if(a.due)bits.push('butoir '+frDate(a.due));
+  if(a.start)bits.push('début '+frDate(a.start));
+  if(a.suivi===true)bits.push('à suivre');if(a.suivi===false)bits.push('retirer le suivi');
+  if(a.encours===true)bits.push('en cours');if(a.encours===false)bits.push('plus en cours');
+  if(a.type==='modifier'&&a.title&&t&&a.title!==t.title)bits.push('nouveau titre « '+a.title+' »');
+  if(a.note!=null&&a.note!=='')bits.push((a.note_mode==='remplacer'?'note : ':'+ note : ')+a.note);
+  if(a.note===''&&a.note_mode==='remplacer')bits.push('effacer la note');
+  const K={creer:'Créer',modifier:'Modifier',cocher:'Cocher (faite)',decocher:'Remettre à faire',supprimer:'Supprimer'}[a.type];
+  return {k:K+' : « '+nom+' »',d:bits.join(' · ')};
+}
+async function secSend(){
+  const texte=$('sec-text').value.trim();
+  if(!texte||secBusy)return;
+  stopListen();secBusy=true;$('sec-send').disabled=true;$('sec-result').hidden=true;
+  secStatus('Je réfléchis…');
+  try{
+    const {data,error}=await sb.functions.invoke('todo-secretaire',{body:{texte}});
+    if(error){let msg='';try{msg=(await error.context.json()).error}catch(e){}throw new Error(msg||'La secrétaire ne répond pas, réessaie.')}
+    secActions=(data&&data.actions)||[];
+    $('sec-rep').textContent=(data&&data.reponse)||'';
+    const ul=$('sec-acts');ul.textContent='';
+    secActions.forEach((a,i)=>{
+      const d=describe(a);
+      const cb=h('input',{type:'checkbox','data-i':String(i)});cb.checked=true;
+      ul.append(h('li',{},h('label',{class:a.type==='supprimer'?'del-act':''},cb,h('span',{},h('span',{class:'k',text:d.k}),d.d?h('span',{class:'d',text:d.d}):null))));
+    });
+    $('sec-apply').hidden=!secActions.length;
+    $('sec-apply').textContent=secActions.length>1?'Valider les '+secActions.length+' actions':'Valider';
+    $('sec-result').hidden=false;
+    secStatus(secActions.length?'Vérifie puis valide :':'');
+  }catch(e){secStatus(navigator.onLine?String(e.message||e):'Pas de connexion internet.')}
+  finally{secBusy=false;$('sec-send').disabled=false}
+}
+async function secApply(){
+  const chosen=[...$('sec-acts').querySelectorAll('input:checked')].map(c=>secActions[+c.dataset.i]);
+  if(!chosen.length){secClose();return}
+  $('sec-apply').disabled=true;secStatus('J’enregistre…');
+  let ok=0,ko=0;
+  for(const a of chosen){
+    const t=tasks.find(x=>x.id===a.id);
+    try{
+      if(a.type==='creer'){
+        await db.collection('tasks').add({title:a.title,cat:a.cat,sub:a.cat==='conciergerie'?(a.sub||'quotidien'):'',due:a.due||'',start:a.start||today,note:a.note||'',suivi:!!a.suivi,encours:!!a.encours,done:false,doneAt:''});
+      }else if(!t){throw new Error('introuvable')}
+      else if(a.type==='supprimer'){await ref(a.id).delete()}
+      else if(a.type==='cocher'){await ref(a.id).update({done:true,doneAt:today})}
+      else if(a.type==='decocher'){await ref(a.id).update({done:false,doneAt:''})}
+      else{
+        const p={};
+        if(a.title)p.title=a.title;
+        if(a.cat)p.cat=a.cat;
+        if(a.sub)p.sub=a.sub;
+        if(a.due)p.due=a.due;
+        if(a.start)p.start=a.start;
+        if(typeof a.suivi==='boolean')p.suivi=a.suivi;
+        if(typeof a.encours==='boolean')p.encours=a.encours;
+        if(a.note!=null){p.note=(a.note_mode==='ajouter'&&t.note&&a.note)?(t.note+' · '+a.note):a.note;p.note=p.note.slice(0,500)}
+        if(Object.keys(p).length)await ref(a.id).update(p);
+      }
+      ok++;
+    }catch(e){console.warn('[todo] action',a,e);ko++}
+  }
+  $('sec-apply').disabled=false;
+  toast(ko?ok+' action(s) faite(s), '+ko+' en échec.':(ok>1?ok+' actions enregistrées':'Action enregistrée'));
+  $('sec-text').value='';secClose();load();
+}
+$('sec-open').addEventListener('click',()=>{secOpen();if(SR)startListen()});
+$('sec-close').addEventListener('click',secClose);
+$('sec-bg').addEventListener('click',secClose);
+$('sec-cancel').addEventListener('click',()=>{$('sec-result').hidden=true;secStatus('Modifie ta demande ou parle à nouveau.')});
+$('sec-mic').addEventListener('click',()=>{listening?stopListen():startListen()});
+$('sec-send').addEventListener('click',secSend);
+$('sec-apply').addEventListener('click',secApply);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('sec').hidden)secClose()});
+// Raccourci de l'icône (appui long → « Parler à ma secrétaire ») : ouvre directement le panneau
+if(new URLSearchParams(location.search).get('voix')==='1'){
+  const t=setInterval(()=>{if(userId&&loaded){clearInterval(t);secOpen()}},300);setTimeout(()=>clearInterval(t),15000);
+}
 
 // ── Application installable : service worker limité au dossier /todo/ ──
 if('serviceWorker' in navigator){
