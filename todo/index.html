@@ -787,27 +787,41 @@ function secOpen(){
   secStatus(SR?'Touche « Parler » puis dis ce que tu veux faire.':'Le micro n’est pas disponible ici : écris ta demande.');
   $('sec-mic').hidden=!SR;
 }
-function secClose(){stopListen();$('sec').hidden=true;$('sec-bg').hidden=true}
-function stopListen(){if(rec&&listening){try{rec.stop()}catch(e){}}}
+function secClose(){stopListen(false);$('sec').hidden=true;$('sec-bg').hidden=true}
+// Remet le bouton à l'état « Parler » tout de suite (sans attendre Chrome)
+function micIdle(){listening=false;$('sec-mic').classList.remove('on');$('sec-mic').textContent='🎤 Parler'}
+// Arrêt : le bouton s'arrête immédiatement ; si Chrome traîne, on coupe net (abort) après 0,6 s.
+// send=true : on envoie ce qui a été entendu (y compris la fin pas encore « validée » par Chrome).
+function stopListen(send){
+  const r=rec;if(!r)return;
+  rec=null;micIdle();
+  try{r.stop()}catch(e){}
+  setTimeout(()=>{try{r.abort()}catch(e){}},600);
+  if(send&&$('sec-text').value.trim()){secStatus('');secSend()}
+  else secStatus(send?'Je n’ai rien entendu, réessaie.':'');
+}
 function startListen(){
-  if(!SR||listening)return;
-  rec=new SR();rec.lang='fr-FR';rec.interimResults=true;rec.continuous=false;rec.maxAlternatives=1;
+  if(!SR||rec)return;
+  const r=new SR();rec=r;r.lang='fr-FR';r.interimResults=true;r.continuous=false;r.maxAlternatives=1;
   const base=$('sec-text').value.trim();let finalTxt='';
-  rec.onstart=()=>{listening=true;$('sec-mic').classList.add('on');$('sec-mic').textContent='■ J’écoute… (touche pour arrêter)';secStatus('Parle normalement, je t’écoute.')};
-  rec.onresult=ev=>{
+  listening=true;$('sec-mic').classList.add('on');$('sec-mic').textContent='■ Arrêter';secStatus('Je t’écoute… parle normalement.');
+  r.onresult=ev=>{
+    if(rec!==r)return;
     let interim='';finalTxt='';
-    for(const r of ev.results){if(r.isFinal)finalTxt+=r[0].transcript;else interim+=r[0].transcript}
+    for(const x of ev.results){if(x.isFinal)finalTxt+=x[0].transcript;else interim+=x[0].transcript}
     $('sec-text').value=(base?base+' ':'')+(finalTxt+interim).trim();
   };
-  rec.onerror=ev=>{
+  r.onerror=ev=>{
+    if(rec!==r||ev.error==='aborted')return;
     const m={'not-allowed':'Micro refusé : autorise le micro pour cette application dans les réglages de Chrome.','no-speech':'Je n’ai rien entendu, réessaie.','network':'Pas de connexion pour la reconnaissance vocale.'}[ev.error];
-    secStatus(m||'Le micro s’est arrêté ('+ev.error+').');
+    rec=null;micIdle();secStatus(m||'Le micro s’est arrêté ('+ev.error+').');
   };
-  rec.onend=()=>{
-    listening=false;$('sec-mic').classList.remove('on');$('sec-mic').textContent='🎤 Parler';
+  r.onend=()=>{
+    if(rec!==r)return; // arrêt manuel déjà traité
+    rec=null;micIdle();
     if(finalTxt.trim()&&$('sec-text').value.trim())secSend();
   };
-  try{rec.start()}catch(e){secStatus('Impossible de démarrer le micro.')}
+  try{r.start()}catch(e){rec=null;micIdle();secStatus('Impossible de démarrer le micro.')}
 }
 function frDate(s){return s?fmt(s):''}
 function describe(a){
@@ -884,7 +898,7 @@ $('sec-open').addEventListener('click',()=>{secOpen();if(SR)startListen()});
 $('sec-close').addEventListener('click',secClose);
 $('sec-bg').addEventListener('click',secClose);
 $('sec-cancel').addEventListener('click',()=>{$('sec-result').hidden=true;secStatus('Modifie ta demande ou parle à nouveau.')});
-$('sec-mic').addEventListener('click',()=>{listening?stopListen():startListen()});
+$('sec-mic').addEventListener('click',()=>{rec?stopListen(true):startListen()});
 $('sec-send').addEventListener('click',secSend);
 $('sec-apply').addEventListener('click',secApply);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('sec').hidden)secClose()});
