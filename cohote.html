@@ -1834,7 +1834,7 @@ function exportRecapCSV() {
   const blob = new Blob(['\uFEFF' + lignes.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `commissions_maison_jade_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `commissions_maison_jayla_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
   URL.revokeObjectURL(a.href);
   showToast('✅ Récap exporté');
