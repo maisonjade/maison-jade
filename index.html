@@ -7902,45 +7902,21 @@ async function genMessageIA() {
     premium: 'premium et raffiné, digne d\'un boutique hôtel 5 étoiles'
   };
 
-  // Contexte du bien
-  const bienCtx = `
-Bien : ${dos.adresse || ''}
-Type : ${dos.type || 'Appartement'} ${dos.surface ? '— ' + dos.surface + ' m²' : ''}
-Check-in : ${dos.checkin || 'À partir de 15h'}
-Check-out : ${dos.checkout || 'Avant 11h'}
-Accès : ${dos.acces || dos.boite_a_cles || 'Boîte à clés'}
-WiFi : ${dos.wifi || 'Disponible — code fourni à l\'arrivée'}
-Parking : ${dos.parking || 'Se renseigner sur place'}
-Transports : ${dos.transport || ''}
-Règles : ${dos.regles || 'Non-fumeur, pas d\'animaux sauf accord préalable'}
-Équipements : ${dos.equip || ''}
-Notes : ${dos.notesPros || ''}
-`.trim();
-
   document.getElementById('msg-loading').style.display = 'block';
   document.getElementById('msg-result').style.display = 'none';
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        system: `Tu es un assistant de conciergerie premium pour Maison Jayla. Tu rédiges des réponses aux voyageurs en ${LANGUE_NOM[langue]}, avec un ton ${TON_DESC[ton]}. 
-Tu utilises les informations du bien pour personnaliser la réponse. 
-Sois précis, chaleureux et professionnel. 
-Signe toujours "L'équipe Maison Jayla" à la fin.
-Ne mentionne pas les informations manquantes — réponds uniquement avec ce que tu sais.`,
-        messages: [{
-          role: 'user',
-          content: `Voici les informations sur le bien :\n${bienCtx}\n\nQuestion du voyageur : "${question}"\n\nRéponds en ${LANGUE_NOM[langue]}.`
-        }]
-      })
+    // Passe par la fonction serveur du chatbot voyageur (clever-endpoint) : la clé IA reste côté serveur
+    // et les informations du bien sont relues en base à partir de son identifiant.
+    // (L'ancien appel direct à api.anthropic.com depuis le navigateur, sans clé, échouait toujours.)
+    const consigne = `Rédige la réponse à envoyer à ce voyageur, en ${LANGUE_NOM[langue]}, avec un ton ${TON_DESC[ton]}. ` +
+      `Réponds uniquement avec les informations du logement dont tu disposes, sans mentionner celles qui manquent.\n\n` +
+      `Question du voyageur : « ${question.slice(0, 1500)} »`;
+    const { data, error } = await sb.functions.invoke('clever-endpoint', {
+      body: { bienId: dos.id, messages: [{ role: 'user', content: consigne }] }
     });
-
-    const data = await response.json();
-    const texte = data.content?.[0]?.text || '';
+    if (error || !data || data.error || !data.reply) throw new Error((data && data.error) || 'assistant indisponible, réessaie dans un instant');
+    const texte = data.reply;
 
     document.getElementById('msg-loading').style.display = 'none';
     document.getElementById('msg-text').textContent = texte;
