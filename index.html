@@ -657,7 +657,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
     <div id="login-error" class="login-error"></div>
     <button class="btn-login" id="btn-retry-auth" style="display:none;margin-bottom:12px" onclick="initAuth()">↻ Réessayer</button>
     <div class="login-group"><label>Adresse email</label>
-      <input type="email" id="login-email" placeholder="contact@maisonjayla.com" autocomplete="email"></div>
+      <input type="email" id="login-email" placeholder="contact@maison-jayla.com" autocomplete="email"></div>
     <div class="login-group"><label>Mot de passe</label>
       <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
     <button class="btn-login" id="btn-login" onclick="doLogin()">Se connecter →</button>
@@ -886,7 +886,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
       <div style="padding:1rem;display:flex;flex-direction:column;gap:10px">
         <div style="background:var(--jade-bg);border:1px solid var(--jade-bd);border-radius:8px;padding:12px">
           <div style="font-size:11px;color:var(--jade);font-weight:600;margin-bottom:4px">📧 EMAIL OFFICIEL</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--jade)">contact@maisonjayla.com</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--jade)">contact@maison-jayla.com</div>
         </div>
         <div style="background:var(--surface2);border-radius:8px;padding:12px">
           <div style="font-size:11px;color:var(--ink3);font-weight:600;margin-bottom:4px">⚖️ AVOCAT</div>
@@ -976,7 +976,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
         <div>
           <div style="font-size:11px;color:var(--ink3);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Domaine officiel</div>
           <div style="background:var(--surface2);border-radius:6px;padding:8px 12px;font-family:'Courier New',monospace;font-size:12px;color:var(--ink)">
-            contact@maisonjayla.com
+            contact@maison-jayla.com
           </div>
         </div>
         <div>
@@ -4244,7 +4244,7 @@ function genRapportVisite() {
 
     <!-- Footer -->
     <div style="position:absolute;bottom:32px;left:52px;right:52px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #E8E2D8;padding-top:12px">
-      <div style="font-size:10px;color:#8A8278">Maison Jayla · contact@maisonjayla.com · www.maisonjayla.com</div>
+      <div style="font-size:10px;color:#8A8278">Maison Jayla · contact@maison-jayla.com · www.maison-jayla.com</div>
       <div style="font-size:10px;color:#8A8278">Rapport de visite · ${dos.prenom} ${dos.nom} · ${visDate ? new Date(visDate).toLocaleDateString('fr-FR') : today}</div>
     </div>
   </div>`;
@@ -4895,8 +4895,8 @@ function genProposition() {
       <div style="font-size:18px;font-weight:500;margin-bottom:4px">Mélanie · Maison Jayla</div>
       <div style="font-size:13px;color:rgba(255,255,255,0.45)">Conciergerie premium · France & International</div>
       <div style="margin-top:12px;display:flex;gap:16px;flex-wrap:wrap">
-        <span style="font-size:13px;color:#C5A477">✉ contact@maisonjayla.com</span>
-        <span style="font-size:13px;color:#C5A477">🌐 www.maisonjayla.com</span>
+        <span style="font-size:13px;color:#C5A477">✉ contact@maison-jayla.com</span>
+        <span style="font-size:13px;color:#C5A477">🌐 www.maison-jayla.com</span>
       </div>
     </div>
   </div>`;
@@ -5328,11 +5328,11 @@ function renderEmailTemplates() {
   const d=emailDos;
   const prenom=d?.prenom||'[Prénom]', adresse=d?.adresse||'[Adresse]', email=d?.email||'';
   const templates=[
-    {code:'E1',titre:'📅 Confirmation de visite découverte',sujet:`Maison Jayla — Confirmation visite · ${adresse}`,corps:`Bonjour ${prenom},\n\nJe confirme notre visite découverte pour le bien situé au ${adresse}.\n\n📅 Date : ${d?.visite?.date?new Date(d.visite.date).toLocaleDateString('fr-FR'):'[date]'}\n⏰ Heure : ${d?.visite?.heure||'[heure]'}\n📍 Adresse : ${adresse}\n\nN'hésitez pas à me contacter pour toute question.\n\nÀ très bientôt,\nMélanie · Maison Jayla\ncontact@maisonjayla.com`},
-    {code:'E2',titre:'📄 Envoi de la proposition commerciale',sujet:`Maison Jayla — Votre proposition commerciale · ${adresse}`,corps:`Bonjour ${prenom},\n\nSuite à notre visite, veuillez trouver en pièce jointe votre proposition commerciale pour le bien au ${adresse}.\n\nElle comprend notre estimation de revenus, les services retenus et les prochaines étapes.\n\nCordialement,\nMélanie · Maison Jayla\ncontact@maisonjayla.com`},
-    {code:'E3',titre:'📋 Demande de documents manquants',sujet:`Maison Jayla — Documents nécessaires · ${adresse}`,corps:`Bonjour ${prenom},\n\nPour finaliser votre dossier, nous avons besoin de :\n\n□ Attestation assurance PNO\n□ Numéro d'enregistrement mairie\n□ Règlement de copropriété\n□ RIB pour les reversements\n□ DPE\n\nMerci de nous les transmettre par email ou WhatsApp.\n\nMélanie · Maison Jayla\ncontact@maisonjayla.com`},
-    {code:'E4',titre:'🎉 Confirmation mise en ligne',sujet:`Maison Jayla — Votre annonce est en ligne ! · ${adresse}`,corps:`Bonjour ${prenom},\n\nVotre bien au ${adresse} est maintenant en ligne sur Airbnb ! 🎉\n\n${d?.lien?'👉 '+d.lien:'👉 Lien à venir'}\n\nNous gérons tout — vous recevrez votre premier rapport dans 30 jours.\n\nMélanie · Maison Jayla\ncontact@maisonjayla.com`},
-    {code:'E5',titre:'📊 Rapport mensuel propriétaire',sujet:`Maison Jayla — Rapport du mois · ${adresse}`,corps:`Bonjour ${prenom},\n\nVoici le bilan du mois pour votre bien au ${adresse} :\n\n🏠 Nuits louées : [X]\n💰 Revenus : [X]€\n⭐ Note Airbnb : [X.X]/5\n📊 Taux d'occupation : [X]%\n\nProchaines actions : [À compléter]\n\nMélanie · Maison Jayla\ncontact@maisonjayla.com`}
+    {code:'E1',titre:'📅 Confirmation de visite découverte',sujet:`Maison Jayla — Confirmation visite · ${adresse}`,corps:`Bonjour ${prenom},\n\nJe confirme notre visite découverte pour le bien situé au ${adresse}.\n\n📅 Date : ${d?.visite?.date?new Date(d.visite.date).toLocaleDateString('fr-FR'):'[date]'}\n⏰ Heure : ${d?.visite?.heure||'[heure]'}\n📍 Adresse : ${adresse}\n\nN'hésitez pas à me contacter pour toute question.\n\nÀ très bientôt,\nMélanie · Maison Jayla\ncontact@maison-jayla.com`},
+    {code:'E2',titre:'📄 Envoi de la proposition commerciale',sujet:`Maison Jayla — Votre proposition commerciale · ${adresse}`,corps:`Bonjour ${prenom},\n\nSuite à notre visite, veuillez trouver en pièce jointe votre proposition commerciale pour le bien au ${adresse}.\n\nElle comprend notre estimation de revenus, les services retenus et les prochaines étapes.\n\nCordialement,\nMélanie · Maison Jayla\ncontact@maison-jayla.com`},
+    {code:'E3',titre:'📋 Demande de documents manquants',sujet:`Maison Jayla — Documents nécessaires · ${adresse}`,corps:`Bonjour ${prenom},\n\nPour finaliser votre dossier, nous avons besoin de :\n\n□ Attestation assurance PNO\n□ Numéro d'enregistrement mairie\n□ Règlement de copropriété\n□ RIB pour les reversements\n□ DPE\n\nMerci de nous les transmettre par email ou WhatsApp.\n\nMélanie · Maison Jayla\ncontact@maison-jayla.com`},
+    {code:'E4',titre:'🎉 Confirmation mise en ligne',sujet:`Maison Jayla — Votre annonce est en ligne ! · ${adresse}`,corps:`Bonjour ${prenom},\n\nVotre bien au ${adresse} est maintenant en ligne sur Airbnb ! 🎉\n\n${d?.lien?'👉 '+d.lien:'👉 Lien à venir'}\n\nNous gérons tout — vous recevrez votre premier rapport dans 30 jours.\n\nMélanie · Maison Jayla\ncontact@maison-jayla.com`},
+    {code:'E5',titre:'📊 Rapport mensuel propriétaire',sujet:`Maison Jayla — Rapport du mois · ${adresse}`,corps:`Bonjour ${prenom},\n\nVoici le bilan du mois pour votre bien au ${adresse} :\n\n🏠 Nuits louées : [X]\n💰 Revenus : [X]€\n⭐ Note Airbnb : [X.X]/5\n📊 Taux d'occupation : [X]%\n\nProchaines actions : [À compléter]\n\nMélanie · Maison Jayla\ncontact@maison-jayla.com`}
   ];
   const c=document.getElementById('email-templates'); if(!c) return;
   c.innerHTML=templates.map(t=>`<div class="scard" style="margin-bottom:1rem"><div class="scard-hd"><span class="scard-num">${t.code}</span><span class="scard-title">${t.titre}</span></div><div class="scard-body"><div style="margin-bottom:8px"><label class="fl">Sujet</label><input type="text" value="${t.sujet}" id="subj-${t.code}" style="background:var(--surface2)"></div><label class="fl">Corps</label><textarea id="body-${t.code}" style="min-height:150px;background:var(--surface2);font-family:'JetBrains Mono',monospace;font-size:12px">${t.corps}</textarea><div style="display:flex;gap:8px;margin-top:10px"><button class="btn btn-ghost btn-sm" onclick="cpEmail('${t.code}')">📋 Copier</button><button class="btn btn-primary btn-sm" onclick="mlEmail('${t.code}','${email}')">✉ Ouvrir messagerie</button></div></div></div>`).join('');
@@ -6047,7 +6047,7 @@ function apercuFacture(id) {
           <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#542C35">Maison <em style="font-style:italic">Jayla</em></div>
           <div style="font-size:11px;color:#8A7B7E;letter-spacing:0.12em;text-transform:uppercase;margin-top:4px">Conciergerie Premium</div>
           <div style="font-size:11px;color:#5A4A4E;margin-top:8px;line-height:1.7">
-            contact@maisonjayla.com<br>www.maisonjayla.com<br>MAISON J LTD · Companies House n° 17471574
+            contact@maison-jayla.com<br>www.maison-jayla.com<br>MAISON J LTD · Companies House n° 17471574
           </div>
         </div>
         <div style="text-align:right">
@@ -6098,7 +6098,7 @@ function apercuFacture(id) {
       <!-- Pied -->
       <div style="border-top:1px solid #E3D9CE;padding-top:16px;font-size:11px;color:#8A7B7E;line-height:1.7">
         Virement bancaire sous ${new Date(f.dateEcheance)>new Date()?Math.ceil((new Date(f.dateEcheance)-new Date())/86400000)+' jours':'30 jours'}. 
-        MAISON J LTD (Maison Jayla) — contact@maisonjayla.com · Tout retard de paiement entraîne des pénalités de 3× le taux légal.
+        MAISON J LTD (Maison Jayla) — contact@maison-jayla.com · Tout retard de paiement entraîne des pénalités de 3× le taux légal.
       </div>
     </div>`;
   openModal('modal-facture-pdf');
@@ -6956,7 +6956,7 @@ ${(document.getElementById('pdf-show-confiance')?.checked && d.confiance) ? `
   </div>
 
   <div class="footer">
-    <span>MAISON J LTD · Maison Jayla · contact@maisonjayla.com · maisonjade.github.io/maison-jade</span>
+    <span>MAISON J LTD · Maison Jayla · contact@maison-jayla.com · maisonjade.github.io/maison-jade</span>
     <span>Simulation préparée par Maison Jayla · ${d.date}</span>
   </div>
 </div>
@@ -7014,7 +7014,7 @@ async function envoyerEmailMission(presta, menage, dos) {
       heure_checkin: dos.checkin || '16:00',
       notes:         menage.notes || 'Aucune note particulière.',
       name:          'Maison Jayla',
-      email:         'contact@maisonjayla.com'
+      email:         'contact@maison-jayla.com'
     });
     return true;
   } catch(e) { console.error('EmailJS erreur:', e); return false; }
@@ -7764,7 +7764,7 @@ async function alertDoublonModal(check, callback) {
     'Ce prospect (' + check.matched_field + ') est déjà suivi par un autre partenaire du réseau depuis le ' + dateStr + '.\n' +
     'Étape actuelle : ' + formaterEtape(check.existing_etape) + '\n\n' +
     'Pour respecter la charte réseau Maison Jayla, vous ne pouvez pas prospecter un client déjà enregistré.\n' +
-    'Contactez contact@maisonjayla.com en cas de question.';
+    'Contactez contact@maison-jayla.com en cas de question.';
   alert(msg);
 }
 
