@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+<title>Simulateur d'honoraires — Maison Jayla</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Montserrat:wght@400;500;600&display=swap">
+<style>
+/* Mise en page : réglages à gauche, résultats à droite ; une colonne sur téléphone. Thème unique, charte Maison Jayla. */
+:root{
+  --bordeaux:#542C35; --bordeaux-clair:#7A4651; --ivoire:#F5EFE7; --papier:#FFFDF9;
+  --or:#C5A477; --or-fonce:#9A7B4F; --encre:#2E1B20; --gris:#6F5F62; --trait:#E2D6C8;
+  --titre:"Cormorant Garamond",Georgia,serif; --texte:"Montserrat",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--ivoire);color:var(--encre);font-family:var(--texte);font-size:15px;line-height:1.5}
+.page{max-width:1080px;margin:0 auto;padding:28px 20px 40px;display:flex;flex-direction:column;gap:22px}
+header h1{font-family:var(--titre);font-weight:600;font-size:34px;line-height:1.1;margin:0;color:var(--bordeaux);text-wrap:balance}
+header p{margin:6px 0 0;color:var(--gris);max-width:65ch}
+.grille{display:grid;grid-template-columns:340px 1fr;gap:22px;align-items:start}
+.bloc{background:var(--papier);border:1px solid var(--trait);border-radius:10px;padding:20px}
+h2{font-family:var(--titre);font-weight:600;font-size:23px;margin:0 0 14px;color:var(--bordeaux)}
+.champ{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.champ:last-child{margin-bottom:0}
+.champ label,.etiquette{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gris)}
+.ligne{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.valeur{font-weight:600;font-variant-numeric:tabular-nums;color:var(--bordeaux)}
+input[type=range]{width:100%;accent-color:var(--bordeaux)}
+.choix{display:flex;gap:6px;flex-wrap:wrap}
+.choix button{flex:1 1 auto;font:inherit;font-size:13px;font-weight:500;padding:9px 8px;border:1px solid var(--trait);background:var(--ivoire);color:var(--encre);border-radius:8px;cursor:pointer}
+.choix button[aria-pressed=true]{background:var(--bordeaux);border-color:var(--bordeaux);color:var(--ivoire)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--or-fonce);outline-offset:2px}
+.case{display:flex;gap:8px;align-items:flex-start;font-size:13px}
+.case input{margin-top:3px;accent-color:var(--bordeaux)}
+h3{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--or-fonce);margin:22px 0 12px;padding-top:16px;border-top:1px solid var(--trait)}
+.net{display:grid;grid-template-columns:1fr 220px;gap:20px;align-items:center}
+.net .detail{font-size:14px;gap:7px}
+.net .detail li.total{border-top:1px solid var(--trait);padding-top:8px;font-weight:600;color:var(--bordeaux)}
+.heure{background:var(--ivoire);border:1px solid var(--or);border-radius:10px;padding:16px;text-align:center}
+.heure .gros{color:var(--bordeaux);margin:2px 0 4px}
+.heure small{color:var(--gris);font-size:12px;display:block}
+.fixe{font-size:13px;color:var(--gris);border-top:1px solid var(--trait);padding-top:14px}
+.resultats{display:flex;flex-direction:column;gap:22px}
+.tuiles{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tuile{border-radius:10px;padding:18px}
+.tuile.co{background:var(--bordeaux);color:var(--ivoire)}
+.tuile.mj{background:var(--papier);border:1px solid var(--or)}
+.tuile .etiquette{color:inherit;opacity:.85}
+.gros{font-family:var(--titre);font-weight:600;font-size:40px;line-height:1.1;font-variant-numeric:tabular-nums;margin:4px 0 10px}
+.detail{list-style:none;margin:0;padding:0;font-size:13px;display:flex;flex-direction:column;gap:4px}
+.detail li{display:flex;justify-content:space-between;gap:10px;font-variant-numeric:tabular-nums}
+.barre{display:flex;height:26px;border-radius:6px;overflow:hidden;border:1px solid var(--trait);background:var(--ivoire)}
+.barre div{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden}
+.barre .p-co{background:var(--bordeaux);color:var(--ivoire)}
+.barre .p-mj{background:var(--or);color:var(--encre)}
+.legende{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--gris);margin-top:8px}
+.alerte{font-size:13px;padding:10px 12px;border-radius:8px;border-left:4px solid var(--or-fonce);background:var(--ivoire);margin-top:12px}
+.defile{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums;min-width:460px}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--trait)}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gris);font-weight:600}
+tr.actif td{background:var(--ivoire);font-weight:600}
+.notes{font-size:13px;color:var(--gris);max-width:75ch}
+.notes ul{margin:6px 0 0;padding-left:18px}
+.vue-cohote .mj-only{display:none}
+.vue-cohote .tuiles{grid-template-columns:1fr}
+@media (max-width:820px){.grille{grid-template-columns:1fr}}
+@media (max-width:560px){.net{grid-template-columns:1fr}}
+@media (max-width:460px){.tuiles{grid-template-columns:1fr}.gros{font-size:34px}header h1{font-size:28px}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1>Simulateur d'honoraires co-hôte</h1>
+    <p>Réglez les revenus du logement, la formule et le nombre de biens. Les parts de la co-hôte et de Maison Jayla se recalculent tout de suite.</p>
+  </header>
+
+  <div class="grille">
+    <section class="bloc" aria-label="Réglages">
+      <h2>Réglages</h2>
+      <div class="champ">
+        <div class="ligne"><label for="revenu">Revenus nets par bien, par mois</label><span class="valeur" id="revenu-v"></span></div>
+        <input type="range" id="revenu" min="500" max="8000" step="50" value="2000">
+      </div>
+      <div class="champ">
+        <span class="etiquette" id="formule-l">Formule du propriétaire</span>
+        <div class="choix" id="formule" role="group" aria-labelledby="formule-l">
+          <button type="button" data-t="16" aria-pressed="false">Essentielle 16 %</button>
+          <button type="button" data-t="22" aria-pressed="true">Sérénité 22 %</button>
+          <button type="button" data-t="25" aria-pressed="false">Signature 25 %</button>
+        </div>
+      </div>
+      <div class="champ">
+        <div class="ligne"><label for="apportes">Biens apportés par la co-hôte (70 / 30)</label><span class="valeur" id="apportes-v"></span></div>
+        <input type="range" id="apportes" min="0" max="10" step="1" value="2">
+      </div>
+      <div class="champ">
+        <div class="ligne"><label for="confies">Biens confiés par Maison Jayla (50 / 50)</label><span class="valeur" id="confies-v"></span></div>
+        <input type="range" id="confies" min="0" max="10" step="1" value="1">
+      </div>
+      <div class="champ">
+        <span class="etiquette" id="periode-l">Afficher</span>
+        <div class="choix" id="periode" role="group" aria-labelledby="periode-l">
+          <button type="button" data-p="1" aria-pressed="true">Par mois</button>
+          <button type="button" data-p="12" aria-pressed="false">Par an</button>
+        </div>
+      </div>
+      <div class="fixe">Abonnement co-hôte : 39,99 € par mois, déduit de la rétrocession.</div>
+
+      <h3>Statut micro-entrepreneur</h3>
+      <div class="champ">
+        <span class="etiquette" id="cotis-l">Cotisations Urssaf</span>
+        <div class="choix" id="cotis" role="group" aria-labelledby="cotis-l">
+          <button type="button" data-c="21.2" aria-pressed="true">Taux normal 21,2 %</button>
+          <button type="button" data-c="15.9" aria-pressed="false">Avec Acre 15,9 %</button>
+        </div>
+      </div>
+      <div class="champ">
+        <label class="case" for="vl" style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--encre)"><input type="checkbox" id="vl"> Impôt payé avec les cotisations (versement libératoire, 1,7 %)</label>
+      </div>
+
+      <h3>Temps passé par bien</h3>
+      <div class="champ">
+        <div class="ligne"><label for="resas">Réservations par bien, par mois</label><span class="valeur" id="resas-v"></span></div>
+        <input type="range" id="resas" min="1" max="15" step="1" value="6">
+      </div>
+      <div class="champ">
+        <div class="ligne"><label for="hresa">Heures par réservation, sans outil</label><span class="valeur" id="hresa-v"></span></div>
+        <input type="range" id="hresa" min="0.5" max="3" step="0.25" value="1.5">
+      </div>
+      <div class="champ">
+        <div class="ligne"><label for="hfixe">Heures fixes par bien, par mois</label><span class="valeur" id="hfixe-v"></span></div>
+        <input type="range" id="hfixe" min="0" max="6" step="0.5" value="2">
+      </div>
+      <div class="champ">
+        <div class="ligne"><label for="gain">Temps gagné avec l'intranet</label><span class="valeur" id="gain-v"></span></div>
+        <input type="range" id="gain" min="0" max="50" step="5" value="25">
+      </div>
+    </section>
+
+    <div class="resultats">
+      <div class="tuiles">
+        <div class="tuile co">
+          <span class="etiquette" id="co-titre">La co-hôte reçoit, avant ses charges</span>
+          <div class="gros" id="co-net"></div>
+          <ul class="detail">
+            <li><span>Biens apportés (70 %)</span><span id="co-app"></span></li>
+            <li><span>Biens confiés (50 %)</span><span id="co-conf"></span></li>
+            <li><span>Abonnement</span><span id="co-abo"></span></li>
+          </ul>
+        </div>
+        <div class="tuile mj mj-only">
+          <span class="etiquette">Maison Jayla garde</span>
+          <div class="gros" id="mj-tot" style="color:var(--bordeaux)"></div>
+          <ul class="detail">
+            <li><span>Biens apportés (30 %)</span><span id="mj-app"></span></li>
+            <li><span>Biens confiés (50 %)</span><span id="mj-conf"></span></li>
+            <li><span>Abonnement</span><span id="mj-abo"></span></li>
+          </ul>
+        </div>
+      </div>
+
+      <section class="bloc">
+        <h2 id="net-titre">Ce qui reste à la co-hôte, en micro-entreprise</h2>
+        <div class="net">
+          <ul class="detail">
+            <li><span>Rétrocession facturée (chiffre d'affaires)</span><span id="n-ca"></span></li>
+            <li><span id="n-cotis-l">Cotisations Urssaf</span><span id="n-cotis"></span></li>
+            <li id="n-vl-li"><span>Impôt (versement libératoire 1,7 %)</span><span id="n-vl"></span></li>
+            <li><span>Abonnement Maison Jayla</span><span id="n-abo"></span></li>
+            <li class="total"><span id="n-net-l">Net</span><span id="n-net"></span></li>
+            <li><span>Temps passé</span><span id="n-temps"></span></li>
+          </ul>
+          <div class="heure">
+            <span class="etiquette">Net par heure travaillée</span>
+            <div class="gros" id="n-heure"></div>
+            <small id="n-heure-s"></small>
+          </div>
+        </div>
+        <div class="alerte" id="alerte-net" hidden></div>
+      </section>
+
+      <section class="bloc mj-only">
+        <h2>Partage des honoraires payés par les propriétaires</h2>
+        <div class="barre" id="barre"><div class="p-co" id="b-co"></div><div class="p-mj" id="b-mj"></div></div>
+        <div class="legende"><span id="l-total"></span><span id="l-seuil"></span></div>
+        <div class="alerte" id="alerte" hidden></div>
+      </section>
+
+      <section class="bloc">
+        <h2>Pour un seul bien, <span id="t-revenu"></span> de revenus par mois</h2>
+        <div class="defile">
+          <table>
+            <thead><tr><th>Formule</th><th>Honoraires</th><th>Co-hôte, bien apporté</th><th>Co-hôte, bien confié</th><th class="mj-only">Maison Jayla, apporté</th><th class="mj-only">Maison Jayla, confié</th></tr></thead>
+            <tbody id="tableau"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="notes">
+    <strong>Hypothèses du calcul</strong>
+    <ul>
+      <li>Règle de l'intranet (FIN-1) : honoraires = pourcentage de la formule × revenus nets, c'est-à-dire le loyer sans le ménage, après frais de plateforme. Arrondi à l'euro.</li>
+      <li>Tous les biens ont ici le même revenu et la même formule.</li>
+      <li>Micro-entreprise, prestations de services commerciales : cotisations de 21,2 % du chiffre d'affaires, plus 0,2 % de formation professionnelle. Avec l'Acre : 15,9 % (taux en vigueur depuis juillet 2026, sous conditions). Les cotisations se calculent sur toute la rétrocession : l'abonnement ne se déduit pas.</li>
+      <li>Sans versement libératoire, l'impôt sur le revenu n'est pas compté : il dépend du foyer de la co-hôte.</li>
+      <li>Temps par bien = (réservations × heures par réservation + heures fixes), réduit du temps gagné avec l'intranet (checklists, calendrier, documents, avis de valeur). Le ménage est fait par un prestataire : il n'est pas compté. Ces durées sont des estimations à ajuster avec vos premiers biens.</li>
+      <li>Non comptés : les packs de démarrage (149 € et 299 €), les prestations sur devis, la TVA éventuelle.</li>
+    </ul>
+  </div>
+</div>
+
+<script src="fin1.js"></script>
+<script>
+// Vue co-hôte par défaut ; vue complète (les deux parts) avec ?vue=admin
+const ADMIN=new URLSearchParams(location.search).get("vue")==="admin";
+if(!ADMIN){document.body.classList.add("vue-cohote");document.getElementById("co-titre").textContent="Vous recevez, avant vos charges";document.getElementById("net-titre").textContent="Ce qui vous reste, en micro-entreprise";}
+const ABO=39.99, FORMULES=[["Essentielle",16],["Sérénité",22],["Signature",25]];
+const etat={taux:22,periode:1,cotis:21.2};
+const CFP=0.2, VL=1.7, PLAFOND=83600;
+const nb=(n,d=1)=>new Intl.NumberFormat("fr-FR",{maximumFractionDigits:d}).format(n);
+const $=id=>document.getElementById(id);
+const eur=n=>new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:Math.abs(n)>=1000?0:2}).format(n);
+
+function calcul(){
+  const r=+$("revenu").value, a=+$("apportes").value, c=+$("confies").value, p=etat.periode;
+  const h=MJ.calcFin1(r,0,etat.taux).commission;
+  const coApp=h*.7*a*p, coConf=h*.5*c*p, mjApp=h*.3*a*p, mjConf=h*.5*c*p, abo=ABO*p;
+  const coNet=coApp+coConf-abo, mjTot=mjApp+mjConf+abo, total=h*(a+c)*p;
+
+  $("revenu-v").textContent=eur(r); $("apportes-v").textContent=a; $("confies-v").textContent=c;
+  $("co-net").textContent=eur(coNet); $("mj-tot").textContent=eur(mjTot);
+  $("co-app").textContent=eur(coApp); $("co-conf").textContent=eur(coConf); $("co-abo").textContent="− "+eur(abo);
+  $("mj-app").textContent=eur(mjApp); $("mj-conf").textContent=eur(mjConf); $("mj-abo").textContent="+ "+eur(abo);
+
+  const partCo=total>0?Math.max(0,coNet)/total*100:0, partMj=total>0?100-partCo:0;
+  $("b-co").style.width=partCo+"%"; $("b-mj").style.width=partMj+"%";
+  $("b-co").textContent=partCo>=12?"Co-hôte "+Math.round(partCo)+" %":"";
+  $("b-mj").textContent=partMj>=12?"Maison Jayla "+Math.round(partMj)+" %":"";
+  $("l-total").textContent="Honoraires payés par les propriétaires : "+eur(total)+(p===12?" par an":" par mois");
+
+  const parBien=a+c>0?(h*.7*a+h*.5*c)/(a+c):0;
+  $("l-seuil").textContent=parBien>0?"Abonnement couvert par "+eur(ABO/(parBien/r))+" de revenus locatifs par mois, tous biens réunis":"";
+  const al=$("alerte");
+  if(a+c===0){al.hidden=false;al.textContent="Sans bien, la co-hôte paie seulement son abonnement : "+eur(abo)+(p===12?" par an.":" par mois.");}
+  else if(coNet<0){al.hidden=false;al.textContent="À ce niveau, la rétrocession ne couvre pas l'abonnement.";}
+  else al.hidden=true;
+
+  // Micro-entreprise et temps passé
+  const res=+$("resas").value, hr=+$("hresa").value, hf=+$("hfixe").value, g=+$("gain").value, vl=$("vl").checked;
+  const ca=coApp+coConf, cotis=ca*(etat.cotis+CFP)/100, impot=vl?ca*VL/100:0, net=ca-cotis-impot-abo;
+  const hBien=(res*hr+hf)*(1-g/100), heures=hBien*(a+c)*p;
+  $("resas-v").textContent=res; $("hresa-v").textContent=nb(hr,2)+" h"; $("hfixe-v").textContent=nb(hf)+" h"; $("gain-v").textContent=g+" %";
+  $("n-ca").textContent=eur(ca);
+  $("n-cotis-l").textContent="Cotisations Urssaf ("+nb(etat.cotis+CFP)+" %)";
+  $("n-cotis").textContent="− "+eur(cotis);
+  $("n-vl-li").hidden=!vl; $("n-vl").textContent="− "+eur(impot);
+  $("n-abo").textContent="− "+eur(abo);
+  $("n-net-l").textContent=vl?"Net après cotisations et impôt":"Net après cotisations, avant impôt";
+  $("n-net").textContent=eur(net);
+  $("n-temps").textContent=a+c>0?nb(heures)+" h, soit "+nb(hBien)+" h par bien et par mois":"0 h";
+  $("n-heure").textContent=heures>0?eur(net/heures):"–";
+  $("n-heure-s").textContent=heures>0?"pour "+nb(heures)+" h "+(p===12?"par an":"par mois"):"";
+  const an=$("alerte-net"), caAn=ca/p*12;
+  if(caAn>PLAFOND){an.hidden=false;an.textContent="À ce rythme, le chiffre d'affaires annuel ("+eur(caAn)+") dépasse le plafond de la micro-entreprise pour les services : 83 600 €.";}
+  else if(a+c>0&&net<0){an.hidden=false;an.textContent="À ce niveau, la co-hôte perd de l'argent une fois les cotisations et l'abonnement payés.";}
+  else an.hidden=true;
+
+  $("t-revenu").textContent=eur(r);
+  $("tableau").innerHTML=FORMULES.map(([n,t])=>{const x=MJ.calcFin1(r,0,t).commission;
+    return `<tr class="${t===etat.taux?"actif":""}"><td>${n} ${t} %</td><td>${eur(x)}</td><td>${eur(x*.7)}</td><td>${eur(x*.5)}</td><td class="mj-only">${eur(x*.3)}</td><td class="mj-only">${eur(x*.5)}</td></tr>`}).join("");
+}
+function groupe(id,cle,attr){
+  $(id).addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+    etat[cle]=+b.dataset[attr];
+    $(id).querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));calcul();});
+}
+groupe("formule","taux","t"); groupe("periode","periode","p"); groupe("cotis","cotis","c");
+$("vl").addEventListener("change",calcul);
+["revenu","apportes","confies","resas","hresa","hfixe","gain"].forEach(i=>$(i).addEventListener("input",calcul));
+calcul();
+</script>
+</body>
+</html>
