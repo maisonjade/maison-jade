@@ -11,9 +11,9 @@
 <script src="avis-commun.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
+:root { --or-logo:#9A7A4C;
   --jade: #542C35; --jade-mid: #6B3A45; --jade-light: #844C58;
-  --sauge: #8A7B7E; --beige: #E3D9CE; --or: #9A7A4C;
+  --sauge: #8A7B7E; --beige: #E3D9CE; --or: #7D6139;
   --ivoire: #F5EFE7; --blanc: #FBF8F3; --taupe: #B9A99A; --noyer: #5A4A4E;
   --red: #C0392B; --redbg: #FDECEA; --green: #542C35; --greenbg: #F3E8E6;
   --border: #E3D9CE; --ink: #241D1F; --ink2: #5A4A4E; --ink3: #6B5C5F;
@@ -34,7 +34,7 @@ h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
   box-shadow: 0 32px 80px rgba(0,0,0,0.25);
 }
 .login-logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; color: var(--jade); letter-spacing: 0.08em; margin-bottom: 6px; }
-.login-logo em { color: var(--or); font-style: italic; }
+.login-logo em { color: var(--or-logo); font-style: italic; }
 .login-sub { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--taupe); margin-bottom: 36px; }
 .login-title { font-size: 28px; color: var(--jade); margin-bottom: 8px; }
 .login-desc { font-size: 12px; color: var(--noyer); font-weight: 300; margin-bottom: 28px; }
@@ -66,11 +66,11 @@ h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
   padding: 0 1.5rem; border-bottom: 1px solid rgba(185,154,94,0.2);
 }
 .brand { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--ivoire); letter-spacing: 0.06em; }
-.brand em { color: var(--or); font-style: italic; }
+.brand em { color: var(--or-logo); font-style: italic; }
 .topbar-right { display: flex; align-items: center; gap: 12px; }
 .user-info { text-align: right; }
 .user-name { font-size: 12px; font-weight: 500; color: var(--ivoire); }
-.user-role { font-size: 12px; color: rgba(185,154,94,0.7); letter-spacing: 0.08em; text-transform: uppercase; }
+.user-role { font-size: 12px; color: #D9C29A; letter-spacing: 0.08em; text-transform: uppercase; }
 .user-avatar {
   width: 36px; height: 36px; border-radius: 50%; background: var(--jade-mid);
   border: 2px solid rgba(185,154,94,0.4);
@@ -90,7 +90,7 @@ h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
   background: var(--jade-mid); display: flex; flex-direction: column; z-index: 50; overflow-y: auto;
 }
 .sb-sect { padding: 1rem 0 0.25rem; }
-.sb-lbl { font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(185,154,94,0.45); padding: 0 1.25rem; margin-bottom: 4px; }
+.sb-lbl { font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #D9C29A; padding: 0 1.25rem; margin-bottom: 4px; }
 .ni {
   display: flex; align-items: center; gap: 9px; padding: 9px 1.25rem;
   font-size: 12px; color: rgba(247,243,237,0.6); cursor: pointer; border: none;
@@ -98,7 +98,7 @@ h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
   transition: all 0.15s; font-family: 'Manrope', sans-serif; letter-spacing: 0.02em;
 }
 .ni:hover { background: rgba(185,154,94,0.07); color: var(--ivoire); }
-.ni.active { color: var(--or); background: rgba(185,154,94,0.1); border-left-color: var(--or); font-weight: 500; }
+.ni.active { color: #D9C29A; background: rgba(185,154,94,0.1); border-left-color: var(--or); font-weight: 500; }
 .ni-icon { font-size: 15px; flex-shrink: 0; }
 .sb-badge { margin-left: auto; background: rgba(185,154,94,0.2); color: var(--or); font-size: 12px; padding: 1px 7px; border-radius: 10px; }
 .sb-foot { margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid rgba(185,154,94,0.1); font-size: 12px; color: rgba(185,154,94,0.35); }
@@ -254,7 +254,7 @@ tr:hover td { background: var(--ivoire); }
     font-size: 12px; letter-spacing: 0.04em; border-top: 2px solid transparent;
   }
   .mt-btn .mt-ico { font-size: 18px; line-height: 1; }
-  .mt-btn.active { color: var(--or); border-top-color: var(--or); background: rgba(185,154,94,0.08); }
+  .mt-btn.active { color: #D9C29A; border-top-color: var(--or); background: rgba(185,154,94,0.08); }
 
   /* Tiroir « Plus » */
   .mobile-drawer {
@@ -2414,7 +2414,7 @@ function updateSaisonnalite() {
   bars.innerHTML = profil.taux.map((t, i) => {
     const pct = Math.round(t * 100);
     const h = Math.round((t / max) * 80) + 20;
-    const col = t >= 0.75 ? '#9A7A4C' : t >= 0.55 ? '#542C35' : '#DCC8CA';
+    const col = t >= 0.75 ? '#7D6139' : t >= 0.55 ? '#542C35' : '#DCC8CA';
     return `<div style="text-align:center">
       <div style="font-size:12px;color:var(--ink3);margin-bottom:2px">${pct}%</div>
       <div style="height:${h}px;background:${col};border-radius:3px 3px 0 0;min-height:8px"></div>
@@ -2423,7 +2423,7 @@ function updateSaisonnalite() {
 
   // Légende
   document.getElementById('saison-legend').innerHTML = `
-    <span style="display:flex;align-items:center;gap:4px;font-size:12px"><span style="width:10px;height:10px;border-radius:2px;background:#9A7A4C;display:inline-block"></span>Haute saison (≥75%)</span>
+    <span style="display:flex;align-items:center;gap:4px;font-size:12px"><span style="width:10px;height:10px;border-radius:2px;background:#7D6139;display:inline-block"></span>Haute saison (≥75%)</span>
     <span style="display:flex;align-items:center;gap:4px;font-size:12px"><span style="width:10px;height:10px;border-radius:2px;background:#542C35;display:inline-block"></span>Moyenne saison (55-75%)</span>
     <span style="display:flex;align-items:center;gap:4px;font-size:12px"><span style="width:10px;height:10px;border-radius:2px;background:#DCC8CA;display:inline-block"></span>Basse saison (<55%)</span>`;
 
@@ -2687,7 +2687,7 @@ function calculerResultats() {
     <tr style="${r.style}">
       <td style="padding:7px 10px;font-weight:500">${r.mois}</td>
       <td style="padding:7px 10px;text-align:center;font-size:12px">
-        <div style="background:${r.taux>=75?'#9A7A4C':r.taux>=55?'#542C35':'#DCC8CA'};color:white;border-radius:10px;padding:2px 6px;display:inline-block">${r.taux}%</div>
+        <div style="background:${r.taux>=75?'#7D6139':r.taux>=55?'#542C35':'#DCC8CA'};color:white;border-radius:10px;padding:2px 6px;display:inline-block">${r.taux}%</div>
       </td>
       <td style="padding:7px 10px;text-align:center">${r.nuits}</td>
       <td style="padding:7px 10px;text-align:center">${r.prix}€</td>
@@ -2794,7 +2794,7 @@ function calculerResultats() {
 
     const el = document.getElementById('score-mj');
     if (el) {
-      const couleur = total >= 75 ? 'var(--jade)' : total >= 55 ? '#9A7A4C' : '#B0703C';
+      const couleur = total >= 75 ? 'var(--jade)' : total >= 55 ? '#7D6139' : '#B0703C';
       const barre = (v) => `<div style="flex:1"><div style="font-size:12px;color:var(--ink3);margin-bottom:2px">${v.l}</div><div style="height:6px;background:var(--surface2);border-radius:3px;overflow:hidden"><div style="height:100%;width:${v.n/25*100}%;background:${couleur}"></div></div><div style="font-size:12px;color:var(--noyer);margin-top:2px">${v.n}/25</div></div>`;
       el.innerHTML = `<div style="padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px">
         <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px">
@@ -3670,7 +3670,7 @@ function afficherConformite() {
       detail = ` · valable jusqu'au ${exp.toLocaleDateString('fr-FR')}`;
     }
     else if (doc.statut === 'valide') { etat = 'Conforme'; couleur = 'var(--jade)'; ok++; }
-    else { etat = 'En vérification'; couleur = '#9A7A4C'; ok++; }
+    else { etat = 'En vérification'; couleur = '#7D6139'; ok++; }
 
     return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
       <span style="font-size:13px">${esc(r.libelle)}${detail ? '<span style="color:var(--ink3);font-size:12px">'+detail+'</span>' : ''}</span>
@@ -3736,7 +3736,7 @@ async function statuerDocument(id, statut) {
 <!-- ÉCRAN NOUVEAU MOT DE PASSE (lien de récupération) -->
 <div id="reset-screen" style="display:none;position:fixed;inset:0;z-index:10000;align-items:center;justify-content:center;background:#542C35;padding:20px">
   <div style="background:#FBF8F3;border-radius:6px;padding:36px 30px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
-    <div style="font-family:'Cormorant Garamond',serif;font-size:30px;color:#542C35;text-align:center">Maison <em style="color:#9A7A4C">Jayla</em></div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:30px;color:#542C35;text-align:center">Maison <em style="color:#7D6139">Jayla</em></div>
     <h2 style="font-family:'Cormorant Garamond',serif;font-size:21px;color:#5A4A4E;text-align:center;margin:22px 0 4px;font-weight:500">Nouveau mot de passe</h2>
     <p style="text-align:center;font-size:12.5px;color:#8A8177;margin-bottom:20px">Choisissez un mot de passe d'au moins 8 caractères</p>
     <div id="reset-error" style="display:none;background:#FBEAE8;border-left:3px solid #C0392B;color:#9B2C22;padding:10px 12px;border-radius:3px;font-size:12.5px;margin-bottom:14px"></div>
