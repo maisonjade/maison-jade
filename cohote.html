@@ -9,6 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="fin1.js"></script>
 <script src="avis-commun.js"></script>
+<script src="academie.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root { --or-logo:#9A7A4C;
@@ -281,6 +282,64 @@ tr:hover td { background: var(--ivoire); }
 
 /* Pré-facture imprimable */
 #facture { display: none; }
+
+/* ── ACADÉMIE ── */
+.ac-mods { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
+.ac-mod { text-align: left; font: inherit; color: inherit; background: var(--blanc); border: 1px solid var(--border); border-radius: 4px; padding: 1rem 1.1rem; cursor: pointer; }
+.ac-mod:hover:not([disabled]) { border-color: var(--jade); }
+.ac-mod.sel { border-color: var(--jade); box-shadow: inset 3px 0 0 var(--jade); }
+.ac-mod[disabled] { cursor: default; background: var(--ivoire); }
+.ac-mod-num { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); }
+.ac-mod-t { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--jade); line-height: 1.2; margin: 2px 0 4px; }
+.ac-mod-r { font-size: 13px; color: var(--ink2); }
+.ac-mod-pied { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; font-size: 12px; color: var(--ink3); }
+.ac-etat { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 10px; background: var(--greenbg); color: var(--jade); }
+.ac-etat.bientot { background: var(--beige); color: var(--noyer); }
+.ac-etat.valide { background: var(--jade); color: #fff; }
+.ac-layout { display: grid; grid-template-columns: 220px 1fr; gap: 1.5rem; align-items: start; }
+.ac-layout > * { min-width: 0; }
+.ac-som { position: sticky; top: calc(var(--th) + 16px); display: flex; flex-direction: column; gap: 2px; }
+.ac-som button { text-align: left; font: inherit; font-size: 13px; color: var(--ink2); background: none; border: none; border-left: 2px solid var(--border); padding: 7px 12px; cursor: pointer; }
+.ac-som button:hover { color: var(--jade); }
+.ac-som button.on { color: var(--jade); font-weight: 600; border-left-color: var(--jade); background: var(--blanc); }
+.ac-sec { background: var(--blanc); border: 1px solid var(--border); border-radius: 4px; padding: 1.5rem 1.75rem; margin-bottom: 1rem; scroll-margin-top: calc(var(--th) + 16px); }
+.ac-sec h2 { font-size: 26px; color: var(--jade); margin-bottom: .75rem; }
+.ac-sec h2 small { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .12em; color: var(--ink3); display: block; text-transform: uppercase; }
+.ac-sec h3 { font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 600; color: var(--jade); margin: 1.25rem 0 .5rem; }
+.ac-sec p, .ac-sec li { font-size: 14px; color: var(--ink); }
+.ac-sec p { margin-bottom: .75rem; }
+.ac-sec ul, .ac-sec ol { padding-left: 1.25rem; margin-bottom: .75rem; }
+.ac-sec li { margin-bottom: .35rem; }
+.ac-sec a { color: var(--jade); }
+.ac-regles li { padding-left: 4px; }
+.ac-scroll { overflow-x: auto; margin-bottom: .75rem; }
+.ac-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ac-table th, .ac-table td { border-bottom: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+.ac-table thead th { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); background: var(--ivoire); }
+.ac-table tbody th { font-weight: 600; color: var(--jade); width: 34%; }
+.ac-limites td:last-child { color: var(--red); }
+.ac-note { background: var(--ivoire); border-left: 3px solid var(--jade); padding: 10px 14px; font-size: 13px !important; }
+.ac-cks { display: flex; flex-direction: column; gap: 6px; margin-bottom: .75rem; }
+.ac-ck { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 3px; cursor: pointer; background: var(--blanc); }
+.ac-ck input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--jade); flex-shrink: 0; }
+.ac-ck:has(input:checked) { background: var(--greenbg); }
+.ac-lien { font: inherit; color: var(--jade); background: none; border: none; padding: 0; text-decoration: underline; cursor: pointer; }
+.ac-q { border: 1px solid var(--border); border-radius: 4px; padding: 12px 14px; margin-bottom: 10px; }
+.ac-q-t { font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 8px; }
+.ac-q-r { display: none; background: var(--ivoire); padding: 8px 12px; border-radius: 3px; font-size: 14px; margin-bottom: 8px; }
+.ac-q.vu .ac-q-r { display: block; }
+.ac-q-bts { display: flex; gap: 8px; flex-wrap: wrap; }
+.ac-q-bts [hidden] { display: none !important; }
+.ac-q-bts .btn[aria-pressed="true"] { background: var(--jade); color: #fff; border-color: var(--jade); }
+.ac-score { font-size: 15px; font-weight: 600; color: var(--jade); padding: 12px 14px; background: var(--greenbg); border-radius: 4px; margin-top: 8px; }
+.ac-score.ko { background: var(--redbg); color: var(--red); }
+@media (max-width: 900px) {
+  .ac-layout { grid-template-columns: 1fr; }
+  .ac-som { position: static; flex-direction: row; overflow-x: auto; gap: 4px; padding-bottom: 4px; }
+  .ac-som button { white-space: nowrap; border-left: none; border-bottom: 2px solid var(--border); }
+  .ac-som button.on { border-bottom-color: var(--jade); }
+  .ac-sec { padding: 1.1rem 1rem; }
+}
 @media print {
   body { background: white; }
   .topbar, .sidebar, #toast, .no-print,
@@ -401,6 +460,10 @@ tr:hover td { background: var(--ivoire); }
     <div class="sb-sect">
       <div class="sb-lbl">Opérationnel</div>
       <button class="ni" onclick="sv('checklists',this)"><span class="ni-icon">✅</span> Checklists terrain</button>
+    </div>
+    <div class="sb-sect">
+      <div class="sb-lbl">Formation</div>
+      <button class="ni" onclick="sv('academie',this)"><span class="ni-icon">🎓</span> Académie</button>
     </div>
     <div class="sb-sect" id="sb-reseau-sect" style="display:none">
       <div class="sb-lbl">Réseau Ambassadeur</div>
@@ -596,6 +659,15 @@ tr:hover td { background: var(--ivoire); }
       </div>
 
       <div id="cl-content"></div>
+    </div>
+
+    <!-- ACADÉMIE -->
+    <div class="view" id="view-academie">
+      <div class="ph">
+        <div><h1>Académie <em>co-hôtes</em></h1><p>Vos modules de formation Maison Jayla</p></div>
+      </div>
+      <div class="ac-mods" id="ac-mods"></div>
+      <div id="ac-module"></div>
     </div>
 
     <!-- RÉSEAU -->
@@ -1333,6 +1405,7 @@ tr:hover td { background: var(--ivoire); }
     <button class="md-item" onclick="svMobile('prospects')"><span class="md-ico">📋</span> Mes prospects</button>
     <button class="md-item" onclick="svMobile('documents')"><span class="md-ico">📁</span> Mes documents</button>
     <button class="md-item" onclick="svMobile('calendrier')"><span class="md-ico">📅</span> Mon calendrier</button>
+    <button class="md-item" onclick="svMobile('academie')"><span class="md-ico">🎓</span> Académie</button>
     <button class="md-item" id="md-reseau" style="display:none" onclick="svMobile('reseau')"><span class="md-ico">👥</span> Mes filleuls</button>
     <button class="md-item" id="md-admin" style="display:none" onclick="svMobile('admin')"><span class="md-ico">⚙️</span> Gestion co-hôtes</button>
     <button class="md-item" onclick="svMobile('profil')"><span class="md-ico">👤</span> Mon profil</button>
@@ -1591,6 +1664,125 @@ function sv(id, btn) {
   if (id === 'checklists') loadChecklistBiens();
   if (id === 'calendrier') loadCalCohote();
   if (id === 'avis') cavCharger();
+  if (id === 'academie') acAfficher();
+}
+
+
+// ── ACADÉMIE ── (contenu dans academie.js ; progression gardée sur l'appareil)
+let acModuleId = null;
+function acCle() { return 'mj-academie-' + (currentUser?.id || 'anonyme'); }
+function acLire() { try { return JSON.parse(localStorage.getItem(acCle()) || '{}'); } catch (e) { return {}; } }
+function acEcrire(o) { try { localStorage.setItem(acCle(), JSON.stringify(o)); } catch (e) {} }
+function acEsc(t) { return String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function acAfficher() {
+  const A = window.ACADEMIE;
+  const zone = document.getElementById('ac-mods');
+  if (!A || !zone) return;
+  const prog = acLire();
+  if (!acModuleId) acModuleId = (A.modules.find(m => m.dispo) || {}).id;
+  zone.innerHTML = A.modules.map(m => {
+    const valide = prog['quiz-' + m.id]?.valide;
+    const etat = !m.dispo ? '<span class="ac-etat bientot">Bientôt disponible</span>'
+      : valide ? '<span class="ac-etat valide">Validé</span>' : '<span class="ac-etat">Disponible</span>';
+    return `<button type="button" class="ac-mod${m.id === acModuleId ? ' sel' : ''}" ${m.dispo ? `onclick="acOuvrir('${m.id}')"` : 'disabled'} aria-pressed="${m.id === acModuleId}">
+      <div class="ac-mod-num">Module ${m.num}</div>
+      <div class="ac-mod-t">${acEsc(m.titre)}</div>
+      <div class="ac-mod-r">${acEsc(m.resume)}</div>
+      <div class="ac-mod-pied"><span>${acEsc(m.duree)}</span>${etat}</div>
+    </button>`;
+  }).join('');
+  acRendreModule();
+}
+
+function acOuvrir(id) { acModuleId = id; acAfficher(); document.getElementById('ac-module')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+
+function acRendreModule() {
+  const m = (window.ACADEMIE?.modules || []).find(x => x.id === acModuleId && x.dispo);
+  const zone = document.getElementById('ac-module');
+  if (!m) { zone.innerHTML = ''; return; }
+  const secs = m.sections.concat([{ id: 'quiz', titre: 'Quiz de validation' }]);
+  const som = secs.map((s, i) => `<button type="button" data-sec="${s.id}" onclick="acAller('${s.id}')">${i + 1}. ${acEsc(s.titre)}</button>`).join('');
+  const corps = m.sections.map((s, i) => `<section class="ac-sec" id="ac-${s.id}"><h2><small>Module ${m.num} · partie ${i + 1}</small>${acEsc(s.titre)}</h2>${s.html}</section>`).join('');
+  const quiz = `<section class="ac-sec" id="ac-quiz"><h2><small>Module ${m.num} · partie ${secs.length}</small>Quiz de validation</h2>
+    <p>Le module est validé à ${m.seuil} bonnes réponses sur ${m.quiz.length}. Répondez de tête, affichez la réponse, puis indiquez honnêtement si vous aviez juste.</p>
+    ${m.quiz.map((q, i) => `<div class="ac-q" id="ac-q-${i}"><div class="ac-q-t">${i + 1}. ${acEsc(q.q)}</div>
+      <div class="ac-q-r"><strong>Réponse :</strong> ${acEsc(q.r)}</div>
+      <div class="ac-q-bts"><button type="button" class="btn btn-outline btn-sm ac-voir" onclick="acVoir(${i})">Voir la réponse</button>
+      <button type="button" class="btn btn-outline btn-sm ac-ok" hidden aria-pressed="false" onclick="acNoter(${i},true)">✓ J'avais juste</button>
+      <button type="button" class="btn btn-outline btn-sm ac-ko" hidden aria-pressed="false" onclick="acNoter(${i},false)">✗ J'avais faux</button></div></div>`).join('')}
+    <div id="ac-score" aria-live="polite"></div>
+    <button type="button" class="btn btn-outline btn-sm" style="margin-top:10px" onclick="acRecommencer()">↺ Recommencer le quiz</button></section>`;
+  zone.innerHTML = `<div class="ac-layout"><nav class="ac-som" aria-label="Parties du module">${som}</nav><div>${corps}${quiz}</div></div>`;
+  // Cases à cocher : restaurer et enregistrer
+  const prog = acLire();
+  zone.querySelectorAll('input[data-k]').forEach(c => {
+    c.checked = !!prog['ck-' + c.dataset.k];
+    c.addEventListener('change', () => { const p = acLire(); p['ck-' + c.dataset.k] = c.checked; acEcrire(p); });
+  });
+  // Liens vers les rubriques de l'espace
+  zone.querySelectorAll('.ac-lien[data-vue]').forEach(b => b.addEventListener('click', () => svMobile(b.dataset.vue)));
+  // Quiz : restaurer
+  const rep = prog['quiz-' + m.id]?.rep || {};
+  Object.keys(rep).forEach(i => { acVoir(+i, true); acMarquer(+i, rep[i]); });
+  acScore();
+  acSuivreSommaire();
+}
+
+function acAller(id) { document.getElementById('ac-' + id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+
+let acObs = null;
+function acSuivreSommaire() {
+  if (acObs) acObs.disconnect();
+  if (!('IntersectionObserver' in window)) return;
+  acObs = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const id = e.target.id.replace('ac-', '');
+    document.querySelectorAll('.ac-som button').forEach(b => b.classList.toggle('on', b.dataset.sec === id));
+  }), { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('.ac-sec').forEach(s => acObs.observe(s));
+}
+
+function acVoir(i, silencieux) {
+  const q = document.getElementById('ac-q-' + i); if (!q) return;
+  q.classList.add('vu');
+  q.querySelector('.ac-voir').hidden = true;
+  q.querySelector('.ac-ok').hidden = false;
+  q.querySelector('.ac-ko').hidden = false;
+  if (!silencieux) q.querySelector('.ac-ok').focus();
+}
+function acMarquer(i, juste) {
+  const q = document.getElementById('ac-q-' + i); if (!q) return;
+  q.querySelector('.ac-ok').setAttribute('aria-pressed', String(juste === true));
+  q.querySelector('.ac-ko').setAttribute('aria-pressed', String(juste === false));
+}
+function acNoter(i, juste) {
+  const p = acLire(); const k = 'quiz-' + acModuleId;
+  p[k] = p[k] || { rep: {} }; p[k].rep[i] = juste;
+  acEcrire(p); acMarquer(i, juste); acScore();
+}
+function acScore() {
+  const m = window.ACADEMIE.modules.find(x => x.id === acModuleId);
+  const p = acLire(); const k = 'quiz-' + m.id; const rep = p[k]?.rep || {};
+  const n = Object.keys(rep).length, bonnes = Object.values(rep).filter(Boolean).length;
+  const zone = document.getElementById('ac-score'); if (!zone) return;
+  if (n < m.quiz.length) { zone.className = ''; zone.textContent = n ? `${n} question(s) sur ${m.quiz.length} notée(s).` : ''; return; }
+  const ok = bonnes >= m.seuil;
+  zone.className = 'ac-score' + (ok ? '' : ' ko');
+  zone.textContent = ok ? `Bravo : ${bonnes}/${m.quiz.length}. Module ${m.num} validé.` : `${bonnes}/${m.quiz.length} : il en faut ${m.seuil}. Relisez les parties concernées puis recommencez.`;
+  if (!!p[k].valide !== ok) { p[k].valide = ok; acEcrire(p); acMajEtat(); }
+}
+function acMajEtat() {
+  // Met à jour la carte du module sans tout redessiner
+  const p = acLire();
+  document.querySelectorAll('.ac-mod').forEach((b, idx) => {
+    const m = window.ACADEMIE.modules[idx]; if (!m?.dispo) return;
+    const e = b.querySelector('.ac-etat'); const v = p['quiz-' + m.id]?.valide;
+    e.className = 'ac-etat' + (v ? ' valide' : ''); e.textContent = v ? 'Validé' : 'Disponible';
+  });
+}
+function acRecommencer() {
+  const p = acLire(); delete p['quiz-' + acModuleId]; acEcrire(p); acAfficher(); acAller('quiz');
 }
 
 // ── MES BIENS ──
