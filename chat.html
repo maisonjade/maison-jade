@@ -569,17 +569,10 @@ async function sendMessage() {
 
     hideTyping();
 
-    // Détecter si l'IA n'est pas sûre → signaler
-    const needsHuman = detectNeedsHuman(text, reply);
-    if (needsHuman) {
-      await notifyHote(text);
-    }
-
+    // L'alerte à l'équipe (fuite, panne, voyageur bloqué…) est envoyée par la fonction serveur
+    // dans les notifications de l'intranet : rien à faire ici.
     addBotMessage(reply);
     conversation.push({ role: 'assistant', content: reply });
-
-    // Enregistrer la conversation dans Supabase
-    logConversation(text, reply, needsHuman);
 
   } catch(e) {
     hideTyping();
@@ -588,38 +581,6 @@ async function sendMessage() {
 
   isTyping = false;
   document.getElementById('send-btn').disabled = false;
-}
-
-function detectNeedsHuman(question, reponse) {
-  const triggersMots = ['ne sais pas','pas d\'information','contacter','urgence','problème grave',
-    'plainte','remboursement','annulation','insatisfait','incident','accident','fuite','panne',
-    'bloqué','coincé','i don\'t know','please contact','emergency'];
-  const txt = (question + ' ' + reponse).toLowerCase();
-  return triggersMots.some(m => txt.includes(m));
-}
-
-async function notifyHote(question) {
-  // Enregistrer dans Supabase pour notification
-  try {
-    await sb.from('chat_alerts').insert({
-      bien_id: new URLSearchParams(window.location.search).get('bien'),
-      question,
-      url: window.location.href,
-      created_at: new Date().toISOString()
-    });
-  } catch(e) {
-    // Table peut ne pas exister encore — ignorer silencieusement
-  }
-}
-
-async function logConversation(question, reponse, alerte) {
-  try {
-    await sb.from('chat_logs').insert({
-      bien_id: new URLSearchParams(window.location.search).get('bien'),
-      question, reponse, alerte,
-      created_at: new Date().toISOString()
-    });
-  } catch(e) { /* ignore */ }
 }
 
 // ── SUGGESTIONS RAPIDES ──
