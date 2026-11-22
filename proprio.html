@@ -10,9 +10,9 @@
 <script src="fin1.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
+:root{ --or-logo:#9A7A4C;
   --jade:#542C35;--jade-mid:#6B3A45;--jade-bg:#F3E8E6;--jade-bd:#DCC8CA;
-  --or:#9A7A4C;--or-bg:#F5EDE3;--or-bd:#DCC6A6;
+  --or:#7D6139;--or-bg:#F5EDE3;--or-bd:#DCC6A6;
   --ivoire:#F5EFE7;--blanc:#FBF8F3;--border:#E3D9CE;
   --ink:#30282A;--ink2:#5A4A4E;--ink3:#6B5C5F;--noyer:#5A4A4E;
   --surface:#FBF8F3;--surface2:#F5EFE7;
@@ -27,7 +27,7 @@ html,body{height:100%;font-family:'Manrope',sans-serif;background:var(--ivoire);
 #login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;background:var(--jade)}
 .login-card{background:var(--blanc);border-radius:16px;padding:2.5rem;width:100%;max-width:380px;box-shadow:0 24px 64px rgba(0,0,0,0.15)}
 .login-logo{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--jade);text-align:center;margin-bottom:4px}
-.login-logo em{color:var(--or);font-style:italic}
+.login-logo em{color:var(--or-logo);font-style:italic}
 .login-sub{text-align:center;font-size:12px;color:var(--ink3);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:2rem}
 .login-label{font-size:12px;font-weight:500;color:var(--ink2);margin-bottom:6px;display:block}
 .login-input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:'Manrope',sans-serif;background:var(--ivoire);color:var(--ink);outline:none;margin-bottom:1rem;transition:border-color 0.2s}
@@ -43,7 +43,7 @@ html,body{height:100%;font-family:'Manrope',sans-serif;background:var(--ivoire);
 /* TOPBAR */
 .topbar{background:var(--jade);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,0.12)}
 .topbar-logo{font-family:'Cormorant Garamond',serif;font-size:20px;color:white;letter-spacing:0.06em}
-.topbar-logo em{color:var(--or);font-style:italic}
+.topbar-logo em{color:var(--or-logo);font-style:italic}
 .topbar-right{display:flex;align-items:center;gap:12px}
 .topbar-user{font-size:12px;color:rgba(255,255,255,0.6)}
 .topbar-user strong{color:white;font-weight:500}

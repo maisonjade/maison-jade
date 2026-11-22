@@ -9,10 +9,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
+:root { --or-logo:#9A7A4C;
   --jade:    #542C35;
   --jade-mid:#6B3A45;
-  --or:      #9A7A4C;
+  --or:      #7D6139;
   --ivoire:  #F5EFE7;
   --blanc:   #FBF8F3;
   --border:  #E3D9CE;
@@ -48,7 +48,7 @@ html, body {
   border: 1.5px solid rgba(165,124,82,0.5);
   display: flex; align-items: center; justify-content: center;
   font-family: 'Cormorant Garamond', serif;
-  font-size: 18px; color: var(--or);
+  font-size: 18px; color: #D9C29A;
   font-style: italic; flex-shrink: 0;
 }
 .header-info { flex: 1; min-width: 0; }
@@ -57,7 +57,7 @@ html, body {
   font-size: 17px; font-weight: 400;
   color: white; letter-spacing: 0.04em;
 }
-.header-name em { font-style: italic; color: var(--or); }
+.header-name em { font-style: italic; color: var(--or-logo); }
 .header-sub {
   font-size: 12px; color: rgba(255,255,255,0.55);
   margin-top: 1px; white-space: nowrap;
