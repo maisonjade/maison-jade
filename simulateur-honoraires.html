@@ -59,7 +59,10 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
 .etape .n{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--or-fonce)}
 .etape.fort .n{color:var(--or)}
 .etape b{font-family:var(--titre);font-size:34px;font-weight:600;line-height:1.05;font-variant-numeric:tabular-nums}
-.etape span{font-size:13px}
+.etape>span{font-size:13px}
+.temps{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.inclus-t{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--or-fonce);margin:18px 0 10px}
+.inclus-t:first-of-type{margin-top:0}
 .pastille{align-self:flex-start;margin-top:6px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;background:var(--or);color:var(--encre)}
 
 /* Repère */
@@ -96,6 +99,7 @@ summary{cursor:pointer;color:var(--bordeaux);font-weight:600}
 body:not(.admin) .mj-only{display:none}
 [hidden]{display:none !important}
 @media (max-width:860px){.duo,.mj-grille{grid-template-columns:1fr}.etapes{grid-template-columns:1fr 1fr}}
+@media (max-width:620px){.temps{grid-template-columns:1fr}}
 @media (max-width:520px){h1{font-size:31px}.grand{font-size:62px}.inclus{grid-template-columns:1fr}.paire b{font-size:32px}}
 </style>
 </head>
@@ -148,8 +152,8 @@ body:not(.admin) .mj-only{display:none}
         <div class="grand"><span id="r-net"></span><small id="r-net-s"></small></div>
       </div>
       <div class="paire">
-        <div><b id="r-temps"></b><span>de travail par semaine</span></div>
-        <div><b id="r-heure"></b><span>net par heure travaillée</span></div>
+        <div><b id="r-temps"></b><span>de suivi par semaine, depuis votre téléphone</span></div>
+        <div><b id="r-heure"></b><span>net par heure de suivi</span></div>
       </div>
       <div class="message" id="r-msg" hidden></div>
     </section>
@@ -157,13 +161,30 @@ body:not(.admin) .mj-only{display:none}
 
   <section class="bloc">
     <h2>Votre progression</h2>
-    <p class="sous">Chaque logement que vous apportez ajoute un revenu, pour environ <span class="t-bien"></span> de travail par semaine.</p>
+    <p class="sous">Chaque logement que vous apportez ajoute un revenu, pour environ <span class="t-bien"></span> de suivi par semaine une fois lancé.</p>
     <div class="etapes" id="etapes"></div>
   </section>
 
   <section class="bloc">
+    <h2>Un logement, deux temps</h2>
+    <p class="sous">Le gros du travail se fait au départ. Ensuite, vous suivez.</p>
+    <div class="temps">
+      <div class="etape">
+        <span class="n">1. Le lancement, une seule fois</span>
+        <b>environ <span class="t-lance"></span></b>
+        <span>Vous préparez l'annonce, réglez les prix et reliez le logement à votre espace.</span>
+      </div>
+      <div class="etape fort">
+        <span class="n">2. Le suivi, chaque semaine</span>
+        <b>environ <span class="t-bien"></span></b>
+        <span>Un ou deux messages par jour, depuis votre téléphone.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc">
     <h2>Un repère : le Smic</h2>
-    <p class="sous">Ce que rapporte une heure de travail, en net.</p>
+    <p class="sous">Ce que rapporte une heure, en net, une fois vos logements lancés.</p>
     <div class="barres">
       <div><div class="barre-l"><span>Co-hôte Maison Jayla, avec votre projet</span><b id="b-vous"></b></div><div class="piste"><i id="p-vous"></i></div></div>
       <div><div class="barre-l"><span>Salarié au Smic</span><b id="b-smic"></b></div><div class="piste"><i class="pale" id="p-smic"></i></div></div>
@@ -185,13 +206,22 @@ body:not(.admin) .mj-only{display:none}
   <section class="bloc">
     <h2>Compris dans votre abonnement</h2>
     <p class="sous">39,99 € par mois, déjà déduits du résultat affiché plus haut.</p>
+    <p class="inclus-t">Disponible dès aujourd'hui</p>
     <ul class="inclus">
-      <li><b>La formation de l'Académie</b><span>Pour gérer un logement et convaincre un propriétaire.</span></li>
       <li><b>Votre espace co-hôte</b><span>Vos logements, vos revenus et vos documents au même endroit.</span></li>
-      <li><b>Les checklists et le calendrier</b><span>Chaque séjour suivi sans rien oublier.</span></li>
+      <li><b>Le calendrier de vos réservations</b><span>Vos séjours à venir, logement par logement.</span></li>
+      <li><b>Les checklists</b><span>Chaque séjour suivi sans rien oublier.</span></li>
       <li><b>L'avis de valeur et le simulateur de revenus</b><span>Pour chiffrer un logement devant son propriétaire.</span></li>
       <li><b>Le suivi de vos prospects</b><span>Vos contacts propriétaires, du premier échange à la signature.</span></li>
       <li><b>La facturation gérée par Maison Jayla</b><span>Vous ne facturez jamais le propriétaire.</span></li>
+    </ul>
+    <p class="inclus-t">En préparation, sans supplément</p>
+    <ul class="inclus">
+      <li><b>Le channel manager</b><span>Prix et disponibilités synchronisés sur toutes les plateformes.</span></li>
+      <li><b>La programmation des prix</b><span>Les tarifs réglés à l'avance, saison par saison.</span></li>
+      <li><b>La programmation de l'annonce</b><span>Une annonce préparée une fois, prête à être mise en ligne.</span></li>
+      <li><b>Le rapport photo après chaque ménage</b><span>Envoyé par le prestataire, reçu dans votre espace.</span></li>
+      <li><b>La formation de l'Académie</b><span>Trois modules pour gérer un logement et convaincre un propriétaire.</span></li>
     </ul>
   </section>
 
@@ -219,7 +249,7 @@ body:not(.admin) .mj-only{display:none}
         <li>Honoraires = pourcentage de la formule × loyers encaissés, hors ménage et après frais de plateforme.</li>
         <li>Vous exercez en micro-entreprise : cotisations de 21,2 % sur votre part, plus 0,2 % de formation professionnelle. Avec l'Acre : 15,9 %, sous conditions. L'abonnement ne se déduit pas des cotisations.</li>
         <li>Sans versement libératoire, l'impôt sur le revenu n'est pas compté : il dépend de votre foyer.</li>
-        <li>Temps de travail : estimation de <span class="t-bien"></span> par semaine et par logement, ménage non compris car il est confié à un prestataire. La prospection et les déplacements ne sont pas comptés.</li>
+        <li>Temps de suivi : estimation de <span class="t-bien"></span> par semaine et par logement, une fois le logement lancé. Le lancement (environ <span class="t-lance"></span> par logement, une seule fois), le ménage confié à un prestataire, la prospection et les déplacements ne sont pas comptés dans le net par heure.</li>
         <li>Smic net horaire : 9,74 € depuis le 1er juin 2026. Un salarié a des congés payés et une assurance chômage, un micro-entrepreneur non.</li>
         <li>Non comptés, et en plus pour vous : les packs de démarrage et les prestations à la carte.</li>
       </ul>
@@ -238,10 +268,16 @@ body:not(.admin) .mj-only{display:none}
         <li class="total"><span>Maison Jayla garde, par mois</span><span id="m-net"></span></li>
         <li><span>Soit par an</span><span id="m-an"></span></li>
       </ul>
-      <div class="champ">
-        <div class="ligne"><label for="tbien">Hypothèse : temps par logement, par semaine</label><span class="valeur" id="tbien-v"></span></div>
-        <input type="range" id="tbien" min="1" max="5" step="0.25" value="2">
-        <span class="aide">Réglage réservé à Maison Jayla. La co-hôte voit le résultat, pas ce curseur.</span>
+      <div>
+        <div class="champ">
+          <div class="ligne"><label for="tbien">Hypothèse : suivi par logement, par semaine</label><span class="valeur" id="tbien-v"></span></div>
+          <input type="range" id="tbien" min="0.25" max="5" step="0.25" value="1.5">
+        </div>
+        <div class="champ">
+          <div class="ligne"><label for="tlance">Hypothèse : lancement d'un logement, une seule fois</label><span class="valeur" id="tlance-v"></span></div>
+          <input type="range" id="tlance" min="2" max="20" step="1" value="8">
+          <span class="aide">Réglages réservés à Maison Jayla. La co-hôte voit le résultat, pas ces curseurs.</span>
+        </div>
       </div>
     </div>
   </section>
@@ -275,7 +311,8 @@ function simule(a,c){
 function calcul(){
   const a=+$("apportes").value, c=+$("confies").value, s=simule(a,c);
   $("apportes-v").textContent=a; $("confies-v").textContent=c; $("revenu-v").textContent=eur(s.r);
-  $("tbien-v").textContent=hm(s.t);
+  $("tbien-v").textContent=hm(s.t); $("tlance-v").textContent=hm(+$("tlance").value);
+  document.querySelectorAll(".t-lance").forEach(e=>e.textContent=hm(+$("tlance").value));
   document.querySelectorAll(".t-bien").forEach(e=>e.textContent=hm(s.t));
 
   // Résultat
@@ -298,14 +335,14 @@ function calcul(){
   // Progression : logements apportés, mêmes loyers et même formule
   const miTemps=MI_TEMPS*SEM*SMIC; let marque=false;
   $("etapes").innerHTML=PALIERS.map(n=>{const e=simule(n,0), fort=!marque&&e.net>=miTemps; if(fort)marque=true;
-    return `<div class="etape${fort?" fort":""}"><span class="n">${n} logement${n>1?"s":""}</span><b>${eur(Math.round(e.net))}</b><span>net par mois</span><span>${hm(e.hSem)} par semaine</span>${fort?'<span class="pastille">Plus qu\'un mi-temps au Smic</span>':""}</div>`}).join("");
+    return `<div class="etape${fort?" fort":""}"><span class="n">${n} logement${n>1?"s":""}</span><b>${eur(Math.round(e.net))}</b><span>net par mois</span><span>${hm(e.hSem)} de suivi par semaine</span>${fort?'<span class="pastille">Plus qu\'un mi-temps au Smic</span>':""}</div>`}).join("");
 
   // Repère Smic
   const ph=s.parHeure!=null&&s.net>0?s.parHeure:0, max=Math.max(ph,SMIC);
   $("b-vous").textContent=ph?eur(ph,2)+" de l'heure":"–"; $("b-smic").textContent=eur(SMIC,2)+" de l'heure";
   $("p-vous").style.width=(ph/max*100)+"%"; $("p-smic").style.width=(SMIC/max*100)+"%";
   $("b-phrase").textContent=ph>SMIC
-    ?"Votre heure de travail rapporte "+new Intl.NumberFormat("fr-FR",{maximumFractionDigits:1}).format(ph/SMIC)+" fois le Smic. Un mi-temps au Smic, c'est "+eur(Math.round(miTemps))+" net par mois pour "+MI_TEMPS+" h par semaine."
+    ?"Votre heure de suivi rapporte "+new Intl.NumberFormat("fr-FR",{maximumFractionDigits:1}).format(ph/SMIC)+" fois le Smic. Un mi-temps au Smic, c'est "+eur(Math.round(miTemps))+" net par mois pour "+MI_TEMPS+" h par semaine."
     :"Un mi-temps au Smic, c'est "+eur(Math.round(miTemps))+" net par mois pour "+MI_TEMPS+" h par semaine.";
 
   // Par logement, selon la formule
@@ -334,7 +371,7 @@ function groupe(id,suite){
 groupe("formule",d=>etat.taux=+d.t);
 groupe("cotis",d=>etat.cotis=+d.c);
 groupe("vues",d=>document.body.classList.toggle("admin",d.v==="admin"));
-["revenu","apportes","confies","tbien"].forEach(i=>$(i).addEventListener("input",calcul));
+["revenu","apportes","confies","tbien","tlance"].forEach(i=>$(i).addEventListener("input",calcul));
 $("vl").addEventListener("change",calcul);
 
 // Vue Maison Jayla : toujours proposée dans la version autonome, sur ?vue=admin dans l'intranet
