@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://lvfncstosaaqgtfozthw.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self';">
 <title>Maison Jayla · Assistant</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
   --border:  #E3D9CE;
   --ink:     #30282A;
   --ink2:    #5A4A4E;
-  --ink3:    #8A7B7E;
+  --ink3:    #6B5C5F;
   --noyer:   #5A4A4E;
 }
 html, body {
@@ -59,13 +59,13 @@ html, body {
 }
 .header-name em { font-style: italic; color: var(--or); }
 .header-sub {
-  font-size: 11px; color: rgba(255,255,255,0.55);
+  font-size: 12px; color: rgba(255,255,255,0.55);
   margin-top: 1px; white-space: nowrap;
   overflow: hidden; text-overflow: ellipsis;
 }
 .header-status {
   display: flex; align-items: center; gap: 5px;
-  font-size: 11px; color: rgba(255,255,255,0.6);
+  font-size: 12px; color: rgba(255,255,255,0.6);
 }
 .status-dot {
   width: 7px; height: 7px; border-radius: 50%;
@@ -119,7 +119,7 @@ html, body {
 }
 
 .msg-time {
-  font-size: 10px; color: var(--ink3);
+  font-size: 12px; color: var(--ink3);
   margin-top: 4px; padding: 0 4px;
   align-self: flex-end;
 }
@@ -266,7 +266,7 @@ html, body {
 .chat-footer {
   text-align: center;
   padding: 6px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink3);
   background: var(--blanc);
   border-top: 1px solid rgba(216,207,191,0.4);
@@ -352,7 +352,7 @@ html, body {
   <div class="error-icon">🏠</div>
   <div class="error-title">Assistant introuvable</div>
   <div class="error-sub">Ce lien ne correspond à aucun logement Maison Jayla.<br>Contactez votre hôte directement.</div>
-  <a href="mailto:contact@maisonjayla.com" style="color:var(--jade);font-size:13px">contact@maisonjayla.com</a>
+  <a href="mailto:contact@maison-jayla.com" style="color:var(--jade);font-size:13px">contact@maison-jayla.com</a>
 </div>
 
 <!-- App -->
@@ -391,7 +391,7 @@ html, body {
   </div>
 
   <div class="chat-footer">
-    Assistant Maison Jayla · <a href="mailto:contact@maisonjayla.com">Nous contacter</a>
+    Assistant Maison Jayla · <a href="mailto:contact@maison-jayla.com">Nous contacter</a>
   </div>
 </div>
 
@@ -569,57 +569,18 @@ async function sendMessage() {
 
     hideTyping();
 
-    // Détecter si l'IA n'est pas sûre → signaler
-    const needsHuman = detectNeedsHuman(text, reply);
-    if (needsHuman) {
-      await notifyHote(text);
-    }
-
+    // L'alerte à l'équipe (fuite, panne, voyageur bloqué…) est envoyée par la fonction serveur
+    // dans les notifications de l'intranet : rien à faire ici.
     addBotMessage(reply);
     conversation.push({ role: 'assistant', content: reply });
 
-    // Enregistrer la conversation dans Supabase
-    logConversation(text, reply, needsHuman);
-
   } catch(e) {
     hideTyping();
-    addBotMessage("Je rencontre une difficulté technique momentanée. Pour toute urgence, contactez Maison Jayla directement :\n\n📞 **contact@maisonjayla.com**");
+    addBotMessage("Je rencontre une difficulté technique momentanée. Pour toute urgence, contactez Maison Jayla directement :\n\n📞 **contact@maison-jayla.com**");
   }
 
   isTyping = false;
   document.getElementById('send-btn').disabled = false;
-}
-
-function detectNeedsHuman(question, reponse) {
-  const triggersMots = ['ne sais pas','pas d\'information','contacter','urgence','problème grave',
-    'plainte','remboursement','annulation','insatisfait','incident','accident','fuite','panne',
-    'bloqué','coincé','i don\'t know','please contact','emergency'];
-  const txt = (question + ' ' + reponse).toLowerCase();
-  return triggersMots.some(m => txt.includes(m));
-}
-
-async function notifyHote(question) {
-  // Enregistrer dans Supabase pour notification
-  try {
-    await sb.from('chat_alerts').insert({
-      bien_id: new URLSearchParams(window.location.search).get('bien'),
-      question,
-      url: window.location.href,
-      created_at: new Date().toISOString()
-    });
-  } catch(e) {
-    // Table peut ne pas exister encore — ignorer silencieusement
-  }
-}
-
-async function logConversation(question, reponse, alerte) {
-  try {
-    await sb.from('chat_logs').insert({
-      bien_id: new URLSearchParams(window.location.search).get('bien'),
-      question, reponse, alerte,
-      created_at: new Date().toISOString()
-    });
-  } catch(e) { /* ignore */ }
 }
 
 // ── SUGGESTIONS RAPIDES ──

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://lvfncstosaaqgtfozthw.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self';">
-<title>Maison Jayla · Cockpit admin</title>
+<title>Maison Jayla · Finances du mois</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="fin1.js"></script>
@@ -16,7 +16,7 @@
   --bronze:#9A7A4C; --bronze-bg:#F4EDE3; --bronze-bd:#DCC6A6;
   --jade:#542C35; --jade-mid:#6B3A45; --jade-bg:#F3E8E6; --jade-bd:#C9AEB2;
   --border:#E3D9CE;
-  --ink:#30282A; --ink2:#5A4A4E; --ink3:#8A7B7E; --ink4:#B8AAA0;
+  --ink:#30282A; --ink2:#5A4A4E; --ink3:#6B5C5F; --ink4:#776A6D;
   --gold:#9A7A4C; --goldbg:#F4EDE3; --goldbd:#DCC6A6;
   /* Couleurs sémantiques (badges / statuts) */
   --green:#2D6A4F; --green-bg:#E8F5EE;
@@ -34,11 +34,11 @@ a{color:var(--bronze);}
 .login-card{background:var(--surface);border-radius:6px;padding:40px 32px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
 .login-logo{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--jade);text-align:center;letter-spacing:0.02em;}
 .login-logo em{font-style:italic;color:var(--bronze);}
-.login-sub{text-align:center;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink3);margin-top:4px;}
+.login-sub{text-align:center;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink3);margin-top:4px;}
 .login-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--noyer);text-align:center;margin:26px 0 4px;font-weight:500;}
 .login-desc{text-align:center;font-size:12.5px;color:var(--ink3);margin-bottom:22px;}
 .login-group{margin-bottom:14px;}
-.login-group label{display:block;font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--jade);margin-bottom:6px;}
+.login-group label{display:block;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--jade);margin-bottom:6px;}
 .login-group input{width:100%;padding:11px 13px;font-size:14px;font-family:inherit;border:1px solid var(--surface3);border-radius:3px;background:var(--bg);color:var(--noyer);}
 .login-group input:focus{outline:2px solid var(--bronze);outline-offset:1px;}
 .btn-login{width:100%;padding:13px;margin-top:8px;cursor:pointer;background:var(--jade);color:var(--bg);border:none;border-radius:3px;font-family:inherit;font-size:13px;font-weight:600;letter-spacing:0.06em;}
@@ -47,16 +47,16 @@ a{color:var(--bronze);}
 .login-error{display:none;background:#FBEAE8;border-left:3px solid var(--red);color:#9B2C22;padding:10px 12px;border-radius:3px;font-size:12.5px;margin-bottom:14px;}
 .login-forgot{text-align:center;margin-top:16px;font-size:12px;}
 .login-forgot a{color:var(--bronze);text-decoration:none;cursor:pointer;}
-.login-note{margin-top:20px;padding-top:16px;border-top:1px solid var(--surface2);font-size:11px;color:var(--ink3);text-align:center;line-height:1.6;}
+.login-note{margin-top:20px;padding-top:16px;border-top:1px solid var(--surface2);font-size:12px;color:var(--ink3);text-align:center;line-height:1.6;}
 
 /* ══ TOPBAR ══ */
 .topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;background:var(--jade);color:var(--bg);}
 .brand-name{font-family:'Cormorant Garamond',serif;font-size:22px;letter-spacing:0.02em;}
 .brand-name em{font-style:italic;color:var(--goldlight,#C5A477);}
-.topbar-sub{font-size:9.5px;letter-spacing:0.18em;text-transform:uppercase;opacity:0.7;margin-left:2px;}
+.topbar-sub{font-size:12px;letter-spacing:0.18em;text-transform:uppercase;opacity:0.7;margin-left:2px;}
 .topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
-.tb-user{font-size:11px;opacity:0.85;}
-.tb-btn{padding:5px 11px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.25);border-radius:4px;color:var(--bg);font-family:inherit;font-size:10.5px;cursor:pointer;text-decoration:none;white-space:nowrap;}
+.tb-user{font-size:12px;opacity:0.85;}
+.tb-btn{padding:5px 11px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.25);border-radius:4px;color:var(--bg);font-family:inherit;font-size:12px;cursor:pointer;text-decoration:none;white-space:nowrap;}
 .tb-btn:hover{background:rgba(255,255,255,0.16);}
 
 /* ══ LAYOUT COCKPIT ══ */
@@ -68,11 +68,11 @@ a{color:var(--bronze);}
 .grid{display:grid;gap:14px;}
 .grid-kpi{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;}
-.kpi-label{font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);}
+.kpi-label{font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);}
 .kpi-value{font-family:'Cormorant Garamond',serif;font-size:30px;color:var(--jade);font-weight:600;line-height:1.1;margin-top:6px;}
 .kpi-value.mono{font-family:'JetBrains Mono',monospace;font-size:22px;}
-.kpi-note{font-size:11px;color:var(--ink3);margin-top:4px;}
-.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:600;letter-spacing:0.03em;}
+.kpi-note{font-size:12px;color:var(--ink3);margin-top:4px;}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.03em;}
 .badge-green{background:var(--green-bg);color:var(--green);}
 .badge-red{background:var(--red-bg);color:var(--red);}
 .badge-blue{background:var(--blue-bg);color:var(--blue);}
@@ -85,7 +85,7 @@ a{color:var(--bronze);}
 /* Filtres */
 .filters{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;margin-bottom:6px;}
 .filter-grp{display:flex;flex-direction:column;gap:5px;}
-.filter-grp label{font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);}
+.filter-grp label{font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);}
 .filter-grp select{padding:8px 11px;font-family:inherit;font-size:13px;border:1px solid var(--surface3);border-radius:5px;background:var(--surface);color:var(--noyer);min-width:150px;cursor:pointer;}
 .filter-grp select:focus{outline:2px solid var(--bronze);outline-offset:1px;}
 
@@ -93,14 +93,14 @@ a{color:var(--bronze);}
 .sub{font-family:'Manrope',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink2);margin:22px 0 8px;}
 .twrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);}
 table{width:100%;border-collapse:collapse;font-size:13px;min-width:520px;}
-thead th{text-align:left;padding:10px 12px;background:var(--jade-bg);color:var(--jade);font-size:10.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;border-bottom:1px solid var(--border);vertical-align:bottom;}
+thead th{text-align:left;padding:10px 12px;background:var(--jade-bg);color:var(--jade);font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;border-bottom:1px solid var(--border);vertical-align:bottom;}
 tbody td{padding:9px 12px;border-bottom:1px solid var(--surface2);color:var(--ink);}
 tbody tr:last-child td{border-bottom:none;}
 th.r,td.r{text-align:right;}
 td.mono,.mono{font-family:'JetBrains Mono',monospace;}
-.th-note{font-weight:400;font-size:9px;letter-spacing:0.04em;color:var(--jade-mid);opacity:0.8;}
-.th-legend{font-size:11px;color:var(--ink3);margin-top:8px;line-height:1.5;}
-code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--surface2);padding:1px 5px;border-radius:3px;color:var(--noyer);}
+.th-note{font-weight:400;font-size:12px;letter-spacing:0.04em;color:var(--jade-mid);opacity:0.8;}
+.th-legend{font-size:12px;color:var(--ink3);margin-top:8px;line-height:1.5;}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--surface2);padding:1px 5px;border-radius:3px;color:var(--noyer);}
 .alertes{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;}
 .alertes li{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:6px;padding:10px 12px;font-size:12.5px;}
 
@@ -119,12 +119,12 @@ code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--su
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo">Maison <em>Jayla</em></div>
-    <div class="login-sub">Cockpit administration</div>
+    <div class="login-sub">Finances du mois</div>
     <h2 class="login-title">Connexion</h2>
     <p class="login-desc">Accès réservé à l'administration</p>
     <div id="login-error" class="login-error"></div>
     <div class="login-group"><label>Adresse email</label>
-      <input type="email" id="login-email" placeholder="contact@maisonjayla.com" autocomplete="email"></div>
+      <input type="email" id="login-email" placeholder="contact@maison-jayla.com" autocomplete="email"></div>
     <div class="login-group"><label>Mot de passe</label>
       <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
     <button class="btn-login" id="btn-login" onclick="doLogin()">Se connecter →</button>
@@ -149,7 +149,7 @@ code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--su
   </div>
 
   <div class="wrap">
-    <h1 class="page-title">Cockpit administration</h1>
+    <h1 class="page-title">Finances du mois</h1>
     <p class="page-sub">Vue de pilotage en lecture seule — <span id="today-date"></span></p>
 
     <div class="card" style="margin-bottom:8px">

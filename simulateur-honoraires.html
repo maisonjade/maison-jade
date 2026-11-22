@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+<title>Simulateur d'honoraires — Maison Jayla</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Montserrat:wght@400;500;600&display=swap">
+<style>
+/* Mise en page : 3 réglages à gauche, un résultat en grand à droite (bordeaux plein), puis progression, repère, inclus.
+   Thème unique, charte Maison Jayla. La partie Maison Jayla (.mj-only) n'apparaît qu'en vue admin. */
+:root{
+  --bordeaux:#542C35; --bordeaux-fonce:#3E1F27; --ivoire:#F5EFE7; --papier:#FFFDF9;
+  --or:#C5A477; --or-fonce:#8F7145; --encre:#2E1B20; --gris:#6F5F62; --trait:#E2D6C8;
+  --titre:"Cormorant Garamond",Georgia,serif; --texte:"Montserrat",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--ivoire);color:var(--encre);font-family:var(--texte);font-size:15px;line-height:1.5}
+.page{max-width:1080px;margin:0 auto;padding:28px 20px 44px;display:flex;flex-direction:column;gap:24px}
+.sur{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--or-fonce)}
+h1{font-family:var(--titre);font-weight:600;font-size:40px;line-height:1.08;margin:6px 0 0;color:var(--bordeaux);text-wrap:balance;max-width:20ch}
+header p{margin:10px 0 0;color:var(--gris);max-width:60ch}
+h2{font-family:var(--titre);font-weight:600;font-size:26px;line-height:1.15;margin:0 0 4px;color:var(--bordeaux);text-wrap:balance}
+.sous{margin:0 0 16px;color:var(--gris);font-size:14px;max-width:65ch}
+.etiquette{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gris)}
+.bloc{background:var(--papier);border:1px solid var(--trait);border-radius:12px;padding:22px}
+.vues{display:flex;gap:6px;align-self:flex-start}
+.duo{display:grid;grid-template-columns:340px 1fr;gap:22px;align-items:stretch}
+
+/* Réglages */
+.champ{display:flex;flex-direction:column;gap:6px;margin-bottom:20px}
+.champ:last-child{margin-bottom:0}
+.ligne{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ligne label{font-weight:500}
+.valeur{font-family:var(--titre);font-size:24px;font-weight:600;color:var(--bordeaux);font-variant-numeric:tabular-nums;white-space:nowrap}
+.aide{font-size:12px;color:var(--gris)}
+input[type=range]{width:100%;accent-color:var(--bordeaux);margin:2px 0}
+.choix{display:flex;gap:6px;flex-wrap:wrap}
+.choix button{flex:1 1 auto;font:inherit;font-size:13px;font-weight:500;padding:9px 8px;border:1px solid var(--trait);background:var(--ivoire);color:var(--encre);border-radius:8px;cursor:pointer}
+.choix button[aria-pressed=true]{background:var(--bordeaux);border-color:var(--bordeaux);color:var(--ivoire)}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--or-fonce);outline-offset:2px}
+
+/* Résultat */
+.resultat{background:var(--bordeaux);color:var(--ivoire);border-radius:12px;padding:28px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.resultat .etiquette{color:var(--or)}
+.grand{font-family:var(--titre);font-weight:600;font-size:84px;line-height:.95;font-variant-numeric:tabular-nums;margin-top:4px}
+.grand small{font-family:var(--texte);font-size:15px;font-weight:400;opacity:.85;display:block;margin-top:10px;line-height:1.4}
+.paire{display:grid;grid-template-columns:1fr 1fr;gap:14px;border-top:1px solid rgba(245,239,231,.25);padding-top:18px}
+.paire b{font-family:var(--titre);font-size:38px;font-weight:600;line-height:1;display:block;color:var(--or);font-variant-numeric:tabular-nums}
+.paire span{font-size:13px;opacity:.9}
+.message{font-size:14px;background:var(--bordeaux-fonce);border-radius:8px;padding:10px 12px}
+
+/* Progression */
+.etapes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.etape{border:1px solid var(--trait);border-radius:10px;padding:16px;background:var(--ivoire);display:flex;flex-direction:column;gap:4px}
+.etape.fort{background:var(--bordeaux);border-color:var(--bordeaux);color:var(--ivoire)}
+.etape .n{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--or-fonce)}
+.etape.fort .n{color:var(--or)}
+.etape b{font-family:var(--titre);font-size:34px;font-weight:600;line-height:1.05;font-variant-numeric:tabular-nums}
+.etape>span{font-size:13px}
+.temps{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.inclus-t{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--or-fonce);margin:18px 0 10px}
+.inclus-t:first-of-type{margin-top:0}
+.pastille{align-self:flex-start;margin-top:6px;font-size:12px;font-weight:600;padding:3px 8px;border-radius:99px;background:var(--or);color:var(--encre)}
+
+/* Repère */
+.barres{display:flex;flex-direction:column;gap:12px}
+.barre-l{display:flex;justify-content:space-between;gap:10px;font-size:14px;margin-bottom:4px}
+.barre-l b{font-variant-numeric:tabular-nums}
+.piste{height:16px;border-radius:99px;background:var(--ivoire);border:1px solid var(--trait);overflow:hidden}
+.piste i{display:block;height:100%;border-radius:99px;background:var(--bordeaux)}
+.piste i.pale{background:var(--or)}
+
+/* Tableau, listes, détail */
+.defile{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums;min-width:420px}
+th,td{padding:10px;text-align:right;border-bottom:1px solid var(--trait)}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--gris);font-weight:600}
+tr.actif td{background:var(--ivoire);font-weight:600}
+.inclus{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 24px}
+.inclus li{padding-left:18px;position:relative}
+.inclus li::before{content:"";position:absolute;left:0;top:.55em;width:8px;height:8px;border-radius:50%;background:var(--or)}
+.inclus b{display:block}
+.inclus span{font-size:13px;color:var(--gris)}
+details{font-size:14px}
+summary{cursor:pointer;color:var(--bordeaux);font-weight:600}
+.detail{list-style:none;margin:14px 0 0;padding:0;max-width:460px;display:flex;flex-direction:column;gap:6px}
+.detail li{display:flex;justify-content:space-between;gap:10px;font-variant-numeric:tabular-nums}
+.detail li.total{border-top:1px solid var(--trait);padding-top:8px;font-weight:600;color:var(--bordeaux)}
+.options{display:flex;flex-direction:column;gap:12px;margin-top:18px;max-width:460px}
+.case{display:flex;gap:8px;align-items:flex-start}
+.case input{margin-top:4px;accent-color:var(--bordeaux)}
+.notes{font-size:13px;color:var(--gris);max-width:75ch;margin:16px 0 0;padding-left:18px}
+.mj-grille{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+.avert{font-size:13px;color:var(--gris);max-width:75ch;margin:0}
+body:not(.admin) .mj-only{display:none}
+[hidden]{display:none !important}
+@media (max-width:860px){.duo,.mj-grille{grid-template-columns:1fr}.etapes{grid-template-columns:1fr 1fr}}
+@media (max-width:620px){.temps{grid-template-columns:1fr}}
+@media (max-width:520px){h1{font-size:31px}.grand{font-size:62px}.inclus{grid-template-columns:1fr}.paire b{font-size:32px}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="choix vues" id="vues" role="group" aria-label="Vue affichée" hidden>
+    <button type="button" data-v="cohote" aria-pressed="true">Vue co-hôte</button>
+    <button type="button" data-v="admin" aria-pressed="false">Vue Maison Jayla</button>
+  </div>
+
+  <header>
+    <span class="sur">Réseau de co-hôtes Maison Jayla</span>
+    <h1>Combien pouvez-vous gagner en devenant co-hôte ?</h1>
+    <p>Trois réglages suffisent. Le résultat se met à jour tout de suite.</p>
+  </header>
+
+  <div class="duo">
+    <section class="bloc" aria-label="Votre projet">
+      <h2>Votre projet</h2>
+      <p class="sous">Les logements que vous accompagnez.</p>
+      <div class="champ">
+        <div class="ligne"><label for="apportes">Logements que vous apportez</label><span class="valeur" id="apportes-v"></span></div>
+        <input type="range" id="apportes" min="0" max="10" step="1" value="3">
+        <span class="aide">Vous gardez 70 % des honoraires.</span>
+      </div>
+      <div class="champ">
+        <div class="ligne"><label for="confies">Logements confiés par Maison Jayla</label><span class="valeur" id="confies-v"></span></div>
+        <input type="range" id="confies" min="0" max="10" step="1" value="0">
+        <span class="aide">Vous gardez 50 % des honoraires.</span>
+      </div>
+      <div class="champ">
+        <div class="ligne"><label for="revenu">Ce qu'un logement rapporte à son propriétaire</label><span class="valeur" id="revenu-v"></span></div>
+        <input type="range" id="revenu" min="500" max="8000" step="50" value="2000">
+        <span class="aide">Loyers encaissés par mois, hors ménage.</span>
+      </div>
+      <div class="champ">
+        <span class="etiquette" id="formule-l">Formule choisie par le propriétaire</span>
+        <div class="choix" id="formule" role="group" aria-labelledby="formule-l">
+          <button type="button" data-t="16" aria-pressed="false">Essentielle 16 %</button>
+          <button type="button" data-t="22" aria-pressed="true">Sérénité 22 %</button>
+          <button type="button" data-t="25" aria-pressed="false">Signature 25 %</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="resultat" aria-live="polite">
+      <div>
+        <span class="etiquette">Vous gardez environ</span>
+        <div class="grand"><span id="r-net"></span><small id="r-net-s"></small></div>
+      </div>
+      <div class="paire">
+        <div><b id="r-temps"></b><span>de suivi par semaine, depuis votre téléphone</span></div>
+        <div><b id="r-heure"></b><span>net par heure de suivi</span></div>
+      </div>
+      <div class="message" id="r-msg" hidden></div>
+    </section>
+  </div>
+
+  <section class="bloc">
+    <h2>Votre progression</h2>
+    <p class="sous">Chaque logement que vous apportez ajoute un revenu, pour environ <span class="t-bien"></span> de suivi par semaine une fois lancé.</p>
+    <div class="etapes" id="etapes"></div>
+  </section>
+
+  <section class="bloc">
+    <h2>Un logement, deux temps</h2>
+    <p class="sous">Le gros du travail se fait au départ. Ensuite, vous suivez.</p>
+    <div class="temps">
+      <div class="etape">
+        <span class="n">1. Le lancement, une seule fois</span>
+        <b>environ <span class="t-lance"></span></b>
+        <span>Vous préparez l'annonce, réglez les prix et reliez le logement à votre espace.</span>
+      </div>
+      <div class="etape fort">
+        <span class="n">2. Le suivi, chaque semaine</span>
+        <b>environ <span class="t-bien"></span></b>
+        <span>Un ou deux messages par jour, depuis votre téléphone.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc">
+    <h2>Un repère : le Smic</h2>
+    <p class="sous">Ce que rapporte une heure, en net, une fois vos logements lancés.</p>
+    <div class="barres">
+      <div><div class="barre-l"><span>Co-hôte Maison Jayla, avec votre projet</span><b id="b-vous"></b></div><div class="piste"><i id="p-vous"></i></div></div>
+      <div><div class="barre-l"><span>Salarié au Smic</span><b id="b-smic"></b></div><div class="piste"><i class="pale" id="p-smic"></i></div></div>
+    </div>
+    <p class="sous" style="margin:14px 0 0" id="b-phrase"></p>
+  </section>
+
+  <section class="bloc">
+    <h2>Ce que vous rapporte un logement</h2>
+    <p class="sous">Par mois, pour un logement qui rapporte <span id="t-revenu"></span> à son propriétaire. Montants avant vos cotisations.</p>
+    <div class="defile" tabindex="0" role="region" aria-label="Tableau défilant">
+      <table>
+        <thead><tr><th>Formule du propriétaire</th><th>Vous apportez le logement</th><th>Maison Jayla vous le confie</th><th class="mj-only">Maison Jayla, apporté</th><th class="mj-only">Maison Jayla, confié</th></tr></thead>
+        <tbody id="tableau"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="bloc">
+    <h2>Compris dans votre abonnement</h2>
+    <p class="sous">39,99 € par mois, déjà déduits du résultat affiché plus haut.</p>
+    <p class="inclus-t">Disponible dès aujourd'hui</p>
+    <ul class="inclus">
+      <li><b>Votre espace co-hôte</b><span>Vos logements, vos revenus et vos documents au même endroit.</span></li>
+      <li><b>Le calendrier de vos réservations</b><span>Vos séjours à venir, logement par logement.</span></li>
+      <li><b>Les checklists</b><span>Chaque séjour suivi sans rien oublier.</span></li>
+      <li><b>L'avis de valeur et le simulateur de revenus</b><span>Pour chiffrer un logement devant son propriétaire.</span></li>
+      <li><b>Le suivi de vos prospects</b><span>Vos contacts propriétaires, du premier échange à la signature.</span></li>
+      <li><b>La facturation gérée par Maison Jayla</b><span>Vous ne facturez jamais le propriétaire.</span></li>
+    </ul>
+    <p class="inclus-t">En préparation, sans supplément</p>
+    <ul class="inclus">
+      <li><b>Le channel manager</b><span>Prix et disponibilités synchronisés sur toutes les plateformes.</span></li>
+      <li><b>La programmation des prix</b><span>Les tarifs réglés à l'avance, saison par saison.</span></li>
+      <li><b>La programmation de l'annonce</b><span>Une annonce préparée une fois, prête à être mise en ligne.</span></li>
+      <li><b>Le rapport photo après chaque ménage</b><span>Envoyé par le prestataire, reçu dans votre espace.</span></li>
+      <li><b>La formation de l'Académie</b><span>Trois modules pour gérer un logement et convaincre un propriétaire.</span></li>
+    </ul>
+  </section>
+
+  <section class="bloc">
+    <details>
+      <summary>Comment ce résultat est calculé</summary>
+      <ul class="detail">
+        <li><span>Votre part des honoraires</span><span id="d-ca"></span></li>
+        <li><span id="d-cotis-l">Cotisations Urssaf</span><span id="d-cotis"></span></li>
+        <li id="d-vl-li"><span>Impôt (versement libératoire 1,7 %)</span><span id="d-vl"></span></li>
+        <li><span>Abonnement Maison Jayla</span><span id="d-abo"></span></li>
+        <li class="total"><span id="d-net-l">Net par mois</span><span id="d-net"></span></li>
+      </ul>
+      <div class="options">
+        <div>
+          <span class="etiquette" id="cotis-l">Vos cotisations de micro-entrepreneur</span>
+          <div class="choix" id="cotis" role="group" aria-labelledby="cotis-l" style="margin-top:6px">
+            <button type="button" data-c="21.2" aria-pressed="true">Taux normal 21,2 %</button>
+            <button type="button" data-c="15.9" aria-pressed="false">Avec l'Acre 15,9 %</button>
+          </div>
+        </div>
+        <label class="case" for="vl"><input type="checkbox" id="vl"> Je paie mon impôt avec mes cotisations (versement libératoire, 1,7 %)</label>
+      </div>
+      <ul class="notes">
+        <li>Honoraires = pourcentage de la formule × loyers encaissés, hors ménage et après frais de plateforme.</li>
+        <li>Vous exercez en micro-entreprise : cotisations de 21,2 % sur votre part, plus 0,2 % de formation professionnelle. Avec l'Acre : 15,9 %, sous conditions. L'abonnement ne se déduit pas des cotisations.</li>
+        <li>Sans versement libératoire, l'impôt sur le revenu n'est pas compté : il dépend de votre foyer.</li>
+        <li>Temps de suivi : estimation de <span class="t-bien"></span> par semaine et par logement, une fois le logement lancé. Le lancement (environ <span class="t-lance"></span> par logement, une seule fois), le ménage confié à un prestataire, la prospection et les déplacements ne sont pas comptés dans le net par heure.</li>
+        <li>Smic net horaire : 9,74 € depuis le 1er juin 2026. Un salarié a des congés payés et une assurance chômage, un micro-entrepreneur non.</li>
+        <li>Non comptés, et en plus pour vous : les packs de démarrage et les prestations à la carte.</li>
+      </ul>
+    </details>
+  </section>
+
+  <section class="bloc mj-only">
+    <h2>Côté Maison Jayla</h2>
+    <p class="sous">Visible uniquement en vue Maison Jayla.</p>
+    <div class="mj-grille">
+      <ul class="detail" style="margin-top:0">
+        <li><span>Honoraires payés par les propriétaires</span><span id="m-total"></span></li>
+        <li><span>Part sur les logements apportés (30 %)</span><span id="m-app"></span></li>
+        <li><span>Part sur les logements confiés (50 %)</span><span id="m-conf"></span></li>
+        <li><span>Abonnement de la co-hôte</span><span id="m-abo"></span></li>
+        <li class="total"><span>Maison Jayla garde, par mois</span><span id="m-net"></span></li>
+        <li><span>Soit par an</span><span id="m-an"></span></li>
+      </ul>
+      <div>
+        <div class="champ">
+          <div class="ligne"><label for="tbien">Hypothèse : suivi par logement, par semaine</label><span class="valeur" id="tbien-v"></span></div>
+          <input type="range" id="tbien" min="0.25" max="5" step="0.25" value="1.5">
+        </div>
+        <div class="champ">
+          <div class="ligne"><label for="tlance">Hypothèse : lancement d'un logement, une seule fois</label><span class="valeur" id="tlance-v"></span></div>
+          <input type="range" id="tlance" min="2" max="20" step="1" value="8">
+          <span class="aide">Réglages réservés à Maison Jayla. La co-hôte voit le résultat, pas ces curseurs.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p class="avert">Simulation indicative, sans engagement de revenus. Le résultat réel dépend des logements, de la saison et du nombre de réservations.</p>
+</div>
+
+<script src="fin1.js"></script>
+<script>
+const AUTONOME=false;
+const PARAM_ADMIN=new URLSearchParams(location.search).get("vue")==="admin";
+// Règle FIN-1 via fin1.js dans l'intranet ; même calcul en secours hors intranet
+const fin1=(r,t)=>window.MJ?MJ.calcFin1(r,0,t).commission:Math.round(r*t/100);
+const ABO=39.99, CFP=0.2, VL=1.7, PLAFOND=83600, SEM=52/12, SMIC=9.74, MI_TEMPS=24;
+const FORMULES=[["Essentielle",16],["Sérénité",22],["Signature",25]], PALIERS=[1,3,5,8];
+const etat={taux:22,cotis:21.2};
+const $=id=>document.getElementById(id);
+const eur=(n,d)=>new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:d??0}).format(n);
+// Durée en heures et minutes, arrondie au quart d'heure : 9,5 -> "9 h 30"
+const hm=x=>{const m=Math.round(x*4)*15,h=Math.floor(m/60),r=m%60;return h+" h"+(r?" "+String(r).padStart(2,"0"):"");};
+
+// Tout par mois. a = logements apportés, c = logements confiés.
+function simule(a,c){
+  const r=+$("revenu").value, h=fin1(r,etat.taux), vl=$("vl").checked, t=+$("tbien").value;
+  const ca=h*.7*a+h*.5*c, cotis=ca*(etat.cotis+CFP)/100, impot=vl?ca*VL/100:0;
+  const net=ca-cotis-impot-ABO, hSem=(a+c)*t, hMois=hSem*SEM;
+  return {r,h,vl,t,ca,cotis,impot,net,hSem,parHeure:hMois>0?net/hMois:null,
+          total:h*(a+c),mjApp:h*.3*a,mjConf:h*.5*c};
+}
+
+function calcul(){
+  const a=+$("apportes").value, c=+$("confies").value, s=simule(a,c);
+  $("apportes-v").textContent=a; $("confies-v").textContent=c; $("revenu-v").textContent=eur(s.r);
+  $("tbien-v").textContent=hm(s.t); $("tlance-v").textContent=hm(+$("tlance").value);
+  document.querySelectorAll(".t-lance").forEach(e=>e.textContent=hm(+$("tlance").value));
+  document.querySelectorAll(".t-bien").forEach(e=>e.textContent=hm(s.t));
+
+  // Résultat
+  $("r-net").textContent=eur(Math.round(s.net));
+  $("r-net-s").textContent="net par mois"+(s.vl?", cotisations et impôt payés":", cotisations payées")+(s.net>0?" · "+eur(Math.round(s.net*12))+" par an":"");
+  $("r-temps").textContent=hm(s.hSem);
+  $("r-heure").textContent=s.parHeure!=null&&s.net>0?eur(s.parHeure):"–";
+  const msg=$("r-msg"), caAn=s.ca*12;
+  if(a+c===0){msg.hidden=false;msg.textContent="Ajoutez un premier logement pour voir votre revenu. Sans logement, seul l'abonnement est dû.";}
+  else if(s.net<=0){msg.hidden=false;msg.textContent="À ce niveau, vos honoraires ne couvrent pas encore l'abonnement et les cotisations.";}
+  else if(s.parHeure<SMIC){
+    // En dessous du Smic horaire : dire à partir de combien de logements apportés ça passe au-dessus
+    let n=0; for(let k=1;k<=10&&!n;k++) if(simule(k,0).parHeure>=SMIC) n=k;
+    msg.hidden=false;
+    msg.textContent=n&&n>a+c?"Avec ce projet, votre heure rapporte moins que le Smic. Le cap est franchi à partir de "+n+" logement"+(n>1?"s":"")+" apporté"+(n>1?"s":"")+"."
+      :"Avec ce projet, votre heure rapporte moins que le Smic. Visez des logements qui rapportent plus à leur propriétaire, ou des logements que vous apportez vous-même.";}
+  else if(caAn>PLAFOND){msg.hidden=false;msg.textContent="Bravo : à ce rythme vous dépassez le plafond de la micro-entreprise (83 600 € par an). Il faudra changer de statut.";}
+  else msg.hidden=true;
+
+  // Progression : logements apportés, mêmes loyers et même formule
+  const miTemps=MI_TEMPS*SEM*SMIC; let marque=false;
+  $("etapes").innerHTML=PALIERS.map(n=>{const e=simule(n,0), fort=!marque&&e.net>=miTemps; if(fort)marque=true;
+    return `<div class="etape${fort?" fort":""}"><span class="n">${n} logement${n>1?"s":""}</span><b>${eur(Math.round(e.net))}</b><span>net par mois</span><span>${hm(e.hSem)} de suivi par semaine</span>${fort?'<span class="pastille">Plus qu\'un mi-temps au Smic</span>':""}</div>`}).join("");
+
+  // Repère Smic
+  const ph=s.parHeure!=null&&s.net>0?s.parHeure:0, max=Math.max(ph,SMIC);
+  $("b-vous").textContent=ph?eur(ph,2)+" de l'heure":"–"; $("b-smic").textContent=eur(SMIC,2)+" de l'heure";
+  $("p-vous").style.width=(ph/max*100)+"%"; $("p-smic").style.width=(SMIC/max*100)+"%";
+  $("b-phrase").textContent=ph>SMIC
+    ?"Votre heure de suivi rapporte "+new Intl.NumberFormat("fr-FR",{maximumFractionDigits:1}).format(ph/SMIC)+" fois le Smic. Un mi-temps au Smic, c'est "+eur(Math.round(miTemps))+" net par mois pour "+MI_TEMPS+" h par semaine."
+    :"Un mi-temps au Smic, c'est "+eur(Math.round(miTemps))+" net par mois pour "+MI_TEMPS+" h par semaine.";
+
+  // Par logement, selon la formule
+  $("t-revenu").textContent=eur(s.r);
+  $("tableau").innerHTML=FORMULES.map(([n,t])=>{const x=fin1(s.r,t);
+    return `<tr class="${t===etat.taux?"actif":""}"><td>${n} ${t} %</td><td>${eur(x*.7)}</td><td>${eur(x*.5)}</td><td class="mj-only">${eur(x*.3)}</td><td class="mj-only">${eur(x*.5)}</td></tr>`}).join("");
+
+  // Détail du calcul
+  $("d-ca").textContent=eur(s.ca,2);
+  $("d-cotis-l").textContent="Cotisations Urssaf ("+new Intl.NumberFormat("fr-FR").format(etat.cotis+CFP)+" %)";
+  $("d-cotis").textContent="− "+eur(s.cotis,2);
+  $("d-vl-li").hidden=!s.vl; $("d-vl").textContent="− "+eur(s.impot,2);
+  $("d-abo").textContent="− "+eur(ABO,2);
+  $("d-net-l").textContent="Net par mois"+(s.vl?"":", avant impôt"); $("d-net").textContent=eur(s.net,2);
+
+  // Côté Maison Jayla
+  const mj=s.mjApp+s.mjConf+ABO;
+  $("m-total").textContent=eur(s.total,2); $("m-app").textContent=eur(s.mjApp,2); $("m-conf").textContent=eur(s.mjConf,2);
+  $("m-abo").textContent="+ "+eur(ABO,2); $("m-net").textContent=eur(mj,2); $("m-an").textContent=eur(Math.round(mj*12));
+}
+
+function groupe(id,suite){
+  $(id).addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+    $(id).querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));suite(b.dataset);calcul();});
+}
+groupe("formule",d=>etat.taux=+d.t);
+groupe("cotis",d=>etat.cotis=+d.c);
+groupe("vues",d=>document.body.classList.toggle("admin",d.v==="admin"));
+["revenu","apportes","confies","tbien","tlance"].forEach(i=>$(i).addEventListener("input",calcul));
+$("vl").addEventListener("change",calcul);
+
+// Vue Maison Jayla : toujours proposée dans la version autonome, sur ?vue=admin dans l'intranet
+if(AUTONOME||PARAM_ADMIN) $("vues").hidden=false;
+if(PARAM_ADMIN){document.body.classList.add("admin");$("vues").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v==="admin"));}
+calcul();
+</script>
+</body>
+</html>
