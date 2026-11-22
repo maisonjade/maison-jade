@@ -841,7 +841,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
     <div class="tcard">
       <div class="tcard-hd"><span class="tcard-title">🔗 Liens rapides</span></div>
       <div style="padding:1rem;display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <a href="https://maisonjade.github.io/maison-jade/" target="_blank" class="btn btn-ghost" style="justify-content:center;text-decoration:none;padding:14px 10px">
+        <a href="https://app.maison-jayla.com/" target="_blank" class="btn btn-ghost" style="justify-content:center;text-decoration:none;padding:14px 10px">
           <div style="text-align:center">
             <div style="font-size:20px">🌐</div>
             <div style="font-size:11px;margin-top:2px">Site public</div>
@@ -6959,7 +6959,7 @@ ${(document.getElementById('pdf-show-confiance')?.checked && d.confiance) ? `
   </div>
 
   <div class="footer">
-    <span>MAISON J LTD · Maison Jayla · contact@maison-jayla.com · maisonjade.github.io/maison-jade</span>
+    <span>MAISON J LTD · Maison Jayla · contact@maison-jayla.com · app.maison-jayla.com</span>
     <span>Simulation préparée par Maison Jayla · ${d.date}</span>
   </div>
 </div>
@@ -8001,7 +8001,7 @@ function installPWA() {
     name: 'Maison Jayla',
     short_name: 'MJ Pro',
     description: 'Espace professionnel Maison Jayla',
-    start_url: '/maison-jade/',
+    start_url: '/',
     display: 'standalone',
     background_color: '#F5EFE7',
     theme_color: '#542C35',
@@ -8159,7 +8159,7 @@ async function saveReservationAmount(id, btn) {
 // ══ CHATBOT VOYAGEUR ══
 function getChatbotUrl() {
   if (!currentDosId) return null;
-  return `https://maisonjade.github.io/maison-jade/chat.html?bien=${currentDosId}`;
+  return `https://app.maison-jayla.com/chat.html?bien=${currentDosId}`;
 }
 
 function updateChatbotLinkDisplay() {
