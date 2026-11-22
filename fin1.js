@@ -1,5 +1,5 @@
 // ══ RÈGLE FIN-1 — SEUL CALCUL DE COMMISSION MAISON JAYLA ══
-// Chargé par index.html, proprio.html, cohote.html, cockpit.html et calculateur-commission.html.
+// Chargé par index.html, proprio.html, cohote.html, cockpit.html (Finances du mois) et simulateur-honoraires.html.
 // Identique au trigger SQL reservations_fin1 (arrondi à l'euro), qui fait foi pour les montants en base.
 //
 //   net_perçu    = montant_brut − frais_plateforme      (montant_brut = loyer seul, sans ménage)
