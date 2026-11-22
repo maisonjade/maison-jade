@@ -16,7 +16,7 @@
   --sauge: #8A7B7E; --beige: #E3D9CE; --or: #9A7A4C;
   --ivoire: #F5EFE7; --blanc: #FBF8F3; --taupe: #B9A99A; --noyer: #5A4A4E;
   --red: #C0392B; --redbg: #FDECEA; --green: #542C35; --greenbg: #F3E8E6;
-  --border: #E3D9CE; --ink: #241D1F; --ink2: #5A4A4E; --ink3: #8A7B7E;
+  --border: #E3D9CE; --ink: #241D1F; --ink2: #5A4A4E; --ink3: #6B5C5F;
   --sw: 240px; --th: 64px;
 }
 body { font-family: 'Manrope', sans-serif; background: var(--ivoire); color: var(--ink); font-size: 14px; line-height: 1.6; }
@@ -35,11 +35,11 @@ h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
 }
 .login-logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; color: var(--jade); letter-spacing: 0.08em; margin-bottom: 6px; }
 .login-logo em { color: var(--or); font-style: italic; }
-.login-sub { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--taupe); margin-bottom: 36px; }
+.login-sub { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--taupe); margin-bottom: 36px; }
 .login-title { font-size: 28px; color: var(--jade); margin-bottom: 8px; }
 .login-desc { font-size: 12px; color: var(--noyer); font-weight: 300; margin-bottom: 28px; }
 .form-group { margin-bottom: 16px; }
-.form-group label { display: block; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--noyer); margin-bottom: 6px; }
+.form-group label { display: block; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--noyer); margin-bottom: 6px; }
 .form-group input {
   width: 100%; padding: 12px 14px;
   border: 1px solid var(--border); border-radius: 2px;
@@ -49,7 +49,7 @@ h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
 .form-group input:focus { border-color: var(--jade); }
 .btn-jade {
   width: 100%; padding: 14px; background: var(--jade); color: white; border: none;
-  border-radius: 2px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+  border-radius: 2px; font-size: 12px; font-weight: 600; letter-spacing: 0.14em;
   text-transform: uppercase; cursor: pointer; transition: background 0.2s; font-family: 'Manrope', sans-serif;
 }
 .btn-jade:hover { background: var(--jade-mid); }
@@ -70,7 +70,7 @@ h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
 .topbar-right { display: flex; align-items: center; gap: 12px; }
 .user-info { text-align: right; }
 .user-name { font-size: 12px; font-weight: 500; color: var(--ivoire); }
-.user-role { font-size: 10px; color: rgba(185,154,94,0.7); letter-spacing: 0.08em; text-transform: uppercase; }
+.user-role { font-size: 12px; color: rgba(185,154,94,0.7); letter-spacing: 0.08em; text-transform: uppercase; }
 .user-avatar {
   width: 36px; height: 36px; border-radius: 50%; background: var(--jade-mid);
   border: 2px solid rgba(185,154,94,0.4);
@@ -79,7 +79,7 @@ h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
 }
 .btn-logout {
   background: none; border: 1px solid rgba(185,154,94,0.3); color: rgba(255,255,255,0.5);
-  padding: 6px 12px; border-radius: 2px; font-size: 10px; letter-spacing: 0.1em;
+  padding: 6px 12px; border-radius: 2px; font-size: 12px; letter-spacing: 0.1em;
   text-transform: uppercase; cursor: pointer; font-family: 'Manrope', sans-serif;
   transition: all 0.2s;
 }
@@ -90,7 +90,7 @@ h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
   background: var(--jade-mid); display: flex; flex-direction: column; z-index: 50; overflow-y: auto;
 }
 .sb-sect { padding: 1rem 0 0.25rem; }
-.sb-lbl { font-size: 9px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(185,154,94,0.45); padding: 0 1.25rem; margin-bottom: 4px; }
+.sb-lbl { font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(185,154,94,0.45); padding: 0 1.25rem; margin-bottom: 4px; }
 .ni {
   display: flex; align-items: center; gap: 9px; padding: 9px 1.25rem;
   font-size: 12px; color: rgba(247,243,237,0.6); cursor: pointer; border: none;
@@ -100,8 +100,8 @@ h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
 .ni:hover { background: rgba(185,154,94,0.07); color: var(--ivoire); }
 .ni.active { color: var(--or); background: rgba(185,154,94,0.1); border-left-color: var(--or); font-weight: 500; }
 .ni-icon { font-size: 15px; flex-shrink: 0; }
-.sb-badge { margin-left: auto; background: rgba(185,154,94,0.2); color: var(--or); font-size: 10px; padding: 1px 7px; border-radius: 10px; }
-.sb-foot { margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid rgba(185,154,94,0.1); font-size: 10px; color: rgba(185,154,94,0.35); }
+.sb-badge { margin-left: auto; background: rgba(185,154,94,0.2); color: var(--or); font-size: 12px; padding: 1px 7px; border-radius: 10px; }
+.sb-foot { margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid rgba(185,154,94,0.1); font-size: 12px; color: rgba(185,154,94,0.35); }
 
 .main { margin-left: var(--sw); padding-top: var(--th); min-height: 100vh; }
 .view { display: none; padding: 2rem 2.5rem; }
@@ -116,8 +116,8 @@ h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
 .kpi-card { background: var(--blanc); border: 1px solid var(--border); border-radius: 4px; padding: 20px 24px; }
 .kpi-num { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--jade); line-height: 1; }
 .kpi-num.gold { color: var(--or); }
-.kpi-lbl { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink3); margin-top: 6px; }
-.kpi-sub { font-size: 11px; color: var(--noyer); margin-top: 4px; }
+.kpi-lbl { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink3); margin-top: 6px; }
+.kpi-sub { font-size: 12px; color: var(--noyer); margin-top: 4px; }
 
 /* Cards biens */
 .biens-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
@@ -125,31 +125,31 @@ h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
 .bien-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(84,44,53,0.08); }
 .bien-card-header { background: var(--jade); padding: 16px 20px; }
 .bien-card-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: white; }
-.bien-card-adresse { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 3px; }
+.bien-card-adresse { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 3px; }
 .bien-card-body { padding: 16px 20px; }
-.bien-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; margin-bottom: 12px; }
+.bien-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; margin-bottom: 12px; }
 .bien-badge.mj { background: rgba(84,44,53,0.08); color: var(--jade); }
 .bien-badge.apporte { background: rgba(185,154,94,0.12); color: #8B6F3A; }
 .bien-commission { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--or); }
-.bien-commission-lbl { font-size: 10px; color: var(--ink3); margin-top: 2px; }
+.bien-commission-lbl { font-size: 12px; color: var(--ink3); margin-top: 2px; }
 .bien-actions { display: flex; gap: 8px; margin-top: 14px; }
 
 /* Boutons */
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 2px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border: none; font-family: 'Manrope', sans-serif; transition: all 0.2s; text-decoration: none; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 2px; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border: none; font-family: 'Manrope', sans-serif; transition: all 0.2s; text-decoration: none; }
 .btn-primary { background: var(--jade); color: white; }
 .btn-primary:hover { background: var(--jade-mid); }
 .btn-outline { background: none; border: 1px solid var(--border); color: var(--noyer); }
 .btn-outline:hover { border-color: var(--jade); color: var(--jade); }
 .btn-or { background: var(--or); color: white; }
 .btn-or:hover { background: #8B6F3A; }
-.btn-sm { padding: 5px 12px; font-size: 10px; }
+.btn-sm { padding: 5px 12px; font-size: 12px; }
 
 /* Table */
 .tcard { background: var(--blanc); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 1.5rem; }
 .tcard-hd { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
 .tcard-title { font-size: 14px; font-weight: 500; color: var(--jade); }
 table { width: 100%; border-collapse: collapse; }
-th { text-align: left; padding: 10px 16px; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink3); background: var(--ivoire); border-bottom: 1px solid var(--border); }
+th { text-align: left; padding: 10px 16px; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink3); background: var(--ivoire); border-bottom: 1px solid var(--border); }
 td { padding: 12px 16px; border-bottom: 1px solid rgba(216,199,174,0.3); font-size: 13px; color: var(--ink2); vertical-align: middle; }
 tr:last-child td { border-bottom: none; }
 tr:hover td { background: var(--ivoire); }
@@ -162,23 +162,23 @@ tr:hover td { background: var(--ivoire); }
 .cl-item.done span { color: var(--jade); }
 
 /* Revenus */
-.section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--or); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.section-label { font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--or); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
 .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
 /* Réseau filleuls */
 .filleul-card { background: var(--blanc); border: 1px solid var(--border); border-radius: 4px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 .filleul-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--jade); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--or); font-style: italic; flex-shrink: 0; }
 .filleul-name { font-size: 14px; font-weight: 500; color: var(--jade); }
-.filleul-sub { font-size: 11px; color: var(--ink3); margin-top: 2px; }
+.filleul-sub { font-size: 12px; color: var(--ink3); margin-top: 2px; }
 .filleul-comm { text-align: right; }
 .filleul-comm-num { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--or); }
-.filleul-comm-lbl { font-size: 10px; color: var(--ink3); }
+.filleul-comm-lbl { font-size: 12px; color: var(--ink3); }
 
 /* Profil */
 .profil-card { background: var(--blanc); border: 1px solid var(--border); border-radius: 4px; padding: 32px; max-width: 560px; }
 .profil-avatar-lg { width: 72px; height: 72px; border-radius: 50%; background: var(--jade); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--or); font-style: italic; margin-bottom: 20px; }
 .profil-field { margin-bottom: 16px; }
-.profil-field label { display: block; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--noyer); margin-bottom: 5px; }
+.profil-field label { display: block; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--noyer); margin-bottom: 5px; }
 .profil-field input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 2px; font-size: 13px; font-family: 'Manrope', sans-serif; background: var(--ivoire); outline: none; }
 .profil-field input:focus { border-color: var(--jade); }
 
@@ -190,10 +190,10 @@ tr:hover td { background: var(--ivoire); }
 }
 .amb-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: white; }
 .amb-sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; font-weight: 300; }
-.amb-badge { background: rgba(185,154,94,0.2); border: 1px solid rgba(185,154,94,0.4); color: var(--or); padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+.amb-badge { background: rgba(185,154,94,0.2); border: 1px solid rgba(185,154,94,0.4); color: var(--or); padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
 
 /* Statut badge */
-.badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; }
 .badge-online { background: var(--greenbg); color: var(--jade); }
 .badge-attente { background: rgba(185,154,94,0.12); color: #8B6F3A; }
 .badge-pause { background: rgba(216,199,174,0.3); color: var(--noyer); }
@@ -251,7 +251,7 @@ tr:hover td { background: var(--ivoire); }
     flex: 1; background: none; border: none; cursor: pointer;
     padding: 9px 2px 8px; display: flex; flex-direction: column; align-items: center; gap: 3px;
     color: rgba(247,243,237,0.55); font-family: 'Manrope', sans-serif;
-    font-size: 9px; letter-spacing: 0.04em; border-top: 2px solid transparent;
+    font-size: 12px; letter-spacing: 0.04em; border-top: 2px solid transparent;
   }
   .mt-btn .mt-ico { font-size: 18px; line-height: 1; }
   .mt-btn.active { color: var(--or); border-top-color: var(--or); background: rgba(185,154,94,0.08); }
@@ -309,7 +309,7 @@ tr:hover td { background: var(--ivoire); }
 .ph p{font-size:12px;color:var(--ink3);margin-top:5px;font-weight:300;}
 .sc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;box-shadow:0 1px 3px rgba(42,31,21,0.05);transition:box-shadow 0.2s;}
 .sc-n{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;line-height:1;}
-.sc-l{font-size:11px;color:var(--ink3);margin-top:4px;}
+.sc-l{font-size:12px;color:var(--ink3);margin-top:4px;}
 .sc.cg .sc-n{color:var(--jade);}
 .sc.co .sc-n{color:var(--ora);}
 .sc.cb .sc-n{color:var(--blue);}
@@ -318,7 +318,7 @@ tr:hover td { background: var(--ivoire); }
 .btn-ghost{background:var(--surface);border:1px solid var(--border);color:var(--ink2);}
 .btn-ghost:hover{border-color:var(--jade-bd);color:var(--jade);background:var(--jade-bg);}
 .btn-gold{background:var(--goldbg);border:1px solid var(--goldbd);color:var(--golddeep);}
-.fl{display:block;font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:5px;}
+.fl{display:block;font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:5px;}
 .fl .req{color:var(--g2);}
 /* CALLOUT */
 .callout{display:flex;gap:10px;padding:0.8rem 1rem;border-radius:8px;font-size:13px;margin:0.75rem 0;line-height:1.6;}
@@ -331,7 +331,7 @@ tr:hover td { background: var(--ivoire); }
 .sim-step.active{opacity:1;background:var(--jade-bg)}
 .sim-step-num{width:28px;height:28px;border-radius:50%;background:var(--border);color:var(--ink3);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;margin:0 auto 6px}
 .sim-step.active .sim-step-num{background:var(--jade);color:white}
-.sim-step-label{font-size:11px;font-weight:500;color:var(--ink3)}
+.sim-step-label{font-size:12px;font-weight:500;color:var(--ink3)}
 .sim-step.active .sim-step-label{color:var(--jade)}
 .sim-radio-label{display:flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:12px;color:var(--ink2);transition:all 0.15s}
 .sim-radio-label:hover{border-color:var(--jade);background:var(--jade-bg)}
@@ -427,7 +427,7 @@ tr:hover td { background: var(--ivoire); }
           <p id="dash-sub">Tableau de bord · Maison Jayla Co-Hôte</p>
         </div>
         <div id="ambassadeur-badge" style="display:none">
-          <span style="background:rgba(185,154,94,0.12);border:1px solid rgba(185,154,94,0.3);color:var(--or);padding:6px 14px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:0.1em">⭐ AMBASSADEUR</span>
+          <span style="background:rgba(185,154,94,0.12);border:1px solid rgba(185,154,94,0.3);color:var(--or);padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.1em">⭐ AMBASSADEUR</span>
         </div>
       </div>
 
@@ -568,7 +568,7 @@ tr:hover td { background: var(--ivoire); }
               <button class="nav-tab" id="obj-toggle-annuel" onclick="setObjPeriode('annuel')" style="flex:1">Annuel</button>
             </div>
             <div style="padding:24px;background:var(--ivoire);border-radius:6px;text-align:center">
-              <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px">Commission estimée</div>
+              <div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px">Commission estimée</div>
               <div id="obj-resultat" style="font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--or)">—</div>
             </div>
           </div>
@@ -692,7 +692,7 @@ tr:hover td { background: var(--ivoire); }
                 <input type="text" id="nc-pass" placeholder="8 caractères minimum" style="flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:var(--ivoire)">
                 <button class="btn btn-outline btn-sm" onclick="genererMdp()">🎲 Générer</button>
               </div>
-              <div style="font-size:10.5px;color:var(--ink3);margin-top:4px">À transmettre au co-hôte. Il pourra le changer ensuite.</div></div>
+              <div style="font-size:12px;color:var(--ink3);margin-top:4px">À transmettre au co-hôte. Il pourra le changer ensuite.</div></div>
           </div>
           <div id="nc-message" style="display:none;margin-top:12px;padding:10px 14px;border-radius:6px;font-size:12.5px"></div>
           <div style="display:flex;gap:8px;margin-top:14px">
@@ -777,7 +777,7 @@ tr:hover td { background: var(--ivoire); }
           </div>
           <div style="margin-top:10px">
             <label class="sim-check-label" style="width:100%"><input type="checkbox" id="s-inclure-frais" onchange="forcePrixSuggere()"> 💳 Déduire les frais de plateforme (15,5 %)</label>
-            <div style="font-size:10px;color:var(--ink3);margin-top:3px">À cocher si l'estimation doit tenir compte de la commission Airbnb / Booking</div>
+            <div style="font-size:12px;color:var(--ink3);margin-top:3px">À cocher si l'estimation doit tenir compte de la commission Airbnb / Booking</div>
           </div>
           <div>
             <label class="fl">Ville / Commune</label>
@@ -880,18 +880,18 @@ tr:hover td { background: var(--ivoire); }
       <div style="padding:1rem">
         <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-bottom:8px" id="saison-bars"></div>
         <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:4px">
-          <div style="text-align:center;font-size:9px;color:var(--ink3)">Jan</div>
-          <div style="text-align:center;font-size:9px;color:var(--ink3)">Fév</div>
-          <div style="text-align:center;font-size:9px;color:var(--ink3)">Mar</div>
-          <div style="text-align:center;font-size:9px;color:var(--ink3)">Avr</div>
-          <div style="text-align:center;font-size:9px;color:var(--ink3)">Mai</div>
-          <div style="text-align:center;font-size:9px;color:var(--ink3)">Juin</div>
-          <div style="text-align:center;font-size:9px;color:var(--ink3)">Juil</div>
-          <div style="text-align:center;font-size:9px;color:var(--ink3)">Août</div>
-          <div style="text-align:center;font-size:9px;color:var(--ink3)">Sep</div>
-          <div style="text-align:center;font-size:9px;color:var(--ink3)">Oct</div>
-          <div style="text-align:center;font-size:9px;color:var(--ink3)">Nov</div>
-          <div style="text-align:center;font-size:9px;color:var(--ink3)">Déc</div>
+          <div style="text-align:center;font-size:12px;color:var(--ink3)">Jan</div>
+          <div style="text-align:center;font-size:12px;color:var(--ink3)">Fév</div>
+          <div style="text-align:center;font-size:12px;color:var(--ink3)">Mar</div>
+          <div style="text-align:center;font-size:12px;color:var(--ink3)">Avr</div>
+          <div style="text-align:center;font-size:12px;color:var(--ink3)">Mai</div>
+          <div style="text-align:center;font-size:12px;color:var(--ink3)">Juin</div>
+          <div style="text-align:center;font-size:12px;color:var(--ink3)">Juil</div>
+          <div style="text-align:center;font-size:12px;color:var(--ink3)">Août</div>
+          <div style="text-align:center;font-size:12px;color:var(--ink3)">Sep</div>
+          <div style="text-align:center;font-size:12px;color:var(--ink3)">Oct</div>
+          <div style="text-align:center;font-size:12px;color:var(--ink3)">Nov</div>
+          <div style="text-align:center;font-size:12px;color:var(--ink3)">Déc</div>
         </div>
         <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap" id="saison-legend"></div>
       </div>
@@ -922,53 +922,53 @@ tr:hover td { background: var(--ivoire); }
 
             <!-- Taux d'occupation par saison -->
             <div style="margin-bottom:12px">
-              <div style="font-size:11px;font-weight:600;color:var(--jade);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Taux d'occupation estimé</div>
+              <div style="font-size:12px;font-weight:600;color:var(--jade);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Taux d'occupation estimé</div>
               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
                 <div style="background:var(--surface2);border-radius:8px;padding:10px;text-align:center">
-                  <div style="font-size:9px;color:var(--ink3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">❄️ Basse saison</div>
+                  <div style="font-size:12px;color:var(--ink3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">❄️ Basse saison</div>
                   <div id="taux-basse" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--ink3)">—</div>
-                  <div style="font-size:10px;color:var(--ink3);margin-top:2px" id="mois-basse">—</div>
+                  <div style="font-size:12px;color:var(--ink3);margin-top:2px" id="mois-basse">—</div>
                 </div>
                 <div style="background:var(--jade-bg);border:1px solid var(--jade-bd);border-radius:8px;padding:10px;text-align:center">
-                  <div style="font-size:9px;color:var(--jade);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">🌤 Moyenne saison</div>
+                  <div style="font-size:12px;color:var(--jade);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">🌤 Moyenne saison</div>
                   <div id="taux-moy" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--jade)">—</div>
-                  <div style="font-size:10px;color:var(--jade);margin-top:2px" id="mois-moy">—</div>
+                  <div style="font-size:12px;color:var(--jade);margin-top:2px" id="mois-moy">—</div>
                 </div>
                 <div style="background:var(--goldbg);border:1px solid var(--goldbd);border-radius:8px;padding:10px;text-align:center">
-                  <div style="font-size:9px;color:var(--golddeep);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">☀️ Haute saison</div>
+                  <div style="font-size:12px;color:var(--golddeep);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">☀️ Haute saison</div>
                   <div id="taux-haute" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--or)">—</div>
-                  <div style="font-size:10px;color:var(--golddeep);margin-top:2px" id="mois-haute">—</div>
+                  <div style="font-size:12px;color:var(--golddeep);margin-top:2px" id="mois-haute">—</div>
                 </div>
               </div>
             </div>
 
             <!-- Fourchette prix -->
             <div style="background:var(--jade-bg);border:1px solid var(--jade-bd);border-radius:8px;padding:12px;margin-bottom:12px">
-              <div style="font-size:11px;color:var(--jade);font-weight:600;margin-bottom:8px">Prix indicatifs / nuit :</div>
+              <div style="font-size:12px;color:var(--jade);font-weight:600;margin-bottom:8px">Prix indicatifs / nuit :</div>
               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
                 <div>
-                  <div style="font-size:10px;color:var(--ink3);margin-bottom:4px">Basse saison</div>
+                  <div style="font-size:12px;color:var(--ink3);margin-bottom:4px">Basse saison</div>
                   <div id="fourch-basse" style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--ink)">—</div>
-                  <div style="font-size:10px;color:var(--ink3)">€/nuit</div>
+                  <div style="font-size:12px;color:var(--ink3)">€/nuit</div>
                 </div>
                 <div>
-                  <div style="font-size:10px;color:var(--ink3);margin-bottom:4px">Moyenne saison</div>
+                  <div style="font-size:12px;color:var(--ink3);margin-bottom:4px">Moyenne saison</div>
                   <div id="fourch-moy" style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--jade)">—</div>
-                  <div style="font-size:10px;color:var(--ink3)">€/nuit</div>
+                  <div style="font-size:12px;color:var(--ink3)">€/nuit</div>
                 </div>
                 <div>
-                  <div style="font-size:10px;color:var(--ink3);margin-bottom:4px">Haute saison</div>
+                  <div style="font-size:12px;color:var(--ink3);margin-bottom:4px">Haute saison</div>
                   <div id="fourch-haute" style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--or)">—</div>
-                  <div style="font-size:10px;color:var(--ink3)">€/nuit</div>
+                  <div style="font-size:12px;color:var(--ink3)">€/nuit</div>
                 </div>
               </div>
-              <div style="font-size:10px;color:var(--ink3);text-align:center;margin-top:8px;font-style:italic" id="fourch-note">Estimation indicative — à vérifier sur Airbnb</div>
+              <div style="font-size:12px;color:var(--ink3);text-align:center;margin-top:8px;font-style:italic" id="fourch-note">Estimation indicative — à vérifier sur Airbnb</div>
             </div>
 
             <a id="btn-airbnb" href="#" target="_blank" class="btn btn-ghost" style="width:100%;justify-content:center;gap:8px;text-decoration:none">
               🔍 Vérifier les prix réels sur Airbnb
             </a>
-            <div style="font-size:11px;color:var(--ink3);text-align:center;margin-top:6px">Filtré sur votre zone et type de bien</div>
+            <div style="font-size:12px;color:var(--ink3);text-align:center;margin-top:6px">Filtré sur votre zone et type de bien</div>
           </div>
         </div>
 
@@ -981,52 +981,52 @@ tr:hover td { background: var(--ivoire); }
             </div>
 
             <div style="background:var(--surface2);border-radius:8px;padding:12px">
-              <div style="font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">❄️ Basse saison</div>
+              <div style="font-size:12px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">❄️ Basse saison</div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center">
                 <div>
-                  <label class="fl" style="font-size:11px">Prix / nuit (€)</label>
+                  <label class="fl" style="font-size:12px">Prix / nuit (€)</label>
                   <input type="number" id="prix-basse" placeholder="Ex: 65" oninput="updatePrixMensuel()" style="margin-top:2px">
                 </div>
                 <div style="text-align:center;background:var(--blanc);border-radius:6px;padding:8px">
-                  <div style="font-size:10px;color:var(--ink3)">Taux d'occ.</div>
+                  <div style="font-size:12px;color:var(--ink3)">Taux d'occ.</div>
                   <div id="taux-basse-mini" style="font-size:18px;font-weight:600;color:var(--ink3)">—</div>
                 </div>
               </div>
             </div>
 
             <div style="background:var(--jade-bg);border:1px solid var(--jade-bd);border-radius:8px;padding:12px">
-              <div style="font-size:10px;font-weight:600;color:var(--jade);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">🌤 Moyenne saison</div>
+              <div style="font-size:12px;font-weight:600;color:var(--jade);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">🌤 Moyenne saison</div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center">
                 <div>
-                  <label class="fl" style="font-size:11px;color:var(--jade)">Prix / nuit (€)</label>
+                  <label class="fl" style="font-size:12px;color:var(--jade)">Prix / nuit (€)</label>
                   <input type="number" id="prix-moy" placeholder="Ex: 95" oninput="updatePrixMensuel()" style="margin-top:2px">
-                  <div id="prix-repere" style="display:none;font-size:11px;color:var(--jade);margin-top:4px"></div>
+                  <div id="prix-repere" style="display:none;font-size:12px;color:var(--jade);margin-top:4px"></div>
                 </div>
                 <div style="text-align:center;background:var(--blanc);border-radius:6px;padding:8px">
-                  <div style="font-size:10px;color:var(--jade)">Taux d'occ.</div>
+                  <div style="font-size:12px;color:var(--jade)">Taux d'occ.</div>
                   <div id="taux-moy-mini" style="font-size:18px;font-weight:600;color:var(--jade)">—</div>
                 </div>
               </div>
             </div>
 
             <div style="background:var(--goldbg);border:1px solid var(--goldbd);border-radius:8px;padding:12px">
-              <div style="font-size:10px;font-weight:600;color:var(--golddeep);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">☀️ Haute saison</div>
+              <div style="font-size:12px;font-weight:600;color:var(--golddeep);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">☀️ Haute saison</div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center">
                 <div>
-                  <label class="fl" style="font-size:11px;color:var(--golddeep)">Prix / nuit (€)</label>
+                  <label class="fl" style="font-size:12px;color:var(--golddeep)">Prix / nuit (€)</label>
                   <input type="number" id="prix-haute" placeholder="Ex: 140" oninput="updatePrixMensuel()" style="margin-top:2px">
                 </div>
                 <div style="text-align:center;background:var(--blanc);border-radius:6px;padding:8px">
-                  <div style="font-size:10px;color:var(--golddeep)">Taux d'occ.</div>
+                  <div style="font-size:12px;color:var(--golddeep)">Taux d'occ.</div>
                   <div id="taux-haute-mini" style="font-size:18px;font-weight:600;color:var(--or)">—</div>
                 </div>
               </div>
             </div>
 
             <div style="background:var(--goldbg);border:1px solid var(--goldbd);border-radius:8px;padding:12px;text-align:center">
-              <div style="font-size:10px;color:var(--golddeep);margin-bottom:4px">CA mensuel moyen estimé</div>
+              <div style="font-size:12px;color:var(--golddeep);margin-bottom:4px">CA mensuel moyen estimé</div>
               <div id="ca-moy-preview" style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--golddeep)">—</div>
-              <div style="font-size:10px;color:var(--golddeep);margin-top:2px" id="ca-moy-detail">—</div>
+              <div style="font-size:12px;color:var(--golddeep);margin-top:2px" id="ca-moy-detail">—</div>
             </div>
 
             <!-- Sauvegarder comme référence -->
@@ -1043,7 +1043,7 @@ tr:hover td { background: var(--ivoire); }
       <div class="tcard">
         <div class="tcard-hd">
           <span class="tcard-title">📋 Références de prix Airbnb enregistrées</span>
-          <span style="font-size:11px;color:var(--ink3);font-style:italic">Données relevées manuellement sur Airbnb</span>
+          <span style="font-size:12px;color:var(--ink3);font-style:italic">Données relevées manuellement sur Airbnb</span>
         </div>
         <div style="padding:1rem">
           <div id="ref-airbnb-list">
@@ -1132,28 +1132,28 @@ tr:hover td { background: var(--ivoire); }
       <div class="tcard-hd"><span class="tcard-title">📊 3 scénarios de rentabilité</span></div>
       <div style="padding:1rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
         <div style="background:var(--surface2);border-radius:10px;padding:16px;text-align:center">
-          <div style="font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">😐 Prudent</div>
-          <div style="font-size:10px;color:var(--ink3);margin-bottom:8px">Taux d'occupation -20%</div>
+          <div style="font-size:12px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">😐 Prudent</div>
+          <div style="font-size:12px;color:var(--ink3);margin-bottom:8px">Taux d'occupation -20%</div>
           <div id="sc-prudent-ca" style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--ink)">—</div>
-          <div style="font-size:10px;color:var(--ink3);margin-top:2px">CA annuel</div>
+          <div style="font-size:12px;color:var(--ink3);margin-top:2px">CA annuel</div>
           <div id="sc-prudent-net" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ink3);margin-top:6px">—</div>
-          <div style="font-size:10px;color:var(--ink3)">Net propriétaire</div>
+          <div style="font-size:12px;color:var(--ink3)">Net propriétaire</div>
         </div>
         <div style="background:var(--jade-bg);border:1px solid var(--jade-bd);border-radius:10px;padding:16px;text-align:center">
-          <div style="font-size:11px;font-weight:600;color:var(--jade);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">✅ Réaliste</div>
-          <div style="font-size:10px;color:var(--jade);margin-bottom:8px">Taux d'occupation estimé</div>
+          <div style="font-size:12px;font-weight:600;color:var(--jade);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">✅ Réaliste</div>
+          <div style="font-size:12px;color:var(--jade);margin-bottom:8px">Taux d'occupation estimé</div>
           <div id="sc-realiste-ca" style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--jade)">—</div>
-          <div style="font-size:10px;color:var(--jade);margin-top:2px">CA annuel</div>
+          <div style="font-size:12px;color:var(--jade);margin-top:2px">CA annuel</div>
           <div id="sc-realiste-net" style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--jade);margin-top:6px">—</div>
-          <div style="font-size:10px;color:var(--jade)">Net propriétaire</div>
+          <div style="font-size:12px;color:var(--jade)">Net propriétaire</div>
         </div>
         <div style="background:var(--goldbg);border:1px solid var(--goldbd);border-radius:10px;padding:16px;text-align:center">
-          <div style="font-size:11px;font-weight:600;color:var(--golddeep);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">🚀 Optimiste</div>
-          <div style="font-size:10px;color:var(--golddeep);margin-bottom:8px">Taux d'occupation +15%</div>
+          <div style="font-size:12px;font-weight:600;color:var(--golddeep);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">🚀 Optimiste</div>
+          <div style="font-size:12px;color:var(--golddeep);margin-bottom:8px">Taux d'occupation +15%</div>
           <div id="sc-optimiste-ca" style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--golddeep)">—</div>
-          <div style="font-size:10px;color:var(--golddeep);margin-top:2px">CA annuel</div>
+          <div style="font-size:12px;color:var(--golddeep);margin-top:2px">CA annuel</div>
           <div id="sc-optimiste-net" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--golddeep);margin-top:6px">—</div>
-          <div style="font-size:10px;color:var(--golddeep)">Net propriétaire</div>
+          <div style="font-size:12px;color:var(--golddeep)">Net propriétaire</div>
         </div>
       </div>
     </div>
@@ -1161,7 +1161,7 @@ tr:hover td { background: var(--ivoire); }
     <!-- Note légale -->
     <div class="callout ct-tip">
       <span>⚠️</span>
-      <div style="font-size:11px">Ces projections sont des estimations basées sur les données de marché observées. Les revenus réels dépendent de la qualité du bien, de sa notation, de la concurrence locale et de la stratégie tarifaire. Maison Jayla optimise en continu pour maximiser votre taux d'occupation.</div>
+      <div style="font-size:12px">Ces projections sont des estimations basées sur les données de marché observées. Les revenus réels dépendent de la qualité du bien, de sa notation, de la concurrence locale et de la stratégie tarifaire. Maison Jayla optimise en continu pour maximiser votre taux d'occupation.</div>
     </div>
 
     <div style="display:flex;justify-content:space-between;margin-top:1rem">
@@ -1704,9 +1704,9 @@ function loadRevenusForm() {
       const part = partCohote(b), off = tauxOffre(b);
       return `<tr>
         <td style="font-weight:500">${esc(d.prenom || '')} ${esc(d.nom || '')}<br>
-          <span style="font-size:11px;color:var(--ink3)">${esc((d.adresse||'').split(',')[0])}</span></td>
+          <span style="font-size:12px;color:var(--ink3)">${esc((d.adresse||'').split(',')[0])}</span></td>
         <td><span class="badge badge-attente">${off ? off + '%' : 'Offre à choisir'}</span><br>
-          <span style="font-size:10px;color:var(--ink3)">part ${part}%</span></td>
+          <span style="font-size:12px;color:var(--ink3)">part ${part}%</span></td>
         <td><input type="number" min="0" step="10" id="rev-ca-${b.dossier_id}" placeholder="0"
               style="width:90px;padding:6px 8px;border:1px solid var(--border);border-radius:2px;font-size:12px"
               oninput="calcCommAuto(${b.dossier_id})"></td>
@@ -1968,7 +1968,7 @@ function renderApercu() {
           <tbody>${parBien.map(x => {
             const d = x.b.dossier || {};
             return `<tr>
-              <td>${esc(d.prenom||'')} ${esc(d.nom||'')}<br><span style="font-size:11px;color:var(--ink3)">${esc((d.adresse||'').split(',')[0])}</span></td>
+              <td>${esc(d.prenom||'')} ${esc(d.nom||'')}<br><span style="font-size:12px;color:var(--ink3)">${esc((d.adresse||'').split(',')[0])}</span></td>
               <td>${formatMontant(x.moyenne)}</td>
               <td>${formatMontant(x.total)}</td>
             </tr>`;
@@ -2090,7 +2090,7 @@ async function loadCalCohote() {
     mesBiens.map(b => {
       const d = b.dossier || {};
       const ical = d.ical_airbnb || '';
-      return `<div style="padding:10px 0;border-bottom:1px solid var(--border)"><strong>${esc(d.prenom||'')} ${esc(d.nom||'')}</strong> — ${esc((d.adresse||'').split(',')[0])}<br><span style="font-size:11px;color:${ical?'var(--jade)':'var(--red)'}">${ical?'✅ iCal configuré':'❌ Lien iCal non renseigné'}</span></div>`;
+      return `<div style="padding:10px 0;border-bottom:1px solid var(--border)"><strong>${esc(d.prenom||'')} ${esc(d.nom||'')}</strong> — ${esc((d.adresse||'').split(',')[0])}<br><span style="font-size:12px;color:${ical?'var(--jade)':'var(--red)'}">${ical?'✅ iCal configuré':'❌ Lien iCal non renseigné'}</span></div>`;
     }).join('') + '</div>';
 }
 
@@ -2180,7 +2180,7 @@ async function loadAdminData() {
       const off = MJ.taux(d.comm), part = a.type_bien === 'apporte' ? 70 : (a.taux_commission || 50);
       return `<tr>
         <td style="font-weight:500">${esc(d.prenom||'')} ${esc(d.nom||'')}<br>
-          <span style="font-size:11px;color:var(--ink3)">${esc((d.adresse||'').split(',')[0])}</span></td>
+          <span style="font-size:12px;color:var(--ink3)">${esc((d.adresse||'').split(',')[0])}</span></td>
         <td>${c ? `${esc(c.prenom||'')} ${esc(c.nom||'')}` : '<span style="color:var(--red)">Co-hôte introuvable</span>'}</td>
         <td><span class="badge ${a.type_bien==='mj'?'badge-online':'badge-attente'}">${a.type_bien==='mj'?'🏠 MJ':'✋ Apporté'}</span></td>
         <td>${off ? `${OFFRES[off]||''} ${off}%` : '<span style="color:var(--red)">Offre à choisir</span>'}</td>
@@ -2416,16 +2416,16 @@ function updateSaisonnalite() {
     const h = Math.round((t / max) * 80) + 20;
     const col = t >= 0.75 ? '#9A7A4C' : t >= 0.55 ? '#542C35' : '#DCC8CA';
     return `<div style="text-align:center">
-      <div style="font-size:9px;color:var(--ink3);margin-bottom:2px">${pct}%</div>
+      <div style="font-size:12px;color:var(--ink3);margin-bottom:2px">${pct}%</div>
       <div style="height:${h}px;background:${col};border-radius:3px 3px 0 0;min-height:8px"></div>
     </div>`;
   }).join('');
 
   // Légende
   document.getElementById('saison-legend').innerHTML = `
-    <span style="display:flex;align-items:center;gap:4px;font-size:11px"><span style="width:10px;height:10px;border-radius:2px;background:#9A7A4C;display:inline-block"></span>Haute saison (≥75%)</span>
-    <span style="display:flex;align-items:center;gap:4px;font-size:11px"><span style="width:10px;height:10px;border-radius:2px;background:#542C35;display:inline-block"></span>Moyenne saison (55-75%)</span>
-    <span style="display:flex;align-items:center;gap:4px;font-size:11px"><span style="width:10px;height:10px;border-radius:2px;background:#DCC8CA;display:inline-block"></span>Basse saison (<55%)</span>`;
+    <span style="display:flex;align-items:center;gap:4px;font-size:12px"><span style="width:10px;height:10px;border-radius:2px;background:#9A7A4C;display:inline-block"></span>Haute saison (≥75%)</span>
+    <span style="display:flex;align-items:center;gap:4px;font-size:12px"><span style="width:10px;height:10px;border-radius:2px;background:#542C35;display:inline-block"></span>Moyenne saison (55-75%)</span>
+    <span style="display:flex;align-items:center;gap:4px;font-size:12px"><span style="width:10px;height:10px;border-radius:2px;background:#DCC8CA;display:inline-block"></span>Basse saison (<55%)</span>`;
 
   // Mettre à jour les fourchettes indicatives à l'étape 2
   updateFourchettes();
@@ -2564,12 +2564,12 @@ function renderRefAirbnb() {
     <tbody>${refsAirbnb.map(r => `<tr style="border-bottom:1px solid var(--border)">
       <td style="padding:8px 10px">
         <div style="font-weight:500">${esc(r.ville || '—')}</div>
-        <div style="font-size:11px;color:var(--ink3)">${r.typeBienLabel || ''} · ${r.attrait || ''}</div>
+        <div style="font-size:12px;color:var(--ink3)">${r.typeBienLabel || ''} · ${r.attrait || ''}</div>
       </td>
       <td style="padding:8px 10px;text-align:center;color:var(--ink3)">${r.prixBasse ? r.prixBasse+'€' : '—'}</td>
       <td style="padding:8px 10px;text-align:center;color:var(--jade);font-weight:500">${r.prixMoy ? r.prixMoy+'€' : '—'}</td>
       <td style="padding:8px 10px;text-align:center;color:var(--or);font-weight:500">${r.prixHaute ? r.prixHaute+'€' : '—'}</td>
-      <td style="padding:8px 10px;text-align:center;font-size:11px;color:var(--ink3)">${r.date}</td>
+      <td style="padding:8px 10px;text-align:center;font-size:12px;color:var(--ink3)">${r.date}</td>
       <td style="padding:8px 10px;text-align:center">
         <button class="btn btn-ghost btn-sm" onclick="chargerRef(${r.id})">↑ Utiliser</button>
         <button class="btn btn-red btn-sm" onclick="supprimerRef(${r.id})" style="margin-left:4px">🗑</button>
@@ -2751,7 +2751,7 @@ function calculerResultats() {
         ${l("− Honoraires Maison Jayla", '-'+totalComm.toLocaleString('fr-FR')+'€', 'color:var(--or)')}
         ${l("= Revenu net propriétaire", totalNet.toLocaleString('fr-FR')+'€', 'border-top:2px solid var(--jade);font-weight:700;color:var(--jade);font-size:15px')}
       </table>
-      <div style="font-size:10.5px;color:var(--ink3);margin-top:8px;line-height:1.5">Hors charges propriétaire (taxe de séjour, charges courantes, assurance, fiscalité). Les frais de ménage sont refacturés au voyageur.</div>
+      <div style="font-size:12px;color:var(--ink3);margin-top:8px;line-height:1.5">Hors charges propriétaire (taxe de séjour, charges courantes, assurance, fiscalité). Les frais de ménage sont refacturés au voyageur.</div>
     </div>`;
     el.style.display = 'block';
   })();
@@ -2795,7 +2795,7 @@ function calculerResultats() {
     const el = document.getElementById('score-mj');
     if (el) {
       const couleur = total >= 75 ? 'var(--jade)' : total >= 55 ? '#9A7A4C' : '#B0703C';
-      const barre = (v) => `<div style="flex:1"><div style="font-size:10px;color:var(--ink3);margin-bottom:2px">${v.l}</div><div style="height:6px;background:var(--surface2);border-radius:3px;overflow:hidden"><div style="height:100%;width:${v.n/25*100}%;background:${couleur}"></div></div><div style="font-size:11px;color:var(--noyer);margin-top:2px">${v.n}/25</div></div>`;
+      const barre = (v) => `<div style="flex:1"><div style="font-size:12px;color:var(--ink3);margin-bottom:2px">${v.l}</div><div style="height:6px;background:var(--surface2);border-radius:3px;overflow:hidden"><div style="height:100%;width:${v.n/25*100}%;background:${couleur}"></div></div><div style="font-size:12px;color:var(--noyer);margin-top:2px">${v.n}/25</div></div>`;
       el.innerHTML = `<div style="padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px">
         <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px">
           <span style="font-size:26px;font-weight:700;color:${couleur}">${total}</span>
@@ -3215,7 +3215,7 @@ function rechercheAdresse(q) {
         const p = f.properties;
         return `<div onclick="selectAdresseParIndex(${i})" style="padding:10px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);color:var(--ink)" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='none'">
           <div style="font-weight:500">${esc(p.label)}</div>
-          <div style="font-size:11px;color:var(--ink3)">${p.context || ''}</div>
+          <div style="font-size:12px;color:var(--ink3)">${p.context || ''}</div>
         </div>`;
       }).join('');
       sugEl.style.display = 'block';
@@ -3322,7 +3322,7 @@ function appliquerGeo(lat, lon, postcode, population, altitude) {
     if (geoData.detail.length) {
       panneau.innerHTML = `<div style="font-weight:600;color:var(--jade);margin-bottom:6px">📊 Ajustements liés à la localisation</div>`
         + geoData.detail.map(d => `<div style="font-size:12px;padding:2px 0;color:var(--noyer)">• ${d}</div>`).join('')
-        + `<div style="font-size:11px;color:var(--ink3);margin-top:6px;font-style:italic">Ces ajustements affinent l'estimation. Le benchmark Airbnb réel, si renseigné, reste prioritaire.</div>`;
+        + `<div style="font-size:12px;color:var(--ink3);margin-top:6px;font-style:italic">Ces ajustements affinent l'estimation. Le benchmark Airbnb réel, si renseigné, reste prioritaire.</div>`;
       panneau.style.display = 'block';
     } else {
       panneau.style.display = 'none';
@@ -3417,7 +3417,7 @@ async function loadProspects() {
       const d = r.data || {};
       return `<tr>
         <td style="font-weight:500">${esc(d.surnom || '—')}<br>
-          <span style="font-size:11px;color:var(--ink3)">${esc((d.adresse||'').split(',')[0])}</span></td>
+          <span style="font-size:12px;color:var(--ink3)">${esc((d.adresse||'').split(',')[0])}</span></td>
         <td>${esc(d.prenom || '')} ${esc(d.nom || '')}</td>
         <td style="font-size:12px">${esc(d.tel || '')}<br><span style="color:var(--ink3)">${esc(d.email || '')}</span></td>
         <td><span class="badge badge-attente">${ETAPES[d.etape] || d.etape || '—'}</span></td>
@@ -3673,7 +3673,7 @@ function afficherConformite() {
     else { etat = 'En vérification'; couleur = '#9A7A4C'; ok++; }
 
     return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-      <span style="font-size:13px">${esc(r.libelle)}${detail ? '<span style="color:var(--ink3);font-size:11px">'+detail+'</span>' : ''}</span>
+      <span style="font-size:13px">${esc(r.libelle)}${detail ? '<span style="color:var(--ink3);font-size:12px">'+detail+'</span>' : ''}</span>
       <span style="font-size:12px;font-weight:600;color:${couleur}">${etat}</span>
     </div>`;
   }).join('');
@@ -3741,11 +3741,11 @@ async function statuerDocument(id, statut) {
     <p style="text-align:center;font-size:12.5px;color:#8A8177;margin-bottom:20px">Choisissez un mot de passe d'au moins 8 caractères</p>
     <div id="reset-error" style="display:none;background:#FBEAE8;border-left:3px solid #C0392B;color:#9B2C22;padding:10px 12px;border-radius:3px;font-size:12.5px;margin-bottom:14px"></div>
     <div style="margin-bottom:14px">
-      <label style="display:block;font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#542C35;margin-bottom:6px">Nouveau mot de passe</label>
+      <label style="display:block;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#542C35;margin-bottom:6px">Nouveau mot de passe</label>
       <input type="password" id="reset-pass1" placeholder="••••••••" style="width:100%;padding:11px 13px;font-size:14px;font-family:inherit;border:1px solid #E0D4C8;border-radius:3px;background:#F5EFE7;color:#5A4A4E">
     </div>
     <div style="margin-bottom:14px">
-      <label style="display:block;font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#542C35;margin-bottom:6px">Confirmer</label>
+      <label style="display:block;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#542C35;margin-bottom:6px">Confirmer</label>
       <input type="password" id="reset-pass2" placeholder="••••••••" style="width:100%;padding:11px 13px;font-size:14px;font-family:inherit;border:1px solid #E0D4C8;border-radius:3px;background:#F5EFE7;color:#5A4A4E">
     </div>
     <button id="reset-btn" onclick="validerNouveauMdp()" style="width:100%;padding:13px;margin-top:8px;cursor:pointer;background:#542C35;color:#F5EFE7;border:none;border-radius:3px;font-family:inherit;font-size:13px;font-weight:600;letter-spacing:0.06em">Enregistrer →</button>

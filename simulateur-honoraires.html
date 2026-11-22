@@ -63,7 +63,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
 .temps{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .inclus-t{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--or-fonce);margin:18px 0 10px}
 .inclus-t:first-of-type{margin-top:0}
-.pastille{align-self:flex-start;margin-top:6px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;background:var(--or);color:var(--encre)}
+.pastille{align-self:flex-start;margin-top:6px;font-size:12px;font-weight:600;padding:3px 8px;border-radius:99px;background:var(--or);color:var(--encre)}
 
 /* Repère */
 .barres{display:flex;flex-direction:column;gap:12px}
@@ -78,7 +78,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
 table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums;min-width:420px}
 th,td{padding:10px;text-align:right;border-bottom:1px solid var(--trait)}
 th:first-child,td:first-child{text-align:left}
-thead th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gris);font-weight:600}
+thead th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--gris);font-weight:600}
 tr.actif td{background:var(--ivoire);font-weight:600}
 .inclus{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 24px}
 .inclus li{padding-left:18px;position:relative}
@@ -195,7 +195,7 @@ body:not(.admin) .mj-only{display:none}
   <section class="bloc">
     <h2>Ce que vous rapporte un logement</h2>
     <p class="sous">Par mois, pour un logement qui rapporte <span id="t-revenu"></span> à son propriétaire. Montants avant vos cotisations.</p>
-    <div class="defile">
+    <div class="defile" tabindex="0" role="region" aria-label="Tableau défilant">
       <table>
         <thead><tr><th>Formule du propriétaire</th><th>Vous apportez le logement</th><th>Maison Jayla vous le confie</th><th class="mj-only">Maison Jayla, apporté</th><th class="mj-only">Maison Jayla, confié</th></tr></thead>
         <tbody id="tableau"></tbody>
