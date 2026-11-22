@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://chart.googleapis.com; connect-src 'self' https://lvfncstosaaqgtfozthw.supabase.co https://data.geopf.fr https://geo.api.gouv.fr https://api.emailjs.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://chart.googleapis.com https://lvfncstosaaqgtfozthw.supabase.co; connect-src 'self' https://lvfncstosaaqgtfozthw.supabase.co https://data.geopf.fr https://geo.api.gouv.fr https://api.emailjs.com; object-src 'none'; base-uri 'self'; form-action 'self';">
 <title>Maison Jayla · Espace professionnel</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -2668,6 +2668,16 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
       </div>
     </div>
     <div class="modal-body" id="fact-pdf-content" style="font-family:'Manrope',sans-serif"></div>
+  </div>
+</div>
+<div class="modal-ov" id="modal-rapport-menage">
+  <div class="modal" style="max-width:720px">
+    <div class="modal-hd">
+      <span class="modal-title">Rapport photo du ménage</span>
+      <button class="modal-close" onclick="closeModal('modal-rapport-menage')">✕</button>
+    </div>
+    <div class="modal-body" id="rm-body"></div>
+    <div class="modal-ft" id="rm-ft"></div>
   </div>
 </div>
 <div class="modal-ov" id="modal-menage">
@@ -8441,9 +8451,11 @@ async function renderMenages(filtre = 'all') {
       <td>${STLBL[m.statut]||m.statut}</td>
       <td>${m.cout?m.cout+'€':'—'}</td>
       <td style="display:flex;gap:4px">
-        ${m.statut!=='valide'?`<button class="btn btn-ghost btn-sm" onclick="validerMenage(${m.id})">✓</button>`:''}
-        <button class="btn btn-ghost btn-sm" onclick="editMenage(${m.id})">✏</button>
-        <button class="btn btn-red btn-sm" onclick="deleteMenage(${m.id})">🗑</button>
+        ${m.statut!=='valide'?`<button class="btn btn-ghost btn-sm" title="Valider" onclick="validerMenage('${esc(m.id)}')">✓</button>`:''}
+        <button class="btn btn-ghost btn-sm" title="Lien de rapport photo pour le prestataire" onclick="lienRapportMenage('${esc(m.id)}')">📷</button>
+        <button class="btn btn-ghost btn-sm" title="Voir le rapport photo" onclick="voirRapportMenage('${esc(m.id)}')">🗂</button>
+        <button class="btn btn-ghost btn-sm" title="Modifier" onclick="editMenage('${esc(m.id)}')">✏</button>
+        <button class="btn btn-red btn-sm" title="Supprimer" onclick="deleteMenage('${esc(m.id)}')">🗑</button>
       </td>
     </tr>`;
   }).join('');
@@ -8461,6 +8473,78 @@ async function deleteMenage(id) {
   await renderMenages();
 }
 function filterMenages(f) { renderMenages(f); }
+
+// ── Rapport photo ménage (jy07) : lien sans compte pour le prestataire, photos avant / après, signalements ──
+async function appelRapportMenage(action, corps) {
+  const { data, error } = await sb.functions.invoke('rapport-menage', { body: { action, ...corps } });
+  if (error) {
+    let m = error.message;
+    try { const j = await error.context.json(); if (j && j.erreur) m = j.erreur; } catch (_) {}
+    throw new Error(m);
+  }
+  return data;
+}
+async function lienRapportMenage(id) {
+  const m = menages.find(x => String(x.id) === String(id));
+  try {
+    const { url, expire_le } = await appelRapportMenage('creer_lien', { menage_id: id });
+    const fin = new Date(expire_le).toLocaleString('fr-FR', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+    const texte = `Bonjour${m && m.prestataire ? ' ' + m.prestataire : ''}, voici le lien pour le rapport photo du ménage${m ? ' (' + m.bienLabel + ')' : ''} : ${url}`;
+    let copie = false;
+    try { await navigator.clipboard.writeText(texte); copie = true; } catch (_) {}
+    document.getElementById('rm-body').innerHTML = `
+      <p style="margin:0 0 .75rem">${copie ? 'Message copié : colle-le dans WhatsApp ou par SMS au prestataire.' : 'Copie ce message et envoie-le au prestataire :'}</p>
+      <textarea readonly style="min-height:90px;width:100%" onclick="this.select()">${esc(texte)}</textarea>
+      <p style="font-size:12px;color:var(--ink3);margin:.5rem 0 0">Valable jusqu'au ${esc(fin)}. Créer un nouveau lien remplace l'ancien.</p>`;
+    document.getElementById('rm-ft').innerHTML = `<button class="btn btn-ghost" onclick="closeModal('modal-rapport-menage')">Fermer</button>`;
+    openModal('modal-rapport-menage');
+  } catch (e) { alert('Lien impossible : ' + e.message); }
+}
+async function voirRapportMenage(id) {
+  const body = document.getElementById('rm-body'), ft = document.getElementById('rm-ft');
+  body.innerHTML = '<p style="color:var(--ink3)">Chargement…</p>'; ft.innerHTML = '';
+  openModal('modal-rapport-menage');
+  let r;
+  try { ({ rapport: r } = await appelRapportMenage('voir', { menage_id: id })); }
+  catch (e) { body.innerHTML = `<p style="color:var(--red)">${esc(e.message)}</p>`; return; }
+  if (!r) {
+    body.innerHTML = '<p>Aucun rapport pour ce ménage. Utilise 📷 pour envoyer un lien au prestataire.</p>';
+    ft.innerHTML = `<button class="btn btn-ghost" onclick="closeModal('modal-rapport-menage')">Fermer</button>`; return;
+  }
+  const ST = { envoye_au_prestataire:'Lien envoyé, rien reçu', en_cours:'Photos en cours d\'envoi', soumis:'Reçu, à valider', valide:'Validé ✓' };
+  const TY = { casse:'Casse', linge:'Linge', consommables:'Consommables', objet_oublie:'Objet oublié', autre:'Autre' };
+  const vign = p => `<a href="${esc(p.url)}" target="_blank" rel="noopener"><img src="${esc(p.url)}" alt="${esc(p.piece)} ${esc(p.moment)}" loading="lazy" style="width:96px;height:96px;object-fit:cover;border-radius:4px;border:1px solid var(--border,#ddd)"></a>`;
+  const pieces = (r.pieces || []).map(p => {
+    const av = r.photos.filter(x => x.piece === p && x.moment === 'avant'), ap = r.photos.filter(x => x.piece === p && x.moment === 'apres');
+    if (!av.length && !ap.length) return `<div style="margin-bottom:.75rem"><b>${esc(p)}</b> <span style="font-size:12px;color:var(--red)">aucune photo</span></div>`;
+    return `<div style="margin-bottom:.9rem"><b>${esc(p)}</b>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+        <div><div style="font-size:11px;color:var(--ink3)">AVANT</div><div style="display:flex;flex-wrap:wrap;gap:4px">${av.map(vign).join('') || '—'}</div></div>
+        <div><div style="font-size:11px;color:var(--ink3)">APRÈS</div><div style="display:flex;flex-wrap:wrap;gap:4px">${ap.map(vign).join('') || '—'}</div></div>
+      </div></div>`;
+  }).join('');
+  const sig = (r.signalements || []).map(s => {
+    const ph = s.photo ? r.photos.find(x => x.chemin === s.photo) : null;
+    return `<li style="margin-bottom:.5rem"><b>${esc(TY[s.type] || s.type)}</b>${s.piece ? ' · ' + esc(s.piece) : ''} : ${esc(s.texte)}${ph ? '<br>' + vign(ph) : ''}</li>`;
+  }).join('');
+  body.innerHTML = `
+    <p style="margin:0 0 .75rem"><span class="badge ${r.statut === 'valide' ? 'b-ok' : 'b-inter'}">${esc(ST[r.statut] || r.statut)}</span>
+      ${r.prestataire_nom ? ' · par ' + esc(r.prestataire_nom) : ''}${r.soumis_le ? ' · le ' + new Date(r.soumis_le).toLocaleString('fr-FR', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) : ''}</p>
+    ${r.commentaire ? `<p style="border-left:2px solid var(--gold,#9A7A4C);padding-left:8px;margin:0 0 .75rem">${esc(r.commentaire)}</p>` : ''}
+    ${sig ? `<div style="margin-bottom:.9rem"><b>Signalements</b><ul style="margin:.25rem 0 0 1.1rem;padding:0">${sig}</ul>
+      <p style="font-size:12px;color:var(--ink3);margin:.25rem 0 0">Un ticket sera créé pour chacun à la validation.</p></div>` : ''}
+    ${pieces}`;
+  ft.innerHTML = `<button class="btn btn-ghost" onclick="closeModal('modal-rapport-menage')">Fermer</button>` +
+    (r.statut === 'soumis' ? `<button class="btn btn-primary" onclick="validerRapportMenage('${esc(id)}')">✓ Valider le rapport</button>` : '');
+}
+async function validerRapportMenage(id) {
+  try {
+    const { tickets: n } = await appelRapportMenage('valider', { menage_id: id });
+    closeModal('modal-rapport-menage');
+    await renderMenages();
+    if (n) alert(`Rapport validé : ${n} ticket(s) créé(s) à partir des signalements.`);
+  } catch (e) { alert('Validation impossible : ' + e.message); }
+}
 function editMenage(id) {
   const m=menages.find(x=>x.id===id); if(!m) return;
   currentMenageId=id; openNewMenage();
