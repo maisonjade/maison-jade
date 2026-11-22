@@ -10,6 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="fin1.js"></script>
 <script src="avis-commun.js"></script>
+<script src="annonce-commun.js"></script>
 <style>
 :root{ --or-logo:#9A7A4C;
   /* ── Palette Quiet Luxury — Maison Jayla ── */
@@ -4787,38 +4788,8 @@ function updateOffreSimu() {
 function genPromptFromDos() {
   const dos = D.dossiers.find(x => x.id === currentDosId);
   if (!dos) return;
-  const lm = { fr: 'Rédige UNIQUEMENT en français.', en: 'Write ONLY in English.', es: 'Escribe ÚNICAMENTE en español.' };
-  const rules = [];
-  if (dos.recos) {
-    if ((dos.equip || '').includes('Non-fumeur')) rules.push('Non-fumeur');
-  }
-  const prompt = `Tu es un expert en rédaction d'annonces Airbnb haut de gamme pour Maison Jayla, conciergerie premium.
-${lm[editLang]}
-
-DONNÉES DU BIEN :
-- Propriétaire : ${dos.prenom} ${dos.nom}
-- Type : ${dos.type}${dos.surface ? ' · ' + dos.surface + ' m²' : ''}
-- Adresse : ${dos.adresse || 'non précisée'}
-- Capacité : ${dos.voy} voyageurs · ${dos.ch} chambre(s) · ${dos.dbl} lit(s) double(s) · ${dos.sdb} SDB
-- Décoration : ${dos.deco || 'non précisé'}
-- Point fort : ${dos.fort || 'non précisé'}
-- Équipements : ${dos.equip || 'WiFi, cuisine équipée'}
-- Transports : ${dos.transport || 'non précisé'}
-- Clientèle : ${dos.cible || 'tous profils'}
-- Check-in : ${dos.checkin || 'flexible'} · Check-out : ${dos.checkout || 'flexible'}
-${dos.extra ? '- Infos : ' + dos.extra : ''}
-${dos.taux ? '- Tarif estimé : ' + (dos.emin || dos.pmin || '?') + '–' + (dos.emax || dos.pmax || '?') + '€/nuit' : ''}
-
-Génère l'annonce complète avec ces 7 sections :
-1. TITRE (max 50 car., accrocheur, sans emoji)
-2. ACCROCHE (1 phrase 15-25 mots)
-3. DESCRIPTION COURTE (40-60 mots, 3 atouts)
-4. DESCRIPTION LONGUE (150-220 mots, 2-3 §)
-5. ÉQUIPEMENTS (liste à puces)
-6. RÈGLES (ton positif)
-7. PHRASE DE CLÔTURE (20-30 mots)
-
-Jamais inventer d'info. Ton chaleureux et premium. Zéro faute.`;
+  // Module commun avec l'espace co-hôte (annonce-commun.js) : nom du propriétaire et rue exclus du prompt.
+  const prompt = promptAnnonce(dos, editLang);
 
   document.getElementById('e-prompt-text').textContent = prompt;
   document.getElementById('e-prompt-out').style.display = 'block';

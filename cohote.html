@@ -10,6 +10,7 @@
 <script src="fin1.js"></script>
 <script src="avis-commun.js"></script>
 <script src="academie.js"></script>
+<script src="annonce-commun.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root { --or-logo:#9A7A4C;
@@ -1838,9 +1839,18 @@ function bienCardHTML(b) {
       ${d.etape ? `<div style="margin-top:10px"><span class="badge badge-online">${d.etape === 'online' ? '🟢 En ligne' : '📋 ' + d.etape}</span></div>` : ''}
       <div class="bien-actions">
         <button class="btn btn-outline btn-sm" onclick="sv('checklists',null);setTimeout(()=>{document.getElementById('cl-bien-select').value='${b.dossier_id}';loadChecklist()},100)">✅ Checklist</button>
+        <button class="btn btn-outline btn-sm" onclick="annonceBien('${esc(b.dossier_id)}')">📝 Annonce</button>
       </div>
     </div>
   </div>`;
+}
+
+// Annonce : prompt préparé depuis la fiche du logement (module commun annonce-commun.js, aucun appel IA).
+function annonceBien(dossierId) {
+  const b = mesBiens.find(x => String(x.dossier_id) === String(dossierId));
+  if (!b) return;
+  const d = b.dossier || {};
+  ouvrirAnnonce(d, d.surnom || (d.adresse || '').split(',')[0] || 'logement');
 }
 
 function renderDashBiens() {
