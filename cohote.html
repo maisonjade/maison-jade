@@ -448,28 +448,30 @@ tr:hover td { background: var(--ivoire); }
     </div>
   </div>
 
-  <nav class="sidebar">
+  <nav class="sidebar" aria-label="Menu principal">
     <div class="sb-sect">
-      <div class="sb-lbl">Mon espace</div>
-      <button class="ni active" onclick="sv('dashboard',this)"><span class="ni-icon">📊</span> Tableau de bord</button>
-      <button class="ni" onclick="sv('simulateur',this)"><span class="ni-icon">🧮</span> Simulateur de revenus</button>
-      <button class="ni" onclick="sv('avis',this)"><span class="ni-icon">📊</span> Avis de valeur</button>
-      <button class="ni" onclick="sv('prospects',this)"><span class="ni-icon">📋</span> Mes prospects</button>
-      <button class="ni" onclick="sv('documents',this)"><span class="ni-icon">📁</span> Mes documents</button>
-      <button class="ni" onclick="sv('biens',this)"><span class="ni-icon">🏠</span> Mes biens <span class="sb-badge" id="nb-biens">0</span></button>
-      <button class="ni" onclick="sv('calendrier',this)"><span class="ni-icon">📅</span> Mon calendrier</button>
+      <button class="ni active" onclick="sv('dashboard',this)"><span class="ni-icon">🏠</span> Accueil</button>
+    </div>
+    <div class="sb-sect">
+      <div class="sb-lbl">Mes logements</div>
+      <button class="ni" onclick="sv('biens',this)"><span class="ni-icon">🏢</span> Mes biens <span class="sb-badge" id="nb-biens">0</span></button>
+      <button class="ni" onclick="sv('calendrier',this)"><span class="ni-icon">📅</span> Calendrier</button>
+      <button class="ni" onclick="sv('checklists',this)"><span class="ni-icon">✅</span> Checklists terrain</button>
       <button class="ni" onclick="sv('revenus',this)"><span class="ni-icon">💰</span> Mes revenus</button>
     </div>
     <div class="sb-sect">
-      <div class="sb-lbl">Opérationnel</div>
-      <button class="ni" onclick="sv('checklists',this)"><span class="ni-icon">✅</span> Checklists terrain</button>
+      <div class="sb-lbl">Trouver des propriétaires</div>
+      <button class="ni" onclick="sv('prospects',this)"><span class="ni-icon">📋</span> Mes prospects</button>
+      <button class="ni" onclick="sv('simulateur',this)"><span class="ni-icon">🧮</span> Simulateur de revenus</button>
+      <button class="ni" onclick="sv('avis',this)"><span class="ni-icon">📊</span> Avis de valeur</button>
+      <button class="ni" onclick="sv('documents',this)"><span class="ni-icon">📄</span> Mes documents</button>
     </div>
     <div class="sb-sect">
       <div class="sb-lbl">Formation</div>
       <button class="ni" onclick="sv('academie',this)"><span class="ni-icon">🎓</span> Académie</button>
     </div>
     <div class="sb-sect" id="sb-reseau-sect" style="display:none">
-      <div class="sb-lbl">Réseau Ambassadeur</div>
+      <div class="sb-lbl">Réseau ambassadeur</div>
       <button class="ni" onclick="sv('reseau',this)"><span class="ni-icon">👥</span> Mes filleuls</button>
     </div>
     <div class="sb-sect" id="sb-admin-sect" style="display:none">
@@ -477,10 +479,9 @@ tr:hover td { background: var(--ivoire); }
       <button class="ni" onclick="sv('admin',this)"><span class="ni-icon">⚙️</span> Gestion co-hôtes</button>
     </div>
     <div class="sb-sect">
-      <div class="sb-lbl">Mon compte</div>
       <button class="ni" onclick="sv('profil',this)"><span class="ni-icon">👤</span> Mon profil</button>
     </div>
-    <div class="sb-foot">v1.3 · Maison Jayla Co-Hôte</div>
+    <div class="sb-foot">v1.4 · Maison Jayla</div>
   </nav>
 
   <main class="main">

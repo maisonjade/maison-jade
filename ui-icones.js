@@ -89,14 +89,17 @@
       if (t) t.replaceWith(document.createRange().createContextualFragment(svg('cloche')));
     }
   }
+  function ouvrirGroupeActif() {
+    document.querySelectorAll('.sb-plus').forEach(d => { if (d.querySelector('.ni.active')) d.open = true; });
+  }
   function demarrer() {
     if (!document.body || !document.body.classList.contains('ui26')) return;
     passer(document);
     let attente = false;
     new MutationObserver(() => {
       if (attente) return; attente = true;
-      requestAnimationFrame(() => { attente = false; passer(document); });
-    }).observe(document.body, { childList: true, subtree: true });
+      requestAnimationFrame(() => { attente = false; passer(document); ouvrirGroupeActif(); });
+    }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer); else demarrer();
 })();

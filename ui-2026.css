@@ -205,6 +205,28 @@ body.ui26 .topbar button[onclick="doLogout()"] .ui-ico, body.ui26 .topbar .btn-l
   body.ui26 .ph h1 { font-size: 28px !important; }
 }
 
+
+/* ── Menu : action principale, groupe « Outils » repliable, liens externes ── */
+body.ui26 .sb-top { padding: 14px 12px 4px; }
+body.ui26 .sb-new {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 12px; border-radius: 11px;
+  background: var(--ui-accent); color: #fff; border: none; font: 600 14px 'Manrope', sans-serif; cursor: pointer;
+  box-shadow: 0 1px 2px rgba(84,44,53,.25), inset 0 1px 0 rgba(255,255,255,.08);
+}
+body.ui26 .sb-new:hover { background: var(--ui-accent2); }
+body.ui26 .sb-new .ni-icon { color: #fff; display: inline-flex; }
+body.ui26 .sb-new.active { background: var(--ui-accent2); }
+body.ui26 .sb-sect + .sb-sect { margin-top: 2px; }
+body.ui26 .sb-plus > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 6px 10px !important; border-radius: 8px; }
+body.ui26 .sb-plus > summary::-webkit-details-marker { display: none; }
+body.ui26 .sb-plus > summary::after { content: ''; width: 7px; height: 7px; border-right: 1.75px solid currentColor; border-bottom: 1.75px solid currentColor; transform: rotate(-45deg); transition: transform .15s; margin-right: 4px; }
+body.ui26 .sb-plus[open] > summary::after { transform: rotate(45deg); }
+body.ui26 .sb-plus > summary:hover { background: #F6F0EA; color: var(--ui-ink2) !important; }
+body.ui26 .sb-ext { margin-left: auto; font-size: 12px; color: var(--ui-ink3); opacity: .8; }
+body.ui26 .sb-cadenas { margin-left: auto; font-size: 11px; opacity: .7; }
+body.ui26 .sidebar .sb-foot { font-size: 12px !important; border-top: none !important; padding: 12px 22px 16px !important; }
+body.ui26 .sidebar { scrollbar-width: thin; scrollbar-color: #E2D8CC transparent; }
+
 /* ── Petits émojis restants dans les titres de cartes : atténués ── */
 body.ui26 .ui-emoji-off { display: none !important; }
 
