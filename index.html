@@ -8034,7 +8034,7 @@ async function genMessageIA() {
       `Réponds uniquement avec les informations du logement dont tu disposes, sans mentionner celles qui manquent.\n\n` +
       `Question du voyageur : « ${question.slice(0, 1500)} »`;
     const { data, error } = await sb.functions.invoke('clever-endpoint', {
-      body: { bienId: dos.id, messages: [{ role: 'user', content: consigne }] }
+      body: { bienId: dos.id, source: 'intranet', messages: [{ role: 'user', content: consigne }] }
     });
     if (error || !data || data.error || !data.reply) throw new Error((data && data.error) || 'assistant indisponible, réessaie dans un instant');
     const texte = data.reply;
