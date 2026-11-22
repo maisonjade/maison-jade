@@ -92,6 +92,15 @@ body{background:var(--bg);color:var(--ink);font-family:'Manrope',sans-serif;font
 .notif-item .t{font-weight:700;margin-bottom:2px}
 .notif-item .d{font-size:12px;color:var(--ink3);margin-top:4px}
 .notif-vide{padding:18px 14px;font-size:14px;color:var(--ink3)}
+/* Porte d'entrée unique */
+.portail-titre{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:34px;color:var(--jade);margin:18px 0 4px}
+.portail-desc{font-size:16px;color:var(--ink2);margin:0 0 20px}
+.portail-btn{display:flex;align-items:center;gap:14px;width:100%;min-height:64px;margin:0 0 12px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#fff;color:var(--ink);text-align:left;text-decoration:none;cursor:pointer;font-family:'Manrope',sans-serif;font-size:16px;transition:border-color .15s,box-shadow .15s}
+.portail-btn:hover,.portail-btn:focus-visible{border-color:var(--jade);box-shadow:0 0 0 3px rgba(84,44,53,.12);outline:none}
+.portail-btn .pi{font-size:26px;flex:none}
+.portail-btn strong{display:block;font-size:16px;color:var(--jade)}
+.portail-btn small{display:block;font-size:14px;color:var(--ink2);margin-top:2px}
+.portail-retour{background:none;border:0;padding:8px 0;margin:6px 0 4px;color:var(--jade);font-size:15px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif}
 @media (max-width:700px){.notif-panel{position:fixed;top:64px;left:12px;right:12px;width:auto}}
 .brand-mark{width:34px;height:34px;background:var(--jade);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;color:#fff;letter-spacing:-0.5px;}
 .brand-name{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ink);letter-spacing:0.06em;}
@@ -666,8 +675,17 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo">Maison <em>Jayla</em></div>
-    <div class="login-sub">Espace professionnel</div>
-    <h2 class="login-title">Connexion</h2>
+    <!-- Porte d'entrée unique : chacun choisit son espace -->
+    <div id="portail">
+      <h1 class="portail-titre">Bienvenue</h1>
+      <p class="portail-desc">Choisissez votre espace</p>
+      <a class="portail-btn" href="proprio.html"><span class="pi" aria-hidden="true">🏠</span><span><strong>Je suis propriétaire</strong><small>Mes biens, mes réservations, mes revenus</small></span></a>
+      <a class="portail-btn" href="cohote.html"><span class="pi" aria-hidden="true">🤝</span><span><strong>Je suis co-hôte</strong><small>Mes logements, ma formation, mes honoraires</small></span></a>
+      <button class="portail-btn" type="button" onclick="portailEquipe()"><span class="pi" aria-hidden="true">🔑</span><span><strong>Équipe Maison Jayla</strong><small>Administration</small></span></button>
+    </div>
+    <div id="login-admin" style="display:none">
+    <button type="button" class="portail-retour" onclick="portailRetour()">← Choisir un autre espace</button>
+    <h2 class="login-title">Connexion équipe</h2>
     <p class="login-desc">Accès réservé à l'administration</p>
     <div id="login-error" class="login-error"></div>
     <button class="btn-login" id="btn-retry-auth" style="display:none;margin-bottom:12px" onclick="initAuth()">↻ Réessayer</button>
@@ -677,8 +695,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
       <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
     <button class="btn-login" id="btn-login" onclick="doLogin()">Se connecter →</button>
     <div class="login-forgot"><a onclick="doReset()">Mot de passe oublié ?</a></div>
-    <div class="login-note">Vous êtes co-hôte partenaire ?<br>
-      <a href="cohote.html" style="color:var(--bronze)">Accéder à l'espace co-hôte →</a></div>
+    </div>
   </div>
 </div>
 
@@ -7851,7 +7868,19 @@ async function doLogin() {
   }
   await ouvrirApp(data.user);
 }
-function showLoginErr(msg) { const e = document.getElementById('login-error'); e.textContent = msg; e.style.display = 'block'; }
+function showLoginErr(msg) { portailEquipe(); const e = document.getElementById('login-error'); e.textContent = msg; e.style.display = 'block'; }
+// Porte d'entrée : l'équipe ouvre le formulaire ; le choix est retenu sur cet appareil.
+function portailEquipe() {
+  document.getElementById('portail').style.display = 'none';
+  document.getElementById('login-admin').style.display = 'block';
+  try { localStorage.setItem('mj-espace', 'equipe'); } catch (e) {}
+  setTimeout(() => document.getElementById('login-email')?.focus(), 50);
+}
+function portailRetour() {
+  document.getElementById('login-admin').style.display = 'none';
+  document.getElementById('portail').style.display = 'block';
+  try { localStorage.removeItem('mj-espace'); } catch (e) {}
+}
 async function doReset() {
   const email = document.getElementById('login-email').value.trim();
   if (!email) { showLoginErr('Entrez votre email pour recevoir un lien de réinitialisation.'); return; }
@@ -7864,7 +7893,11 @@ async function doLogout() {
   await sb.auth.signOut(); currentUser = null; currentProfile = null;
   D = { dossiers: [], prevObj: {} }; location.reload();
 }
-function afficherLogin() { document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app-body').style.display = 'none'; }
+function afficherLogin() {
+  document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app-body').style.display = 'none';
+  let espace = null; try { espace = localStorage.getItem('mj-espace'); } catch (e) {}
+  if (espace === 'equipe') portailEquipe();
+}
 async function ouvrirApp(user) {
   const { data: profile, error } = await sb.from('profiles').select('*').eq('id', user.id).single();
   // Erreur réseau/serveur (≠ profil absent) : ne JAMAIS déconnecter — la session reste valide, on propose de réessayer.
@@ -7877,8 +7910,12 @@ async function ouvrirApp(user) {
   }
   document.getElementById('btn-retry-auth').style.display = 'none';
   if (!profile || profile.role !== 'admin') {
-    await sb.auth.signOut(); afficherLogin();
-    showLoginErr("Cet espace est réservé à l'administration. Les co-hôtes doivent utiliser l'espace partenaire.");
+    await sb.auth.signOut();
+    // Mauvaise porte : on envoie la personne vers son espace au lieu de la bloquer
+    const cible = profile?.role === 'cohote' ? 'cohote.html' : profile?.role === 'proprio' ? 'proprio.html' : null;
+    if (cible) { try { localStorage.removeItem('mj-espace'); } catch (e) {} window.location.href = cible; return; }
+    afficherLogin();
+    showLoginErr("Cet espace est réservé à l'équipe Maison Jayla. Choisissez « Je suis propriétaire » ou « Je suis co-hôte ».");
     return;
   }
   currentUser = user; currentProfile = profile;
