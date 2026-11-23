@@ -670,8 +670,10 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
 }
 
 </style>
+<link rel="stylesheet" href="ui-2026.css">
+<script src="ui-icones.js" defer></script>
 </head>
-<body>
+<body class="ui26">
 
 <div id="login-screen">
   <div class="login-card">
@@ -723,52 +725,46 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:300;}
   </div>
 </div>
 
-<nav class="sidebar">
-  <div class="sb-sect">
-    <div class="sb-lbl">🎯 Cockpit</div>
-    <button class="ni" id="nav-cockpit" onclick="sv('cockpit',this)"><span class="ni-icon">🎯</span> Cockpit MJ</button>
+<nav class="sidebar" aria-label="Menu principal">
+  <div class="sb-top">
+    <button class="sb-new" onclick="sv('nouveau',this)"><span class="ni-icon">✦</span> Nouveau dossier</button>
   </div>
   <div class="sb-sect">
-    <div class="sb-lbl">🚀 Commercial</div>
-    <button class="ni active" id="nav-simulateur" onclick="sv('simulateur',this)"><span class="ni-icon">🧮</span> Simulateur revenus</button>
+    <button class="ni" onclick="sv('dashboard',this)"><span class="ni-icon">🏠</span> Accueil</button>
+    <button class="ni" id="nav-cockpit" onclick="sv('cockpit',this)"><span class="ni-icon">🎯</span> Cockpit</button>
+  </div>
+  <div class="sb-sect">
+    <div class="sb-lbl">Commercial</div>
+    <button class="ni" onclick="sv('kanban',this)"><span class="ni-icon">📋</span> Prospects <span class="nb nb-g" id="b-kanban">0</span></button>
+    <button class="ni active" id="nav-simulateur" onclick="sv('simulateur',this)"><span class="ni-icon">🧮</span> Simulateur de revenus</button>
     <button class="ni" id="nav-avis" onclick="sv('avis',this)"><span class="ni-icon">📊</span> Avis de valeur <span class="nb nb-g" id="b-avis" style="display:none">0</span></button>
-    <button class="ni" onclick="sv('kanban',this)"><span class="ni-icon">📋</span> Kanban prospects <span class="nb nb-g" id="b-kanban">0</span></button>
-    <button class="ni" onclick="sv('nouveau',this)"><span class="ni-icon">✦</span> Nouveau dossier</button>
   </div>
   <div class="sb-sect">
-    <div class="sb-lbl">📁 Portefeuille</div>
-    <button class="ni" onclick="sv('dossiers',this)"><span class="ni-icon">📁</span> Tous les dossiers <span class="nb nb-g" id="b-dos">0</span></button>
+    <div class="sb-lbl">Logements</div>
+    <button class="ni" onclick="sv('dossiers',this)"><span class="ni-icon">📁</span> Dossiers <span class="nb nb-g" id="b-dos">0</span></button>
     <button class="ni" onclick="sv('calendrier',this)"><span class="ni-icon">📅</span> Calendrier</button>
-    <button class="ni" onclick="sv('dashboard',this)"><span class="ni-icon">📊</span> Tableau de bord</button>
-  </div>
-  <div class="sb-sect">
-    <div class="sb-lbl">⚙️ Opérationnel</div>
     <button class="ni" onclick="sv('menages',this)"><span class="ni-icon">🧹</span> Ménages</button>
-    <button class="ni" onclick="sv('prestataires',this)"><span class="ni-icon">👷</span> Prestataires</button>
-    <button class="ni" onclick="window.open('proprio.html','_blank')"><span class="ni-icon">🏢</span> Espace propriétaire</button>
     <button class="ni" onclick="sv('maintenance',this)"><span class="ni-icon">🔧</span> Maintenance</button>
+    <button class="ni" onclick="sv('prestataires',this)"><span class="ni-icon">👷</span> Prestataires</button>
   </div>
   <div class="sb-sect">
-    <div class="sb-lbl">💰 Finances</div>
-    <button class="ni" onclick="sv('previsionnel',this)"><span class="ni-icon">📈</span> Prévisionnel <span style="font-size:12px;background:var(--goldbg);color:var(--gold);padding:1px 6px;border-radius:10px;margin-left:2px;">🔒</span></button>
+    <div class="sb-lbl">Finances</div>
     <button class="ni" onclick="sv('facturation',this)"><span class="ni-icon">🧾</span> Facturation</button>
-    <a class="ni" href="cockpit.html" style="text-decoration:none" target="_blank" rel="noopener"><span class="ni-icon">💶</span> Finances du mois ↗</a>
+    <button class="ni" onclick="sv('previsionnel',this)"><span class="ni-icon">📈</span> Prévisionnel <span class="sb-cadenas" title="Protégé par code">🔒</span></button>
+    <a class="ni" href="cockpit.html" style="text-decoration:none" target="_blank" rel="noopener"><span class="ni-icon">💶</span> Finances du mois <span class="sb-ext" aria-label="(nouvel onglet)">↗</span></a>
   </div>
-  <div class="sb-sect">
-    <div class="sb-lbl">🛠 Outils</div>
-    <button class="ni" onclick="sv('emails',this)"><span class="ni-icon">📧</span> Modèles emails</button>
-    <button class="ni" onclick="sv('photos',this)"><span class="ni-icon">📸</span> Photos</button>
+  <details class="sb-sect sb-plus">
+    <summary class="sb-lbl">Outils</summary>
     <button class="ni" onclick="sv('pipeline',this)"><span class="ni-icon">🔄</span> Pipeline <span class="nb nb-g" id="b-pipe">0</span></button>
-    <a class="ni" href="todo/" style="text-decoration:none" target="_blank" rel="noopener"><span class="ni-icon">✅</span> TO DO LIST ↗</a>
-    <a class="ni" href="simulateur-honoraires.html?vue=admin" style="text-decoration:none" target="_blank" rel="noopener"><span class="ni-icon">🧮</span> Simulateur d'honoraires ↗</a>
-  </div>
-  <div class="sb-foot">
-    <div style="display:flex;gap:8px;margin-bottom:8px">
-      <button onclick="exportData()" style="flex:1;padding:5px 8px;border-radius:6px;border:1px solid rgba(184,146,58,0.3);background:none;color:rgba(184,146,58,0.6);font-size:12px;cursor:pointer;font-family:'Manrope',sans-serif;" title="Exporter les données">💾 Exporter</button>
-      <label style="flex:1;padding:5px 8px;border-radius:6px;border:1px solid rgba(184,146,58,0.3);background:none;color:rgba(184,146,58,0.6);font-size:12px;cursor:pointer;text-align:center;" title="Importer des données">📂 Importer<input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>
-    </div>
-    v4.1 · Maison Jayla
-  </div>
+    <button class="ni" onclick="sv('emails',this)"><span class="ni-icon">📧</span> Modèles d'e-mails</button>
+    <button class="ni" onclick="sv('photos',this)"><span class="ni-icon">📸</span> Photos</button>
+    <a class="ni" href="todo/" style="text-decoration:none" target="_blank" rel="noopener"><span class="ni-icon">✅</span> To do list <span class="sb-ext" aria-label="(nouvel onglet)">↗</span></a>
+    <a class="ni" href="simulateur-honoraires.html?vue=admin" style="text-decoration:none" target="_blank" rel="noopener"><span class="ni-icon">💶</span> Simulateur d'honoraires <span class="sb-ext" aria-label="(nouvel onglet)">↗</span></a>
+    <button class="ni" onclick="window.open('proprio.html','_blank')"><span class="ni-icon">🏢</span> Espace propriétaire <span class="sb-ext" aria-label="(nouvel onglet)">↗</span></button>
+    <button class="ni" onclick="exportData()"><span class="ni-icon">💾</span> Exporter les données</button>
+    <label class="ni" style="cursor:pointer"><span class="ni-icon">📂</span> Importer des données<input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>
+  </details>
+  <div class="sb-foot">v4.2 · Maison Jayla</div>
 </nav>
 
 <main class="main">

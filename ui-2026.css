@@ -1,0 +1,233 @@
+/* ══ Interface Maison Jayla — refonte visuelle 2026 ══
+   Couche commune à l'intranet (index.html), l'espace co-hôte (cohote.html) et l'espace propriétaire (proprio.html).
+   Activée par la classe « ui26 » sur <body> : retirer la classe = retour immédiat à l'ancien affichage.
+   Charte respectée : bordeaux #542C35, ivoire, Cormorant Garamond (titres) et Manrope (texte).
+   Rien ne s'applique à l'impression (documents PDF inchangés). */
+
+@media screen {
+
+body.ui26 {
+  --ui-bg: #F6F1EA;
+  --ui-card: #FFFDFA;
+  --ui-line: #EAE1D6;
+  --ui-line2: #DED2C4;
+  --ui-ink: #2A2224;
+  --ui-ink2: #5A4C50;
+  --ui-ink3: #6E6064;
+  --ui-accent: #542C35;
+  --ui-accent2: #6B3A45;
+  --ui-accent-bg: #F4EAE8;
+  --ui-gold: #7D6139;
+  --ui-r: 14px;
+  --ui-r-sm: 10px;
+  --ui-shadow: 0 1px 2px rgba(42,34,36,.04), 0 6px 20px -8px rgba(42,34,36,.10);
+  --ui-shadow-hover: 0 2px 4px rgba(42,34,36,.05), 0 14px 32px -12px rgba(42,34,36,.18);
+  background: var(--ui-bg) !important;
+  color: var(--ui-ink);
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Icônes (remplacent les émojis du menu) ── */
+body.ui26 .ui-ico { width: 18px; height: 18px; flex: none; display: block; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ── Barre du haut ── */
+body.ui26 .topbar {
+  background: rgba(255,253,250,.86) !important;
+  backdrop-filter: saturate(1.4) blur(14px);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  border-bottom: 1px solid var(--ui-line) !important;
+  box-shadow: none !important;
+  color: var(--ui-ink) !important;
+}
+body.ui26 .topbar .brand-name, body.ui26 .topbar .topbar-logo, body.ui26 .topbar .brand { color: var(--ui-ink) !important; font-size: 21px !important; letter-spacing: .02em !important; }
+body.ui26 .topbar .topbar-logo em, body.ui26 .topbar .brand-name em, body.ui26 .topbar .brand em { color: var(--or-logo, #9A7A4C) !important; }
+body.ui26 .topbar-date { font-family: 'Manrope', sans-serif !important; color: var(--ui-ink3) !important; font-size: 13px !important; text-transform: capitalize; }
+body.ui26 #tb-user { display: none !important; }
+body.ui26 .notif-btn { border-radius: 12px !important; border-color: var(--ui-line) !important; background: var(--ui-card) !important; color: var(--ui-ink2); display: inline-flex; align-items: center; justify-content: center; }
+body.ui26 .notif-btn:hover { border-color: var(--ui-line2) !important; color: var(--ui-accent); }
+body.ui26 .user-dot, body.ui26 .user-avatar { background: var(--ui-accent) !important; color: #fff !important; border: none !important; }
+body.ui26 .user-name { color: var(--ui-ink) !important; }
+body.ui26 .user-role { color: var(--ui-ink3) !important; letter-spacing: .02em !important; text-transform: none !important; font-size: 12px !important; }
+body.ui26 .btn-logout, body.ui26 .topbar button[onclick="doLogout()"] {
+  background: transparent !important; border: 1px solid var(--ui-line2) !important; color: var(--ui-ink2) !important;
+  border-radius: 10px !important; padding: 7px 14px !important; font-size: 13px !important; letter-spacing: 0 !important; text-transform: none !important; font-weight: 600 !important;
+}
+body.ui26 .btn-logout:hover, body.ui26 .topbar button[onclick="doLogout()"]:hover { border-color: var(--ui-accent) !important; color: var(--ui-accent) !important; }
+
+/* ── Barre latérale ── */
+body.ui26 .sidebar {
+  background: var(--ui-card) !important;
+  border-right: 1px solid var(--ui-line) !important;
+  padding: 10px 0 0;
+}
+body.ui26 .sb-sect { padding: 14px 12px 2px !important; }
+body.ui26 .sb-lbl {
+  font-size: 12px !important; font-weight: 600 !important; letter-spacing: .02em !important; text-transform: none !important;
+  color: var(--ui-ink3) !important; padding: 0 10px !important; margin-bottom: 6px !important; font-family: 'Manrope', sans-serif !important;
+}
+body.ui26 .ni {
+  gap: 11px !important; padding: 9px 10px !important; margin: 1px 0; border-radius: 10px !important; border-left: none !important;
+  font-size: 14px !important; font-weight: 500 !important; color: var(--ui-ink2) !important; letter-spacing: 0 !important; width: 100%;
+}
+body.ui26 .ni:hover { background: #F6F0EA !important; color: var(--ui-ink) !important; }
+body.ui26 .ni.active { background: var(--ui-accent-bg) !important; color: var(--ui-accent) !important; font-weight: 600 !important; }
+body.ui26 .ni .ni-icon { width: 20px; display: inline-flex; justify-content: center; color: var(--ui-ink3); font-size: 16px; }
+body.ui26 .ni:hover .ni-icon { color: var(--ui-ink2); }
+body.ui26 .ni.active .ni-icon { color: var(--ui-accent); }
+body.ui26 .sb-badge, body.ui26 .ni .nb { background: #EFE7DE !important; color: var(--ui-ink2) !important; border-radius: 999px !important; font-weight: 600 !important; font-size: 12px !important; min-width: 22px; text-align: center; padding: 1px 7px !important; margin-left: auto; }
+body.ui26 .ni.active .sb-badge, body.ui26 .ni.active .nb { background: #fff !important; color: var(--ui-accent) !important; }
+body.ui26 .sb-foot { border-top: 1px solid var(--ui-line) !important; color: var(--ui-ink3) !important; padding: 14px 20px !important; }
+body.ui26 .sb-foot button, body.ui26 .sb-foot label { border-color: var(--ui-line2) !important; color: var(--ui-ink2) !important; border-radius: 8px !important; }
+
+/* ── Zone principale ── */
+body.ui26 .main { background: transparent !important; }
+body.ui26 .ph h1 { font-size: 34px !important; font-weight: 400 !important; color: var(--ui-ink) !important; letter-spacing: -.005em; }
+body.ui26 .ph h1 em { color: var(--ui-accent) !important; }
+body.ui26 .ph p { font-size: 14px !important; color: var(--ui-ink3) !important; font-weight: 400 !important; }
+
+/* ── Cartes ── */
+body.ui26 .tcard, body.ui26 .card, body.ui26 .sc, body.ui26 .kpi-card, body.ui26 .ac-sec, body.ui26 .ac-mod:not([disabled]) {
+  background: var(--ui-card) !important; border: 1px solid var(--ui-line) !important; border-radius: var(--ui-r) !important; box-shadow: var(--ui-shadow) !important;
+}
+body.ui26 .tcard-hd, body.ui26 .card-hd { border-bottom: 1px solid var(--ui-line) !important; background: transparent !important; padding: 16px 20px !important; }
+body.ui26 .tcard-title, body.ui26 .card-title { font-size: 15px !important; font-weight: 600 !important; color: var(--ui-ink) !important; letter-spacing: 0 !important; text-transform: none !important; display: flex; align-items: center; gap: 8px; }
+body.ui26 .sc { padding: 18px 20px !important; transition: box-shadow .2s, transform .2s; }
+body.ui26 .sc:hover, body.ui26 .kpi-card:hover { box-shadow: var(--ui-shadow-hover) !important; }
+
+/* Chiffres : Manrope, chiffres alignés (le « 0 » ne ressemble plus à un « O ») */
+body.ui26 .sc-n, body.ui26 .kpi-num, body.ui26 .tn-n, body.ui26 .stat-num, body.ui26 .big-num {
+  font-family: 'Manrope', sans-serif !important; font-weight: 700 !important; letter-spacing: -.02em !important;
+  font-variant-numeric: lining-nums tabular-nums; line-height: 1.1 !important;
+}
+body.ui26 .sc-n, body.ui26 .kpi-num { font-size: 28px !important; }
+body.ui26 .sc-l, body.ui26 .kpi-lbl { font-size: 13px !important; color: var(--ui-ink3) !important; letter-spacing: 0 !important; text-transform: none !important; margin-top: 6px !important; font-weight: 500; }
+
+/* ── Boutons ── */
+body.ui26 .btn {
+  border-radius: 10px !important; font-size: 14px !important; font-weight: 600 !important; letter-spacing: 0 !important; text-transform: none !important;
+  padding: 9px 16px !important; gap: 8px !important;
+}
+body.ui26 .btn-sm { padding: 6px 12px !important; font-size: 13px !important; border-radius: 9px !important; }
+body.ui26 .btn-primary { background: var(--ui-accent) !important; color: #fff !important; border: 1px solid var(--ui-accent) !important; box-shadow: 0 1px 2px rgba(84,44,53,.25), inset 0 1px 0 rgba(255,255,255,.08) !important; }
+body.ui26 .btn-primary:hover { background: var(--ui-accent2) !important; }
+body.ui26 .btn-ghost, body.ui26 .btn-outline { background: var(--ui-card) !important; border: 1px solid var(--ui-line2) !important; color: var(--ui-ink2) !important; }
+body.ui26 .btn-ghost:hover, body.ui26 .btn-outline:hover { border-color: var(--ui-accent) !important; color: var(--ui-accent) !important; background: var(--ui-card) !important; }
+body.ui26 .btn:focus-visible, body.ui26 .ni:focus-visible { outline: 2px solid var(--ui-accent) !important; outline-offset: 2px; }
+
+/* ── Formulaires ── */
+body.ui26 .fl, body.ui26 .form-group label, body.ui26 .field label, body.ui26 .lbl {
+  font-size: 13px !important; font-weight: 600 !important; letter-spacing: 0 !important; text-transform: none !important; color: var(--ui-ink2) !important;
+}
+body.ui26 input[type=text], body.ui26 input[type=email], body.ui26 input[type=tel], body.ui26 input[type=number],
+body.ui26 input[type=date], body.ui26 input[type=password], body.ui26 input[type=search], body.ui26 input[type=url], body.ui26 select, body.ui26 textarea {
+  background-color: #fff !important; border: 1px solid var(--ui-line2) !important; border-radius: 10px !important;
+  font-size: 14px !important; padding-top: 10px !important; padding-bottom: 10px !important; color: var(--ui-ink) !important;
+}
+body.ui26 input:hover, body.ui26 select:hover, body.ui26 textarea:hover { border-color: #CDBFAF !important; }
+body.ui26 input:focus, body.ui26 select:focus, body.ui26 textarea:focus { border-color: var(--ui-accent) !important; box-shadow: 0 0 0 3px rgba(84,44,53,.12) !important; outline: none !important; }
+body.ui26 input[type=checkbox], body.ui26 input[type=radio] { accent-color: var(--ui-accent); }
+
+/* ── Tableaux ── */
+body.ui26 th { background: transparent !important; text-transform: none !important; letter-spacing: 0 !important; font-size: 12px !important; font-weight: 600 !important; color: var(--ui-ink3) !important; border-bottom: 1px solid var(--ui-line) !important; }
+body.ui26 td { border-bottom: 1px solid #F1EAE1 !important; color: var(--ui-ink2); }
+body.ui26 tr:hover td { background: #FBF6F1 !important; }
+
+/* ── Pastilles ── */
+body.ui26 .badge { border-radius: 999px !important; font-weight: 600 !important; padding: 3px 10px !important; letter-spacing: 0 !important; text-transform: none !important; }
+
+/* ── Titres de section en petites capitales (co-hôte) ── */
+body.ui26 .section-title, body.ui26 .sec-title, body.ui26 .sect-title {
+  text-transform: none !important; letter-spacing: 0 !important; font-size: 15px !important; font-weight: 600 !important; color: var(--ui-ink) !important;
+}
+
+/* ── Parcours (tunnel d'acquisition, étapes) ── */
+body.ui26 .tn { border-radius: 12px !important; }
+body.ui26 .tn-dot { border-width: 1.5px !important; font-weight: 700 !important; }
+body.ui26 .tn-line { height: 1.5px !important; }
+
+/* ── Fenêtres ── */
+body.ui26 .modal, body.ui26 .modal-box, body.ui26 .modal-content, body.ui26 .md-sheet { border-radius: 18px !important; box-shadow: 0 24px 60px -20px rgba(42,34,36,.35) !important; }
+body.ui26 .modal-ov, body.ui26 .modal-overlay, body.ui26 .mobile-drawer.open { backdrop-filter: blur(3px); }
+
+/* ── Navigation mobile ── */
+body.ui26 .mobile-tabs, body.ui26 #mobile-tabbar {
+  background: rgba(255,253,250,.94) !important; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--ui-line) !important; box-shadow: 0 -6px 20px -12px rgba(42,34,36,.2) !important;
+}
+body.ui26 .mt-btn, body.ui26 .m-tab { color: var(--ui-ink3) !important; border-top: none !important; background: transparent !important; font-weight: 600 !important; letter-spacing: 0 !important; }
+body.ui26 .mt-btn.active, body.ui26 .m-tab.active { color: var(--ui-accent) !important; }
+body.ui26 .mt-btn .ui-ico, body.ui26 .m-tab .ui-ico { width: 22px; height: 22px; margin: 0 auto 2px; }
+body.ui26 .m-tab-dot { background: var(--ui-accent) !important; }
+body.ui26 .md-sheet { background: var(--ui-card) !important; }
+body.ui26 .md-item { border-radius: 12px !important; color: var(--ui-ink) !important; font-weight: 500 !important; display: flex; align-items: center; gap: 12px; }
+body.ui26 .md-item:hover { background: #F6F0EA !important; }
+body.ui26 .md-ico { width: 22px; display: inline-flex; justify-content: center; color: var(--ui-ink3); }
+
+/* ── Bandeau mode démo ── */
+body.ui26 #demo-btn { border-radius: 10px !important; }
+
+/* ── Page de connexion ── */
+body.ui26 #login-screen, body.ui26 #auth-screen, body.ui26 .login-screen {
+  background: radial-gradient(1200px 600px at 10% -10%, #6B3A45 0%, transparent 60%), linear-gradient(160deg, #542C35 0%, #3E1F27 100%) !important;
+}
+body.ui26 .login-box, body.ui26 .login-card, body.ui26 .auth-card { border-radius: 22px !important; box-shadow: 0 30px 80px -30px rgba(0,0,0,.45) !important; border: none !important; }
+body.ui26 .portail-btn { border-radius: 14px !important; border-color: var(--ui-line2) !important; }
+body.ui26 .btn-login, body.ui26 .btn-jade { border-radius: 12px !important; letter-spacing: .01em !important; text-transform: none !important; font-size: 15px !important; }
+
+
+/* ── Autres cartes et titres (cartes de synthèse, fenêtres, espace propriétaire) ── */
+body.ui26 .scard, body.ui26 .offre-card, body.ui26 .simu-box { background: var(--ui-card) !important; border: 1px solid var(--ui-line) !important; border-radius: var(--ui-r) !important; box-shadow: var(--ui-shadow) !important; }
+body.ui26 .scard-hd, body.ui26 .modal-hd, body.ui26 .mt-col-hd { background: transparent !important; border-bottom: 1px solid var(--ui-line) !important; display: flex; align-items: center; gap: 10px; }
+body.ui26 .scard-hd .ui-ico { color: var(--ui-accent); }
+body.ui26 .scard-title, body.ui26 .modal-title, body.ui26 .pc-title { font-family: 'Manrope', sans-serif !important; font-size: 15px !important; font-weight: 600 !important; color: var(--ui-ink) !important; letter-spacing: 0 !important; text-transform: none !important; }
+body.ui26 .scard-num { font-family: 'Manrope', sans-serif !important; font-weight: 700 !important; font-variant-numeric: lining-nums tabular-nums; }
+body.ui26 .section-label { text-transform: none !important; letter-spacing: 0 !important; font-size: 16px !important; font-weight: 600 !important; color: var(--ui-ink) !important; font-family: 'Manrope', sans-serif !important; }
+body.ui26 .section-label::after { background: var(--ui-line) !important; }
+body.ui26 .kpi-label, body.ui26 .sc-label, body.ui26 .sim-step-label, body.ui26 .login-label { text-transform: none !important; letter-spacing: 0 !important; font-size: 13px !important; color: var(--ui-ink3) !important; font-weight: 500 !important; }
+body.ui26 .card-hd { display: flex; align-items: center; gap: 8px; }
+
+
+/* ── Accueil : pictogrammes des trois espaces ── */
+body.ui26 .portail-btn .pi { width: 44px; height: 44px; border-radius: 12px; background: var(--ui-accent-bg); color: var(--ui-accent); display: inline-flex; align-items: center; justify-content: center; }
+body.ui26 .portail-btn .pi .ui-ico { width: 22px; height: 22px; }
+body.ui26 .topbar button[onclick="doLogout()"], body.ui26 .topbar .btn-logout { display: inline-flex !important; align-items: center; gap: 7px; }
+body.ui26 .topbar button[onclick="doLogout()"] .ui-ico, body.ui26 .topbar .btn-logout .ui-ico { width: 16px; height: 16px; }
+
+/* ── Barre du haut sur téléphone : l'essentiel seulement ── */
+@media (max-width: 768px) {
+  body.ui26 .topbar { padding: 0 12px !important; gap: 8px !important; }
+  body.ui26 .topbar .brand-name, body.ui26 .topbar .topbar-logo, body.ui26 .topbar .brand { white-space: nowrap; font-size: 19px !important; }
+  body.ui26 .topbar-right { gap: 8px !important; }
+  body.ui26 .topbar-date, body.ui26 #save-status, body.ui26 #demo-label, body.ui26 .topbar .user-dot + span, body.ui26 .topbar .user-info { display: none !important; }
+  body.ui26 .topbar button[onclick="doLogout()"], body.ui26 .topbar .btn-logout { padding: 8px !important; margin-left: 0 !important; }
+  body.ui26 .topbar button[onclick="doLogout()"] .ui-txt, body.ui26 .topbar .btn-logout .ui-txt { display: none; }
+  body.ui26 .ph h1 { font-size: 28px !important; }
+}
+
+
+/* ── Menu : action principale, groupe « Outils » repliable, liens externes ── */
+body.ui26 .sb-top { padding: 14px 12px 4px; }
+body.ui26 .sb-new {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 12px; border-radius: 11px;
+  background: var(--ui-accent); color: #fff; border: none; font: 600 14px 'Manrope', sans-serif; cursor: pointer;
+  box-shadow: 0 1px 2px rgba(84,44,53,.25), inset 0 1px 0 rgba(255,255,255,.08);
+}
+body.ui26 .sb-new:hover { background: var(--ui-accent2); }
+body.ui26 .sb-new .ni-icon { color: #fff; display: inline-flex; }
+body.ui26 .sb-new.active { background: var(--ui-accent2); }
+body.ui26 .sb-sect + .sb-sect { margin-top: 2px; }
+body.ui26 .sb-plus > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 6px 10px !important; border-radius: 8px; }
+body.ui26 .sb-plus > summary::-webkit-details-marker { display: none; }
+body.ui26 .sb-plus > summary::after { content: ''; width: 7px; height: 7px; border-right: 1.75px solid currentColor; border-bottom: 1.75px solid currentColor; transform: rotate(-45deg); transition: transform .15s; margin-right: 4px; }
+body.ui26 .sb-plus[open] > summary::after { transform: rotate(45deg); }
+body.ui26 .sb-plus > summary:hover { background: #F6F0EA; color: var(--ui-ink2) !important; }
+body.ui26 .sb-ext { margin-left: auto; font-size: 12px; color: var(--ui-ink3); opacity: .8; }
+body.ui26 .sb-cadenas { margin-left: auto; font-size: 11px; opacity: .7; }
+body.ui26 .sidebar .sb-foot { font-size: 12px !important; border-top: none !important; padding: 12px 22px 16px !important; }
+body.ui26 .sidebar { scrollbar-width: thin; scrollbar-color: #E2D8CC transparent; }
+
+/* ── Petits émojis restants dans les titres de cartes : atténués ── */
+body.ui26 .ui-emoji-off { display: none !important; }
+
+}
